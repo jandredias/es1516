@@ -20,7 +20,7 @@
         <id>ist99999</id> <!-- FIXME -->
 	<name>github username</name> <!-- FIXME -->
 	<email>ist99999@tecnico.ulisboa.pt</email> <!-- FIXME -->
-	<organization>es16 g99al</organization> <!-- FIXME -->
+	<organization>es16 g05al</organization> 
 	<roles>
 	  <role>Developer</role>
 	  <role>Architect</role>
@@ -29,6 +29,21 @@
 	</roles>
 	<properties>
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist199999</picUrl> <!-- FIXME -->
+        </properties>
+      </developer>
+      <developer> 
+        <id>ist78865</id>
+	<name>miguel-amaral</name>
+	<email>miguel.p.amaral@tecnico.ulisboa.pt</email>
+	<organization>es16 g05al</organization>
+	<roles>
+	  <role>Developer</role>
+	  <role>Architect</role>
+	  <role>Tester</role>
+	  <role>Integrator</role>
+	</roles>
+	<properties>
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178865</picUrl>
         </properties>
       </developer>
     </developers>
