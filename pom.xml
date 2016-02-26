@@ -61,6 +61,21 @@
 				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist169537</picUrl>
 			</properties>
 		</developer>
+      <developer> 
+        <id>ist78516</id>
+	<name>Jotax</name>
+	<email>j.pedro.loureiro@tecnico.ulisboa.pt</email>
+	<organization>es16 g05al</organization> 
+	<roles>
+	  <role>Developer</role>
+	  <role>Architect</role>
+	  <role>Tester</role>
+	  <role>Integrator</role>
+	</roles>
+	<properties>
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178516</picUrl>
+        </properties>
+      </developer>
     </developers>
 
     <properties>
