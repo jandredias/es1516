@@ -76,7 +76,24 @@
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178516</picUrl>
         </properties>
       </developer>
+
+	<developer>
+        	<id>ist179620</id>
+        	<name>Tagarito</name>
+        	<email>tiago.m.vicente@tecnico.ulisboa.pt</email>
+        	<organization>es16 g05al</organization>
+        	<roles>
+          		<role>Developer</role>
+          		<role>Architect</role>
+          		<role>Tester</role>
+          		<role>Integrator</role>
+        	</roles>
+        	<properties>
+          		<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist179620</picUrl>
+        	</properties>
+      </developer>
     </developers>
+
 
     <properties>
 	<java.version>1.8</java.version>
