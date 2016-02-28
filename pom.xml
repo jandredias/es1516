@@ -20,7 +20,7 @@
         <id>ist99999</id> <!-- FIXME -->
 	<name>github username</name> <!-- FIXME -->
 	<email>ist99999@tecnico.ulisboa.pt</email> <!-- FIXME -->
-	<organization>es16 g05al</organization> 
+	<organization>es16 g05al</organization>
 	<roles>
 	  <role>Developer</role>
 	  <role>Architect</role>
@@ -31,7 +31,7 @@
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist199999</picUrl> <!-- FIXME -->
         </properties>
       </developer>
-      <developer> 
+      <developer>
         <id>ist78865</id>
 	<name>miguel-amaral</name>
 	<email>miguel.p.amaral@tecnico.ulisboa.pt</email>
@@ -61,11 +61,11 @@
 				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist169537</picUrl>
 			</properties>
 		</developer>
-      <developer> 
+      <developer>
         <id>ist78516</id>
 	<name>Jotax</name>
 	<email>j.pedro.loureiro@tecnico.ulisboa.pt</email>
-	<organization>es16 g05al</organization> 
+	<organization>es16 g05al</organization>
 	<roles>
 	  <role>Developer</role>
 	  <role>Architect</role>
@@ -93,6 +93,23 @@
         	</properties>
       </developer>
     </developers>
+
+    <developer>
+          	<id>ist178439</id>
+          	<name>rsmlopes</name>
+          	<email>ricardo.mendes.lopes@ist.utl.pt</email>
+          	<organization>es16 g05al</organization>
+          	<roles>
+            		<role>Developer</role>
+            		<role>Architect</role>
+            		<role>Tester</role>
+            		<role>Integrator</role>
+          	</roles>
+          	<properties>
+            		<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178439</picUrl>
+          	</properties>
+        </developer>
+      </developers>
 
 
     <properties>
@@ -123,7 +140,7 @@
 	      <verbose>true</verbose>
 	      <fork>true</fork>
 	    </configuration>
-	  </plugin>	  
+	  </plugin>
           <plugin>
             <groupId>pt.ist</groupId>
             <artifactId>ff-maven-plugin</artifactId>
