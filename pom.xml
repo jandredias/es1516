@@ -92,9 +92,7 @@
           		<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist179620</picUrl>
         	</properties>
       </developer>
-    </developers>
-
-    <developer>
+      <developer>
           	<id>ist178439</id>
           	<name>rsmlopes</name>
           	<email>ricardo.mendes.lopes@ist.utl.pt</email>
@@ -109,9 +107,7 @@
             		<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist178439</picUrl>
           	</properties>
         </developer>
-      </developers>
-
-
+    </developers>
     <properties>
 	<java.version>1.8</java.version>
 
