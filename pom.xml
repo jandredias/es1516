@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Phonebook</name>
+    <name>MyDrive</name>
 
     <organization>
       <name>Engenharia de Software, IST 2016</name>
@@ -20,7 +20,7 @@
         <id>ist99999</id> <!-- FIXME -->
 	<name>github username</name> <!-- FIXME -->
 	<email>ist99999@tecnico.ulisboa.pt</email> <!-- FIXME -->
-	<organization>es16 g05al</organization> 
+	<organization>es16 g05al</organization>
 	<roles>
 	  <role>Developer</role>
 	  <role>Architect</role>
@@ -31,7 +31,7 @@
           <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist199999</picUrl> <!-- FIXME -->
         </properties>
       </developer>
-      <developer> 
+      <developer>
         <id>ist78865</id>
 	<name>miguel-amaral</name>
 	<email>miguel.p.amaral@tecnico.ulisboa.pt</email>
@@ -61,11 +61,11 @@
 				<picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist169537</picUrl>
 			</properties>
 		</developer>
-      <developer> 
+      <developer>
         <id>ist78516</id>
 	<name>Jotax</name>
 	<email>j.pedro.loureiro@tecnico.ulisboa.pt</email>
-	<organization>es16 g05al</organization> 
+	<organization>es16 g05al</organization>
 	<roles>
 	  <role>Developer</role>
 	  <role>Architect</role>
@@ -123,7 +123,7 @@
 	      <verbose>true</verbose>
 	      <fork>true</fork>
 	    </configuration>
-	  </plugin>	  
+	  </plugin>
           <plugin>
             <groupId>pt.ist</groupId>
             <artifactId>ff-maven-plugin</artifactId>
@@ -165,6 +165,24 @@
               <killAfter>-1</killAfter>
                 </configuration>
           </plugin>
+	  <plugin>
+             <groupId>pt.tecnico.plugin</groupId>
+             <artifactId>dml2yuml-maven-plugin</artifactId>
+             <version>1.0-SNAPSHOT</version>
+             <configuration>
+                 <names>false</names>
+                 <outputDirectory>info</outputDirectory>
+                 <url>http://yuml.me/diagram/scruffy;dir:lr/class/</url>
+             </configuration>
+             <executions>
+               <execution>
+                 <phase>compile</phase>
+                 <goals>
+                      <goal>dml2yuml</goal>
+                 </goals>
+               </execution>
+             </executions>
+     	  </plugin>
         </plugins>
     </build>
 
