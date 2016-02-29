@@ -1,0 +1,75 @@
+package pt.tecnico.mydrive.domain;
+
+class MyDriveApplication;
+
+class User {
+    String username;
+	String password;
+    String name;
+	String mask;
+    String dir;
+}
+
+class File {
+	String info_name;
+    String name;
+    Integer nid;
+	String dir;
+	String username;
+    DateTime mod_date;
+    String permition;
+}
+
+class TextFile extends File {
+    String content;
+	String permition;
+}
+
+class Directory extends File{
+}
+
+relation DirHasFather {
+	Directory playsRole Dir;
+	Directory playsRole fatherDir;
+}
+
+relation DirHasSelf {
+	Directory playsRole Dir;
+	Directory playsRole selfDir;
+}
+
+relation DirectoryHasFiles {
+	Directory playsRole Dir;
+	File playsRole files {
+		multiplicity *;
+	}
+}
+
+class Link extends TextFile{
+}
+
+class App extends TextFile{
+}
+
+relation UserHasFiles {
+	User playsRole user;
+	File playsRole files {
+		multiplicity *;
+	}
+}
+
+relation MyDriveHasUsers {
+	MyDriveApplication playsRole mydrive;
+	User playsRole user {
+		multiplicity 1..*;
+	}
+}
+
+relation DomainRootHasMyDriveApplication {
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 0..1;
+	}
+	MyDriveApplication playsRole mydrive {
+		multiplicity 0..1;
+	}
+}
