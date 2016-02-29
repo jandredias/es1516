@@ -16,10 +16,10 @@
     </organization>
 
     <developers>
-      <developer> <!-- FIXME: one developer for each team member -->
-        <id>ist99999</id> <!-- FIXME -->
-	<name>github username</name> <!-- FIXME -->
-	<email>ist99999@tecnico.ulisboa.pt</email> <!-- FIXME -->
+      <developer>
+        <id>ist75741</id>
+	<name>jandredias</name> 
+	<email>j.andre.dias@tecnico.ulisboa.pt</email>
 	<organization>es16 g05al</organization>
 	<roles>
 	  <role>Developer</role>
@@ -28,7 +28,7 @@
 	  <role>Integrator</role>
 	</roles>
 	<properties>
-          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist199999</picUrl> <!-- FIXME -->
+          <picUrl>https://fenix.tecnico.ulisboa.pt/user/photo/ist175741</picUrl>
         </properties>
       </developer>
       <developer>
