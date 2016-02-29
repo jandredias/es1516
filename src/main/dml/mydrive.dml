@@ -1,0 +1,4 @@
+package pt.tecnico.myDrive.domain;
+
+class User;
+
