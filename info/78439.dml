@@ -1,0 +1,62 @@
+package pt.tecnico.mydrive.domain;
+
+class Manager{
+  int idCount;
+};
+
+class User {
+  String username;
+  String name;
+  String pwd;
+  String umask;
+}
+
+class File {
+  int id;
+  String name;
+  String permissions;
+  DateTime lastModificationDate;
+}
+
+class PlainFile extends File {
+  String content;
+}
+
+class Directory extends File {
+}
+
+class Link extends PlainFile {
+}
+
+class App extends PlainFile {
+}
+
+relation rootBridge {
+  .pt.ist.fenixframework.DomainRoot playsRole root;
+  Manager plays role bridge;
+}
+
+relation managerHasUsers{
+  Manager playsRole manager;
+  User playsRole user {multiplicity 1..*;}
+}
+
+relation userHasHome{
+  User playsRole owner {multiplicity 1..1;}
+  Directory playsRole home {multiplicity 1..1;}
+}
+
+relation userHasFiles{
+  User playsRole owner {multiplicity 1..1;}
+  File playsRole owned {multiplicity *;}
+}
+
+relation managerHasFiles{
+  Manager playsRole owner {multiplicity 1..1;}
+  File playsRole owned {multiplicity 1..*;}
+}
+
+relation DirectoryHasFiles{
+  Directory playsRole directory {multiplicity 1..1;}
+  File playsRole file {multiplicity *;}
+}
