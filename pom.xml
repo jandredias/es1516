@@ -116,7 +116,7 @@
 
         <fenix.framework.codeGeneratorClassName>pt.ist.fenixframework.backend.jvstmojb.codeGenerator.FenixCodeGeneratorOneBoxPerObject</fenix.framework.codeGeneratorClassName>
         <fenix.framework.backend>jvstm-ojb</fenix.framework.backend>
-        <version.pt.ist.fenix.framework>2.6.0</version.pt.ist.fenix.framework>
+        <version.pt.ist.fenix.framework>2.6.2</version.pt.ist.fenix.framework>
 
         <version.slf4j.api>1.7.7</version.slf4j.api>
         <version.ch.qos.logback.logback.classic>1.1.2</version.ch.qos.logback.logback.classic>
