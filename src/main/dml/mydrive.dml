@@ -27,7 +27,7 @@ class Directory extends File {}
 class Link extends PlainFile {}
 class Application extends PlainFile {}
 
-relation MyDriveHasRoot {
+relation MyDriveDomain {
   .pt.ist.fenixframework.DomainRoot playsRole root {
     multiplicity 0..1;
   }
@@ -72,7 +72,7 @@ relation DirectoryHasFiles {
   }
 }
 
-relation MyDriveRoot {
+relation MyDriveHasRoot {
   MyDrive playsRole myDrive {
     multiplicity 1..1;
   }
