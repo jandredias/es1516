@@ -59,7 +59,7 @@ relation UsersFiles {
   User playsRole owner {
     multiplicity 0..1;
   }
-  File playsRole files {
+  Entry playsRole files {
     multiplicity 0..*;
   }
 }
@@ -68,7 +68,7 @@ relation DirectoryHasFiles {
   Directory playsRole fatherDirectory {
     multiplicity 0..1;
   }
-  File playsRole files {
+  Entry playsRole files {
     multiplicity 2..*;
   }
 }
