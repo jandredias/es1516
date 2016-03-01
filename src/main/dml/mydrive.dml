@@ -59,7 +59,7 @@ relation UserHasFiles {
 relation UserHasHome {
   User playsRole ownerHome {
    multiplicity 0..0;
-};
+  }
   Directory playsRole usersHome {
     multiplicity 1..1;
   }
