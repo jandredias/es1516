@@ -78,16 +78,16 @@ relation MyDriveHasRoot {
   MyDrive playsRole myDrive {
     multiplicity 1..1;
   }
-  Directory playsRole root {
+  Directory playsRole rootDirectory {
     multiplicity 1..1;
   }
 }
 
 relation MyDriveHasRootUser {
-  MyDrive playsRole myDrive {
+  MyDrive playsRole rootsDrive {
     multiplicity 1..1;
    }
-  Root playsRole root {
+  Root playsRole rootUser {
     multiplicity 1..1;
   }
 }
