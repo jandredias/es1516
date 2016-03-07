@@ -17,7 +17,6 @@ class File {
   String name;
   Integer id;
   DateTime modification;
-  DateTime created;
   Integer permissions;
 }
 
@@ -58,7 +57,7 @@ relation UserHasFiles {
 
 relation UserHasHome {
   User playsRole ownerHome {
-   multiplicity 0..0;
+   multiplicity 0..1;
   }
   Directory playsRole usersHome {
     multiplicity 1..1;
@@ -79,15 +78,6 @@ relation MyDriveHasRoot {
     multiplicity 1..1;
   }
   Directory playsRole rootDirectory {
-    multiplicity 1..1;
-  }
-}
-
-relation MyDriveHasRootUser {
-  MyDrive playsRole rootsDrive {
-    multiplicity 1..1;
-   }
-  Root playsRole rootUser {
     multiplicity 1..1;
   }
 }
