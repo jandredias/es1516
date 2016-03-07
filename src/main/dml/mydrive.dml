@@ -17,7 +17,6 @@ class File {
   String name;
   Integer id;
   DateTime modification;
-  DateTime created;
   Integer permissions;
 }
 
