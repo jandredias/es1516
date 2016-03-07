@@ -1,5 +1,5 @@
 [MyDrive| Integer fileId;]
-[User| String username; String password; String name; Integer mask;]
+[User| String username; String password; String name; Integer permissions;]
 [User]^-[Root]
 [Root]
 [File| String name; Integer id; DateTime modification; DateTime created; Integer permissions;]
@@ -15,5 +15,5 @@
 [User]1..* users - myDrive 1..1[MyDrive]
 [User]1..1 owner - ownedFiles 1..*[File]
 [User]0..1 ownerHome - usersHome 1..1[Directory]
-[Directory]1..1 dir - file 2..*[File]
+[Directory]1..1 dir - files 2..*[File]
 [MyDrive]1..1 myDrive - rootDirectory 1..1[Directory]
