@@ -7,6 +7,6 @@ public class Directory extends Directory_Base {
     }
 
     public void accept(Visitor v){
-        v.visitDirectory(this);
-    }    
+       // v.visitDirectory(this);
+    }
 }
