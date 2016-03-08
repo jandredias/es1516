@@ -6,7 +6,7 @@ public class Directory extends Directory_Base {
         super();
     }
 
-    public accept(Visitor v){
+    public void accept(Visitor v){
         v.visitDirectory(this);
     }    
 }
