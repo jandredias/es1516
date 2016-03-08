@@ -1,11 +1,12 @@
 package pt.tecnico.myDrive.domain;
 
 class ImportXMLService {
-    public ImportXMLService(){
-        //TODO
+    private String _filename;
+    public ImportXMLService(String filename){
+        _filename = filename;
     }
 
     public void execute(){
-      //TODO
+      
     }
 }
