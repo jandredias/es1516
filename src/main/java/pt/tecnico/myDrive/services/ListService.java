@@ -1,7 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
 class ListService {
-    public ExportXMLService(){
+    public ListService(){
         //TODO
     }
 

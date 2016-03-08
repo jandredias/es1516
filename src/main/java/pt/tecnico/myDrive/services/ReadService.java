@@ -1,7 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
 class ReadService {
-    public ExportXMLService(){
+    public ReadService(){
         //TODO
     }
 
