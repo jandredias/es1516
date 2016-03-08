@@ -1,9 +1,8 @@
 package pt.tecnico.myDrive.domain;
+import pt.tecnico.myDrive.exception.MyDriveException;
 
-public class Visitor{
+public interface Visitor{
     
-    public Visitor() {     }
-
     public void visitFile(File f) throws MyDriveException;//TODO
 
     public void visitDirectory(Directory d) throws MyDriveException;//TODO
