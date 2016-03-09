@@ -1,4 +1,4 @@
-package pt.tecnico.myDrive.domain;
+package pt.tecnico.myDrive.services;
 
 class ExportXMLService {
     public ExportXMLService(){
