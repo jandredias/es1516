@@ -1,9 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -14,7 +10,9 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class MyDrive extends MyDrive_Base {
 
