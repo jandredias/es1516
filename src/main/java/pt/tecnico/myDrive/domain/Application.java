@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
+import org.jdom2.Element;
 
 /* HERDA DE PLAINFILE*/
 public class Application extends Application_Base {
@@ -8,4 +9,11 @@ public class Application extends Application_Base {
         super();
     }
     
+    public Element xmlExport() {
+     	Element element = super.xmlExport();
+     	
+     	element.setName("application");
+
+     	return element;
+    }
 }

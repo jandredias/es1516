@@ -24,6 +24,17 @@ public class File extends File_Base {
 
     public File getFile(String fileName) throws NotDirectoryException { throw new NotDirectoryException(); }
 
+    public String getPath() {
+    	String myName = getName();
+    	if ( ! myName.equals("/") )
+    		// when the strings match
+    		return myName;
+    	else {
+    		Directory fatherDir = getDir();
+    		return fatherDir.getPath() + myName;
+    	}
+    }
+    
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
     	Directory parentDirectory = getDir();
     	parentDirectory.removeFiles(this);
@@ -32,10 +43,13 @@ public class File extends File_Base {
     
     public Element xmlExport() {
     	Element element = new Element("file");
+    	
     	element.setAttribute("name",getName());
     	element.setAttribute("id",getId().toString());
-    	element.setAttribute("modification",getModification().toString());
-    	element.setAttribute("permissions",getPermissions().toString());
+    	element.setAttribute("modification",getModification().toString());//TODO
+    	element.setAttribute("permissions",Integer.toString(getPermissions()));
+    	element.setAttribute("father-dir",getDir().getPath());
+    	
     	return element;
     }
 }

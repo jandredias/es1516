@@ -60,7 +60,6 @@ public class MyDrive extends MyDrive_Base {
 		return root;
 	}
 	
-/*	
 	public Document xmlExport() {
         Element element = new Element("mydrive");
         Document doc = new Document(element);
@@ -74,5 +73,4 @@ public class MyDrive extends MyDrive_Base {
         
         return doc;
     }
-*/
 }

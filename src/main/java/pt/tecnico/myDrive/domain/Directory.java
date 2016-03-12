@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
+import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -13,7 +14,7 @@ public class Directory extends Directory_Base {
     }
 
     public void accept(Visitor v) throws MyDriveException{
-	v.visitDirectory(this);
+    	v.visitDirectory(this);
     }
 
     public File getFile(String fileName) {
@@ -28,7 +29,19 @@ public class Directory extends Directory_Base {
     	if(getFilesSet().isEmpty())
     		super.deleteFile();
     	throw new DirectoryIsNotEmptyException();
-    		
-    	
     }
+    
+    public Element xmlExport() {
+     	Element element = super.xmlExport();
+     	
+     	element.setName("directory");
+     	
+     	Element filesElement = new Element("files");
+        element.addContent(filesElement);
+
+        for (File file: getFilesSet())
+            filesElement.addContent(file.xmlExport());
+        return element;
+     }
 }
+
