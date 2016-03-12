@@ -3,11 +3,11 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class listDirVisitor implements Visitor{
+public class ListDirVisitor implements Visitor{
 
     private ArrayList<String> fileNames;
     
-    public listDirVisitor() {
+    public ListDirVisitor() {
         fileNames = new ArrayList();
     }
 
