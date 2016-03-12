@@ -1,7 +1,6 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
-import java.util.Set;
 
 public class ListDirVisitor implements Visitor{
 
@@ -16,7 +15,7 @@ public class ListDirVisitor implements Visitor{
     }
 
     public void visitFile(File f) throws UnsupportedOperationException{ 
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException("Can't list File."); 
     }
 
     public void visitDirectory(Directory d){
@@ -28,26 +27,26 @@ public class ListDirVisitor implements Visitor{
     }
 
     public void visitPlainFile(PlainFile p) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException("Can't list PlainFile."); 
     }
 
     public void visitLink(Link l) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException("Can't list Link."); 
     }
 
     public void visitApplication(Application a) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException("Can't list Application."); 
     }
 
     public void visitUser(User u) throws UnsupportedOperationException{
-	throw new UnsupportedOperationException(); 
+	throw new UnsupportedOperationException("Can't list User."); 
     }
 
     public void visitRoot(Root r) throws UnsupportedOperationException{
-	throw new UnsupportedOperationException(); 
+	throw new UnsupportedOperationException("Can't list Root."); 
     }
 
     public void visitMyDrive(MyDrive mD) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException("Can't list MyDrive."); 
     }
 }
