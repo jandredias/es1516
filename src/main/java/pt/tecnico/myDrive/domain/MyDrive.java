@@ -81,7 +81,13 @@ public class MyDrive extends MyDrive_Base {
     	this.setFileId(getFileId()+1);
     	pt.tecnico.myDrive.domain.Directory home = rootDir.getDirectory("home"); 
     	pt.tecnico.myDrive.domain.Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
-    	pt.tecnico.myDrive.domain.User newUser = new User(username, pwd, name, permissions, userHome);
+    	pt.tecnico.myDrive.domain.User newUser;
+    	if(username == null || pwd == null || name == null || permissions == null){
+    		newUser = new User(username, userHome);
+    	}
+    	else{
+    		 newUser = new User(username, pwd, name, permissions, userHome);
+    	}
     	userHome.setOwner(newUser);
     	userHome.setOwnerHome(newUser);
     	this.addUsers(newUser);
