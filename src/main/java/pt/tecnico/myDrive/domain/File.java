@@ -3,6 +3,8 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.exception.MyDriveException;
+
 public class File extends File_Base {
     
     protected File() { /* for deriver classes */}
@@ -28,5 +30,9 @@ public class File extends File_Base {
     	element.setAttribute("modification",getModification().toString());
     	element.setAttribute("permissions",getPermissions().toString());
     	return element;
+    }
+    
+    public void accept(Visitor visitor) throws MyDriveException /*TODO*/{
+    	visitor.visitFile(this);
     }
 }

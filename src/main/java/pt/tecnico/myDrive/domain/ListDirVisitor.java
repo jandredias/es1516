@@ -8,7 +8,7 @@ public class ListDirVisitor implements Visitor{
     private ArrayList<String> fileNames;
     
     public ListDirVisitor() {
-        fileNames = new ArrayList();
+        fileNames = new ArrayList<String>();
     }
 
     public ArrayList<String> getFileNames(){
@@ -20,9 +20,8 @@ public class ListDirVisitor implements Visitor{
     }
 
     public void visitDirectory(Directory d) throws MyDriveException{//TODO
-        Set<File> fileList = d.getFiles();
 
-        for(File file : fileList){
+        for(File file : d.getFilesSet()){
             fileNames.add(file.getName());
         }
     }

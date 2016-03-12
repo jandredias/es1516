@@ -9,8 +9,8 @@ public class Directory extends Directory_Base {
         init(name, id, modification, permissions, owner);
     }
 
-    public void accept(Visitor v) throws MyDriveException{
-	v.visitDirectory(this);
+    public void accept(Visitor visitor) throws MyDriveException /*TODO*/{
+    	visitor.visitDirectory(this);
     }
 
     public File getFile(String fileName){/*TODO*/ return null;}
