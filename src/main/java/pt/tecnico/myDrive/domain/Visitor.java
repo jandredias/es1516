@@ -1,21 +1,21 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public interface Visitor{
     
-    public void visitFile(File f) throws MyDriveException;//TODO
+    public void visitFile(File f) throws UnsupportedOperationException;
 
-    public void visitDirectory(Directory d) throws MyDriveException;//TODO
+    public void visitDirectory(Directory d) throws UnsupportedOperationException;
 
-    public void visitPlainFile(PlainFile p) throws MyDriveException;//TODO
+    public void visitPlainFile(PlainFile p) throws UnsupportedOperationException;
 
-    public void visitLink(Link l) throws MyDriveException;//TODO
+    public void visitLink(Link l) throws UnsupportedOperationException;
 
-    public void visitApplication(Application a) throws MyDriveException;//TODO
+    public void visitApplication(Application a) throws UnsupportedOperationException;
 
-    public void visitUser(User u) throws MyDriveException;//TODO
+    public void visitUser(User u) throws UnsupportedOperationException;
 
-    public void visitRoot(Root r) throws MyDriveException;//TODO
+    public void visitRoot(Root r) throws UnsupportedOperationException;
 
-    public void visitMyDrive(MyDrive mD) throws MyDriveException;//TODO
+    public void visitMyDrive(MyDrive mD) throws UnsupportedOperationException;
 }

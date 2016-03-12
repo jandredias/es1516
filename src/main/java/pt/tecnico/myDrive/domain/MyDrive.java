@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,18 +13,17 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 
 public class MyDrive extends MyDrive_Base {
-	
+
 	static final Logger log = LogManager.getRootLogger();
-	
+
 	public static MyDrive getInstance() {
 		MyDrive md = FenixFramework.getDomainRoot().getMyDrive();
 		if (md != null)
 			return md;
-		
+
 		log.trace("new MyDrive");
 		return new MyDrive();
 	}
-    
     private MyDrive() {
     	setRoot(FenixFramework.getDomainRoot());
     }
@@ -73,4 +73,25 @@ public class MyDrive extends MyDrive_Base {
         
         return doc;
     }
+
+	public ArrayList<String> listDir(String path) throws UnsupportedOperationException {
+		File file = getFileFromPath(path);
+		ListDirVisitor visitor = new ListDirVisitor();
+		file.accept(visitor);
+		return visitor.getFileNames();
+	}
+	
+	//TODO
+	public String getFileContents(File file) throws UnsupportedOperationException {
+		if(!(file instanceof PlainFile)){
+			throw new UnsupportedOperationException("Can only get the contents of a plain file");
+		}
+		PlainFile plainFile = (PlainFile) file;
+		return plainFile.getContent();
+	}
+	
+	public String getFileContents(String filePath) throws UnsupportedOperationException {
+		File file = getFileFromPath(filePath);
+		return getFileContents(file);
+	}
 }
