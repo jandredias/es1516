@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -59,5 +60,18 @@ public class MyDrive extends MyDrive_Base {
         ListDirVisitor visitor = new ListDirVisitor();
         file.accept(visitor);
         return visitor.getFileNames();
+    }
+    
+    public void addUser(String username, String pwd, String name, Integer permissions){
+    	pt.tecnico.myDrive.domain.Directory rootDir = this.getRootDirectory();
+    	pt.tecnico.myDrive.domain.User rootUser = this.getRootUser();
+    	this.setFileId(getFileId()+1);
+    	pt.tecnico.myDrive.domain.Directory home = rootDir.getDirectory("home"); 
+    	pt.tecnico.myDrive.domain.Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
+    	pt.tecnico.myDrive.domain.User newUser = new User(username, pwd, name, permissions, userHome);
+    	userHome.setOwner(newUser);
+    	userHome.setOwnerHome(newUser);
+    	this.addUsers(newUser);
+    	
     }
 }
