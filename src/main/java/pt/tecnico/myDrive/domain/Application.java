@@ -1,6 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 /* HERDA DE PLAINFILE*/
 
@@ -10,7 +10,7 @@ public class Application extends Application_Base {
         super();
     }
     
-    public void accept(Visitor visitor) throws MyDriveException /*TODO*/{
+    public void accept(Visitor visitor) throws UnsupportedOperationException {
     	visitor.visitApplication(this);
     }
     

@@ -1,7 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
 
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -54,7 +54,7 @@ public class MyDrive extends MyDrive_Base {
 	return pieces;
     }
 
-    public ArrayList<String> listDir(String path) throws MyDriveException{//TODO
+    public ArrayList<String> listDir(String path) throws UnsupportedOperationException {
         File file = getFileFromPath(path);
         ListDirVisitor visitor = new ListDirVisitor();
         file.accept(visitor);
