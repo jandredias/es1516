@@ -6,7 +6,10 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class PlainFile extends PlainFile_Base {
     
-     public PlainFile(){super();}
+     public PlainFile(String name, Integer id, DateTime modification, Integer permissions, pt.tecnico.myDrive.domain.User owner, String content){
+    	 init(name, id, modification, permissions, owner);
+    	 this.setContent(content);
+     }
      
      
      public Element xmlExport() {

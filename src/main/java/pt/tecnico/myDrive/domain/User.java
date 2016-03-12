@@ -9,6 +9,9 @@ public class User extends User_Base {
     public User(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
 	init(username, pwd, name, permissions, home);
     }
+    public User(String username, pt.tecnico.myDrive.domain.Directory home){
+    	init(username, username, username, 11111010, home);
+    }
 
     protected void init(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
     	setUsername(username);
