@@ -67,4 +67,9 @@ public class MyDrive extends MyDrive_Base {
 		PlainFile plainFile = (PlainFile) file;
 		return plainFile.getContent();
 	}
+	
+	public String getFileContents(String filePath) throws UnsupportedOperationException {
+		File file = getFileFromPath(filePath);
+		return getFileContents(file);
+	}
 }
