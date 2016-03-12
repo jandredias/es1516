@@ -8,7 +8,10 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 
 public class File extends File_Base {
     
-    protected File() { /* for deriver classes */}
+
+	protected File() {
+		/* for deriver classes */
+	}
     
     public File(String name, Integer id, DateTime modification, Integer permissions, pt.tecnico.myDrive.domain.User owner){
     	init(name, id, modification, permissions, owner);
@@ -22,24 +25,39 @@ public class File extends File_Base {
     	setOwner(owner);
     }
 
-    public File getFile(String fileName) throws NotDirectoryException { throw new NotDirectoryException(); }
-
+    public File getFile(String fileName) throws NotDirectoryException {
+		throw new NotDirectoryException();
+	}
+    
+    public String getPath() {
+    	String myName = getName();
+    	if ( ! myName.equals("/") )
+    		// when the strings match
+    		return myName;
+    	else {
+    		Directory fatherDir = getDir();
+    		return fatherDir.getPath() + myName;
+    	}
+    }
+    
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
     	Directory parentDirectory = getDir();
     	parentDirectory.removeFiles(this);
-    	
     }
     
     public Element xmlExport() {
     	Element element = new Element("file");
+    	
     	element.setAttribute("name",getName());
     	element.setAttribute("id",getId().toString());
-    	element.setAttribute("modification",getModification().toString());
-    	element.setAttribute("permissions",getPermissions().toString());
+    	element.setAttribute("modification",getModification().toString());//TODO
+    	element.setAttribute("permissions",Integer.toString(getPermissions()));
+    	element.setAttribute("father-dir",getDir().getPath());
+    	
     	return element;
     }
-    
-    public void accept(Visitor visitor) throws UnsupportedOperationException {
-    	visitor.visitFile(this);
-    }
+
+	public void accept(Visitor visitor) throws UnsupportedOperationException {
+		visitor.visitFile(this);
+	}
 }

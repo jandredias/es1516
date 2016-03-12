@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
+import org.jdom2.Element;
+
 public class User extends User_Base {
     
     protected User() {/*for subclasses to use*/}
@@ -9,11 +11,22 @@ public class User extends User_Base {
     }
 
     protected void init(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
-	setUsername(username);
+    	setUsername(username);
         setPassword(pwd);
         setName(name);
         setPermissions(permissions);
         setUsersHome(home);
     }
     
+    public Element xmlExport() {
+     	Element element = new Element("user"); 
+     	
+     	element.setAttribute("username", getUsername());
+     	element.setAttribute("password", getPassword());
+     	element.setAttribute("name", getName());
+     	element.setAttribute("permissions", Integer.toString(getPermissions()));
+     	element.setAttribute("home",getUsersHome().getPath());
+     	
+     	return element;
+    }
 }
