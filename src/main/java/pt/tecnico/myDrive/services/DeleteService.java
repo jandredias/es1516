@@ -1,4 +1,4 @@
-package pt.tecnico.myDrive.domain;
+/*package pt.tecnico.myDrive.domain;
 
 import java.util.ArrayList;
 
@@ -49,4 +49,4 @@ class DeleteService {
             currentFile = currentDirectory.getFile(currentPiece);
         return currentFile;
     }
-}
+}*/
