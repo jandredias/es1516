@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -48,7 +50,29 @@ public class MyDrive extends MyDrive_Base {
     }
 
     private ArrayList<String> splitString(String s){
-	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(s.split("/")));
-	return pieces;
+    	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(s.split("/")));
+    	return pieces;
     }
+	
+	private User getRootUser() {
+		Directory directory = getRootDirectory();
+		User root = directory.getOwner();
+		return root;
+	}
+	
+/*	
+	public Document xmlExport() {
+        Element element = new Element("mydrive");
+        Document doc = new Document(element);
+        
+        for (User user: getUsersSet())
+            element.addContent(user.xmlExport());
+        
+        Directory rootDirectory = getRootDirectory();
+        element.addContent(rootDirectory.xmlExport());
+        
+        
+        return doc;
+    }
+*/
 }
