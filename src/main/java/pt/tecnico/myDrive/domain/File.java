@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+
 
 public class File extends File_Base {
     
@@ -25,7 +27,7 @@ public class File extends File_Base {
     	setOwner(owner);
     }
 
-    public File getFile(String fileName) throws NotDirectoryException {
+    public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
 		throw new NotDirectoryException();
 	}
     

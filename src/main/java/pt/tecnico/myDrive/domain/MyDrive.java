@@ -13,6 +13,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -109,6 +110,23 @@ public class MyDrive extends MyDrive_Base {
 	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
 		File file = getFileFromPath(filePath);
 		return getFileContents(file);
+	}
+	
+	public void DeleteFile (String path){
+		try{
+			getFileFromPath(path).deleteFile();
+		}
+		catch (DirectoryIsNotEmptyException e) {
+			log.error("Cannot delete a non-empty folder");
+		}
+		catch (FileNotFoundException e){
+			log.error("The file doesn't exist");
+		}
+		catch (NotDirectoryException e) {
+			//Should never occur
+			log.error("The father directory isn't a directory");
+		}
+	
 	}
 
 }
