@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 
 import org.jdom2.Element;
 import org.joda.time.DateTime;
@@ -19,11 +20,11 @@ public class Directory extends Directory_Base {
     	visitor.visitDirectory(this);
     }
 
-    public File getFile(String fileName) {
+    public File getFile(String fileName) throws FileNotFoundException {
     	for(File file: getFilesSet())
     		if(file.getName().equals(fileName))
     			return file;
-    	return null;
+    	throw new FileNotFoundException();
     }
     
    /* FIX ME */ 
