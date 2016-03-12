@@ -20,7 +20,8 @@ public class ListDirVisitor implements Visitor{
     }
 
     public void visitDirectory(Directory d){
-
+	fileNames.add(".");
+	fileNames.add("..");
         for(File file : d.getFilesSet()){
             fileNames.add(file.getName());
         }
