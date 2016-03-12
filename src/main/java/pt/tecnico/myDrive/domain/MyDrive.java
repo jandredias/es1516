@@ -86,7 +86,7 @@ public class MyDrive extends MyDrive_Base {
     	
     }
 
-	public ArrayList<String> listDir(String path) throws UnsupportedOperationException {
+	public ArrayList<String> listDir(String path) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
 		File file = getFileFromPath(path);
 		ListDirVisitor visitor = new ListDirVisitor();
 		file.accept(visitor);
@@ -102,7 +102,7 @@ public class MyDrive extends MyDrive_Base {
 		return plainFile.getContent();
 	}
 	
-	public String getFileContents(String filePath) throws UnsupportedOperationException {
+	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
 		File file = getFileFromPath(filePath);
 		return getFileContents(file);
 	}
