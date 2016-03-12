@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -24,10 +25,10 @@ public class MyDrive extends MyDrive_Base {
 		log.trace("new MyDrive");
 		return new MyDrive();
 	}
+	
     private MyDrive() {
     	setRoot(FenixFramework.getDomainRoot());
     }
-    
     
     /**
      * recebe um path (string) e devolve o ficheiro correspondente caso exista
@@ -74,6 +75,19 @@ public class MyDrive extends MyDrive_Base {
         return doc;
     }
 
+    public void addUser(String username, String pwd, String name, Integer permissions){
+    	pt.tecnico.myDrive.domain.Directory rootDir = this.getRootDirectory();
+    	pt.tecnico.myDrive.domain.User rootUser = this.getRootUser();
+    	this.setFileId(getFileId()+1);
+    	pt.tecnico.myDrive.domain.Directory home = rootDir.getDirectory("home"); 
+    	pt.tecnico.myDrive.domain.Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
+    	pt.tecnico.myDrive.domain.User newUser = new User(username, pwd, name, permissions, userHome);
+    	userHome.setOwner(newUser);
+    	userHome.setOwnerHome(newUser);
+    	this.addUsers(newUser);
+    	
+    }
+
 	public ArrayList<String> listDir(String path) throws UnsupportedOperationException {
 		File file = getFileFromPath(path);
 		ListDirVisitor visitor = new ListDirVisitor();
@@ -94,4 +108,5 @@ public class MyDrive extends MyDrive_Base {
 		File file = getFileFromPath(filePath);
 		return getFileContents(file);
 	}
+
 }
