@@ -69,7 +69,7 @@ relation DirectoryHasFiles {
     multiplicity 1..1;
   }
   File playsRole files{
-    multiplicity 2..*;
+    multiplicity 0..*;
   }
 }
 

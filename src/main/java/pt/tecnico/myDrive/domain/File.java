@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
+import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
@@ -27,5 +28,14 @@ public class File extends File_Base {
     	Directory parentDirectory = getDir();
     	parentDirectory.removeFiles(this);
     	
+    }
+    
+    public Element xmlExport() {
+    	Element element = new Element("file");
+    	element.setAttribute("name",getName());
+    	element.setAttribute("id",getId().toString());
+    	element.setAttribute("modification",getModification().toString());
+    	element.setAttribute("permissions",getPermissions().toString());
+    	return element;
     }
 }
