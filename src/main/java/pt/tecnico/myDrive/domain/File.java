@@ -2,7 +2,7 @@ package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
 import org.joda.time.DateTime;
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 
@@ -39,7 +39,7 @@ public class File extends File_Base {
     	return element;
     }
     
-    public void accept(Visitor visitor) throws MyDriveException /*TODO*/{
+    public void accept(Visitor visitor) throws UnsupportedOperationException {
     	visitor.visitFile(this);
     }
 }

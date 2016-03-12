@@ -1,5 +1,5 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 import org.joda.time.DateTime;
 
@@ -12,7 +12,7 @@ public class Directory extends Directory_Base {
         init(name, id, modification, permissions, owner);
     }
 
-    public void accept(Visitor visitor) throws MyDriveException /*TODO*/{
+    public void accept(Visitor visitor) throws UnsupportedOperationException {
     	visitor.visitDirectory(this);
     }
 
