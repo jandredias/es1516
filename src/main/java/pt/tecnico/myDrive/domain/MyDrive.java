@@ -30,14 +30,14 @@ public class MyDrive extends MyDrive_Base {
 	
     private MyDrive() {
     	setRoot(FenixFramework.getDomainRoot());
+    	//FIXME 
+    	/*
+    	 * Create / folder
+    	 * Create root?
+    	 
+    	 * */
     }
     
-    /**
-     * recebe um path (string) e devolve o ficheiro correspondente caso exista
-     * @param 	path absolute path to file
-     * @return	the file at the specified path
-     * @see		File
-     */
     public File getFileFromPath(String path) throws FileNotFoundException, NotDirectoryException {
         ArrayList<String> pieces = splitString(path);
         File currentFile = getRootDirectory();
@@ -73,12 +73,12 @@ public class MyDrive extends MyDrive_Base {
     }
 
     public void addUser(String username, String pwd, String name, Integer permissions){
-    	pt.tecnico.myDrive.domain.Directory rootDir = this.getRootDirectory();
-    	pt.tecnico.myDrive.domain.User rootUser = this.getRootUser();
+    	Directory rootDir = this.getRootDirectory();
+    	User rootUser = this.getRootUser();
     	this.setFileId(getFileId()+1);
-    	pt.tecnico.myDrive.domain.Directory home = rootDir.getDirectory("home"); 
-    	pt.tecnico.myDrive.domain.Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111, rootUser, home); //TODO not sure 11111111
-    	pt.tecnico.myDrive.domain.User newUser;
+    	Directory home = rootDir.getDirectory("home"); 
+    	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111, rootUser, home); //TODO not sure 11111111
+    	User newUser;
     	if(pwd == null || name == null || permissions == null){
     		newUser = new User(username, userHome);
     	}
@@ -107,10 +107,12 @@ public class MyDrive extends MyDrive_Base {
 		return plainFile.getContent();
 	}
 	
+	
 	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
 		File file = getFileFromPath(filePath);
 		return getFileContents(file);
 	}
+
 	
 	public void DeleteFile (String path){
 		try{
@@ -126,7 +128,30 @@ public class MyDrive extends MyDrive_Base {
 			//Should never occur
 			log.error("The father directory isn't a directory");
 		}
-	
 	}
-
+	/*
+	public void createDirectory(String path, String name) { 
+		File directory;
+		try {
+			 directory = getFileFromPath(path);
+		}
+		catch (FileNotFoundException e) { 
+			log.error("The path requested does not exists"); return;
+		}
+		catch (NotDirectoryException e) { 
+			log.error("The path requested does not exists"); return;
+		}
+		try {
+			if (directory.hasFile(name)) {
+				log.error("The file already exists");
+				return;
+			}
+			else {
+				Directory newDirectory = new Directory(name, getFileId(), new DateTime(), 11111111, getRootUser(), (Directory) directory);
+			}
+		} catch (UnsupportedOperationException e){
+			log.error("The path requested does not exists");
+			return;		
+		}
+	}*/
 }

@@ -10,7 +10,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 
 public class Directory extends Directory_Base {
     
-    public Directory(String name, Integer id, DateTime modification, Integer permissions, pt.tecnico.myDrive.domain.User owner, pt.tecnico.myDrive.domain.Directory father) {
+    public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) {
         init(name, id, modification, permissions, owner);
         this.setDir(father);
     }
@@ -27,13 +27,13 @@ public class Directory extends Directory_Base {
     	throw new FileNotFoundException();
     }
     
-   /* FIX ME */ 
+   /* FIXME */ 
    
     public Directory getDirectory(String fileName) {
     	for(File file: getFilesSet())
     		if(file.getName().equals(fileName) &&  file.getClass() == Directory.class)
     			return (Directory) file;
-    	return null;
+    	return null; //FIXME
     }
     
     @Override
@@ -54,6 +54,17 @@ public class Directory extends Directory_Base {
         for (File file: getFilesSet())
             filesElement.addContent(file.xmlExport());
         return element;
-     }
+    }
+    
+    @Override
+    public boolean hasFile(String fileName) throws UnsupportedOperationException {
+    	try {
+    		getFile(fileName);
+    	} catch (FileNotFoundException e) {
+    		return false;
+    	}
+    	return true;
+    }
+    
 }
 
