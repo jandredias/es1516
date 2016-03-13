@@ -212,6 +212,14 @@ public class MyDriveApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		try {
+			md.addUser("miguel",null,null,null);
+		} catch (InvalidUsernameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		try {
 			String folder = "/home";
 			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -229,7 +237,7 @@ public class MyDriveApplication {
 		}
 		
 		//10
-		/* FIXME not Solved yet
+		/* FIXME not Solved yet 
 		try {
 			System.out.println("Deleting /home/miguel");
 			md.deleteFile("/home/miguel");
