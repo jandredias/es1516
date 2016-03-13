@@ -67,10 +67,10 @@ public class Directory extends Directory_Base {
     }
     
     public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
-        if (hasContact(fileToBeAdded.getName()))
+        if (hasFile(fileToBeAdded.getName()))
             throw new NameAlreadyExistsException(contactToBeAdded.getName());
 
-        super.addFile(fileToBeAdded);
+        super.addFiles(fileToBeAdded);
     }
 }
 
