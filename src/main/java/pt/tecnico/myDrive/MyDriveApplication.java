@@ -75,8 +75,7 @@ public class MyDriveApplication {
 		//3
 		try {
 			System.out.println("File contents: " + md.getFileContents("/home/README"));
-		} catch (FileNotFoundException | NotDirectoryException e) {
-			// TODO Auto-generated catch block
+		} catch (FileNotFoundException | NotDirectoryException | UnsupportedOperationException e) {
 			log.debug("Caught exception while obtaining file contents");
 			e.printStackTrace();
 		}
@@ -219,6 +218,14 @@ public class MyDriveApplication {
 		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+		
+		// 11
+		try {
+			md.getFileContents(usr);
+			log.error("Should have thrown exception");
+		} catch (UnsupportedOperationException e) {
+			log.debug("Thrown exception when trying to get the contents of a directory (expected)");
 		}
 		
 		//10
