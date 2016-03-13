@@ -135,9 +135,21 @@ public class MyDrive extends MyDrive_Base {
     //TODO
     //Import Directories
     for(Element dir : e.getChildren("directory")){
-        Directory parent = (Directory) this.getFileFromPath(dir.getAttribute("parent").getValue());
-        User owner = null;//FIXME
-        parent.addFiles(new Directory(dir, parent, owner));
+      String path = "/";
+      String[] parts = dir.getAttribute("path").getValue().split("/");
+      for(int i = 0; i < parts.length -1 ; i++)
+        path += parts[i];
+        log.trace(path);
+        Directory parent = (Directory) this.getFileFromPath(path);
+        User owner = getUserByUsername(dir.getAttribute("owner").getValue());
+        log.trace("PARENT: " + parent.getPath());
+        log.trace("OWNER: " + owner.getUsername());
+        try{
+          parent.getFile(dir.getAttribute("name").getValue());
+
+        }catch(FileNotFoundException es){
+          parent.addFiles(new Directory(dir, parent, owner));
+        }
     }
   }
 

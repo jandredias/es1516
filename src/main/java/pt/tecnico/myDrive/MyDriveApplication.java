@@ -31,10 +31,8 @@ public class MyDriveApplication {
   public static void main(String[] args) throws IOException {
     //TODO
     try {
-	  setup();
-      xmlPrint();
-
       for (String s: args) xmlScan(new File(s));
+      setup();
       xmlPrint();
     } finally { FenixFramework.shutdown(); }
 
@@ -218,18 +216,8 @@ public class MyDriveApplication {
 	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}    
-	
-	try {
-		md.addUser("miguel",null,null,null);
-	} catch (InvalidUsernameException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (UsernameAlreadyInUseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
 	}
-	
+
 	try {
 		md.addUser("miguel",null,null,null);
 	} catch (InvalidUsernameException e) {
@@ -240,7 +228,17 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 
-	
+	try {
+		md.addUser("miguel",null,null,null);
+	} catch (InvalidUsernameException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (UsernameAlreadyInUseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+
 	try {
 		String folder = "/home";
 		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -248,7 +246,7 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	
+
 	// 11
 	try {
 		md.getFileContents(usr);
@@ -256,9 +254,9 @@ public class MyDriveApplication {
 	} catch (UnsupportedOperationException e) {
 		log.debug("Thrown exception when trying to get the contents of a directory (expected)");
 	}
-	
+
 	//10
-	/* FIXME not Solved yet 
+	/* FIXME not Solved yet
 	try {
 		System.out.println("Deleting /home/miguel");
 		md.deleteFile("/home/miguel");
@@ -276,7 +274,7 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-     
+
  }
 
 /*

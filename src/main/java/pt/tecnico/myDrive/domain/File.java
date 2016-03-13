@@ -67,7 +67,7 @@ public class File extends File_Base {
     element.setAttribute("id",getId().toString());
     element.setAttribute("modification",getModification().toString());//TODO
     element.setAttribute("permissions",Integer.toString(getPermissions()));
-    element.setAttribute("owner",getOwner().getName());
+    element.setAttribute("owner",getOwner().getUsername());
     element.setAttribute("path",getPath());
     array.add(element);
     return array;
