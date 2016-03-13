@@ -39,6 +39,20 @@ public class Directory extends Directory_Base {
    */
   public void isParentable() throws NotDirectoryException{}
 
+  /**
+   * Checks if file exists on Files set and Adds it
+   *
+   * @param File
+   * @throws FileAlreadyExistsException
+   */
+  public void addChildFile(File f) throws FileAlreadyExistsException {
+    try{
+      getFile(f.getName());
+    }catch(FileNotFoundException e){
+      addFiles(f);
+    }
+  }
+
   public void accept(Visitor visitor) throws UnsupportedOperationException {
     visitor.visitDirectory(this);
   }

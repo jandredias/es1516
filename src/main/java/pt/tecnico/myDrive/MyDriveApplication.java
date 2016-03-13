@@ -26,7 +26,6 @@ import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
-
 public class MyDriveApplication {
   static final Logger log = LogManager.getRootLogger();
 
@@ -43,8 +42,7 @@ public class MyDriveApplication {
   @Atomic
   public static void init() {
     log.trace("Init: " + FenixFramework.getDomainRoot());
-    //MyDrive.getInstance().cleanup();
-    MyDrive.getInstance();
+    MyDrive.getInstance().cleanup();
   }
 
   @Atomic
@@ -306,16 +304,14 @@ public static void xmlScan(File file) {
   } catch(JDOMException | IOException e) {
     e.printStackTrace();
   } catch(InvalidUsernameException e){
-    e.printStackTrace();
     //TODO
   } catch(FileNotFoundException e){
-    e.printStackTrace();
     //TODO
   } catch(NotDirectoryException e) {
-    e.printStackTrace();
     //TODO
   } catch(NoSuchUserException e) {
-    e.printStackTrace();
+    //TODO
+  }catch(FileAlreadyExistsException e){
     //TODO
   }
 

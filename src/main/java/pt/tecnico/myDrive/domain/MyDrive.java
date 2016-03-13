@@ -18,6 +18,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -94,7 +95,9 @@ public class MyDrive extends MyDrive_Base {
    * Clean database
    */
   public void cleanup(){
-    //TODO
+	  for (User user : getUsersSet()) {
+		  user.remove();
+	  }
   }
 
   /**
@@ -104,7 +107,7 @@ public class MyDrive extends MyDrive_Base {
    */
   public void xmlImport(Element e)
     throws InvalidUsernameException, FileNotFoundException,
-    NotDirectoryException, NoSuchUserException {
+    NotDirectoryException, NoSuchUserException, FileAlreadyExistsException {
     Element root = e.getChild("root");
     if(root != null){
       log.trace("Adding root to filesystem");
@@ -147,7 +150,7 @@ public class MyDrive extends MyDrive_Base {
           parent.getFile(dir.getAttribute("name").getValue());
 
         }catch(FileNotFoundException es){
-          parent.addFiles(new Directory(dir, parent, owner));
+          parent.addChildFile(new Directory(dir, parent, owner));
         }
     }
   }
@@ -181,7 +184,7 @@ public class MyDrive extends MyDrive_Base {
   public void addUser(String username) throws InvalidUsernameException, UsernameAlreadyInUseException{
 	  addUser(username, username, username, 11110000);
   }
-  
+
   private void addUser(String username, String pwd, String name, Integer permissions)
     throws InvalidUsernameException, UsernameAlreadyInUseException {
     if(username != null && username != "" && StringUtils.isAlphanumeric(username)){
