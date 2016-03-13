@@ -222,6 +222,7 @@ public class MyDriveApplication {
 		}
 		
 		//10
+		/* FIXME not Solved yet
 		try {
 			System.out.println("Deleting /home/miguel");
 			md.deleteFile("/home/miguel");
@@ -231,7 +232,7 @@ public class MyDriveApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
     }
     
     public static void xmlPrint() {
