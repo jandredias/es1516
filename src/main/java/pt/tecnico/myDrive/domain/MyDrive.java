@@ -92,7 +92,9 @@ public class MyDrive extends MyDrive_Base {
    * Clean database
    */
   public void cleanup(){
-    //TODO
+	  for (User user : getUsersSet()) {
+		  user.remove();
+	  }
   }
 
   /**

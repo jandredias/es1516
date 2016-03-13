@@ -32,4 +32,8 @@ public class User extends User_Base {
      	
      	return element;
     }
+
+	public void remove() {
+		
+	}
 }
