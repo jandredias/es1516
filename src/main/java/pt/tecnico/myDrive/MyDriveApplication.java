@@ -35,7 +35,6 @@ public class MyDriveApplication {
       xmlPrint();
 
       for (String s: args) xmlScan(new File(s));
-      xmlPrint();
     } finally { FenixFramework.shutdown(); }
 
   }
@@ -221,7 +220,7 @@ public class MyDriveApplication {
 	}    
 	
 	try {
-		md.addUser("miguel",null,null,null);
+		md.addUser("miguel");
 	} catch (InvalidUsernameException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -231,13 +230,12 @@ public class MyDriveApplication {
 	}
 	
 	try {
-		md.addUser("miguel",null,null,null);
+		md.addUser("miguel");
 	} catch (InvalidUsernameException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	} catch (UsernameAlreadyInUseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		System.out.println("ERROR (EXPECTED & INTENDED): duplicate user miguel");
 	}
 
 	
@@ -269,14 +267,7 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
-	try {
-		md.addUser("miguel",null,null,null);
-		System.out.println("EROOR !!! FIXME !!! SHOULD HAVE THROWN EXCEPTION DUPLICATE USER");
-	} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-     
+
  }
 
 /*

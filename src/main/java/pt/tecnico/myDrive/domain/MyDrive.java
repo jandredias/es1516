@@ -44,9 +44,6 @@ public class MyDrive extends MyDrive_Base {
     this.setRootDirectory(rootDirectory);
 
     incrementFileId();
-    new Directory("root",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
-
-    incrementFileId();
     Directory homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
 
     incrementFileId();
@@ -167,7 +164,11 @@ public class MyDrive extends MyDrive_Base {
     return null;
   }
 
-  public void addUser(String username, String pwd, String name, Integer permissions)
+  public void addUser(String username) throws InvalidUsernameException, UsernameAlreadyInUseException{
+	  addUser(username, username, username, 11110000);
+  }
+  
+  private void addUser(String username, String pwd, String name, Integer permissions)
     throws InvalidUsernameException, UsernameAlreadyInUseException {
     if(username != null && username != "" && StringUtils.isAlphanumeric(username)){
 
@@ -176,16 +177,16 @@ public class MyDrive extends MyDrive_Base {
 
       Directory rootDir = this.getRootDirectory();
       User rootUser = this.getRootUser();
-      File home;
+      Directory home;
       try {
         home = rootDir.getDirectory("home");
       }
       catch (FileNotFoundException e){
         this.incrementFileId();
-        home = new Directory("home",getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser,rootDir);
+        home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
       }
       this.incrementFileId();
-      Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, (Directory) home);
+      Directory userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
       User newUser;
       if(pwd == null || name == null || permissions == null){
         newUser = new User(username, userHome);
