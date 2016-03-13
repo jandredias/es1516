@@ -40,18 +40,46 @@ public class MyDrive extends MyDrive_Base {
     Root root = new Root();
     this.addUsers(root);
 
-    Directory rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
+    Directory rootDirectory;
+	try {
+		rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
+		incrementFileId();
+	} catch (FileAlreadyExistsException e) {
+		rootDirectory = this.getRootDirectory();
+		//Root Exists no need to recreate it
+	}
     rootDirectory.setDir(rootDirectory);
     this.setRootDirectory(rootDirectory);
 
-    incrementFileId();
-    Directory homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+    Directory homeFolder;
+	try {
+		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+		incrementFileId();
+	} catch (FileAlreadyExistsException e) {
+		try {
+			homeFolder = rootDirectory.getDirectory("home");
+		} catch (FileNotFoundException e1) { 
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+	}
 
-    incrementFileId();
-    Directory home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+    Directory home_root;
+	try {
+		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+		incrementFileId();
+	} catch (FileAlreadyExistsException e) {
+		try {
+			home_root = rootDirectory.getDirectory("root");
+		} catch (FileNotFoundException e1) { 
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+	}
 
     root.setUsersHome(home_root);
-
   }
 
   public Directory getDirectoryFromPath(String path)
@@ -197,18 +225,40 @@ public class MyDrive extends MyDrive_Base {
         home = rootDir.getDirectory("home");
       }
       catch (FileNotFoundException e){
-        this.incrementFileId();
-        home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
+        try {
+			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
+			this.incrementFileId();
+		} catch (FileAlreadyExistsException e1) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
       }
-      this.incrementFileId();
-      Directory userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
+      
+      Directory userHome = null;
       User newUser;
-      if(pwd == null || name == null || permissions == null){
-        newUser = new User(username, userHome);
+
+      try {
+		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
+		this.incrementFileId();
+		
+      } catch (FileAlreadyExistsException e) {
+    	try {
+			userHome = home.getDirectory(username);
+		} catch (FileNotFoundException e1) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return;
+		}
+      } finally {
+	    if(pwd == null || name == null || permissions == null){
+	      newUser = new User(username, userHome);
+	    }
+	    else{
+	       newUser = new User(username, pwd, name, permissions, userHome);
+	    }
       }
-      else{
-        newUser = new User(username, pwd, name, permissions, userHome);
-      }
+      
       userHome.setOwner(newUser);
       userHome.setOwnerHome(newUser);
       this.addUsers(newUser);

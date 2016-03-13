@@ -57,21 +57,60 @@ public class MyDriveApplication {
     try {
       homeDir = rootDir.getDirectory("home");
     } catch (FileNotFoundException e2) {
-      // TODO Auto-generated catch block
-      homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+      try {
+		homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		md.incrementFileId();
+      } catch (FileAlreadyExistsException e) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+      }
       return;
     };
-    md.incrementFileId();
-    PlainFile file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores");
-    homeDir.addFiles(file);
-
+    try {
+		PlainFile file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
+		md.incrementFileId();
+	} catch (FileAlreadyExistsException e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	}
+    
     //2
+    Directory usr;
+	try {
+		usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		md.incrementFileId();
+	} catch (FileAlreadyExistsException e2) {
+		try {
+			usr = rootDir.getDirectory("usr");
+		} catch (FileNotFoundException e) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+		
+	}
+    Directory local;
+	try {
+		local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
+		md.incrementFileId();
+	} catch (FileAlreadyExistsException e2) {
+		try {
+			local = rootDir.getDirectory("local");
+		} catch (FileNotFoundException e) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+	}
+	
+    try {
+		new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
+	} catch (FileAlreadyExistsException e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	}
     md.incrementFileId();
-    Directory usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-    md.incrementFileId();
-    Directory local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
-    md.incrementFileId();
-    new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 
     //3
     try {
@@ -96,8 +135,6 @@ public class MyDriveApplication {
       log.error("The father directory isn't a directory");
     }
 
-    //5 TODO
-    //xmlPrint(); TODO
 
     //6
     try{
@@ -267,53 +304,53 @@ public class MyDriveApplication {
 	*/
  }
 
-/*
-* Prints a XML output to console
-*/
-@Atomic
-public static void xmlPrint() {
-  log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
-  MyDrive md = MyDrive.getInstance();
-  Document doc = md.xmlExport();
-  XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
-  try {
-    xmlOutput.output(doc, new PrintStream(System.out));
-  } catch (IOException e) {
-    System.out.println(e);
-  }
-}
-
-/**
-* Reads a XML file and imports the content to the filesystem
-*
-* @param File
-*/
-@Atomic
-public static void xmlScan(File file) {
-  log.trace("xmlScan: " + FenixFramework.getDomainRoot());
-
-  MyDrive md = MyDrive.getInstance();
-  SAXBuilder builder = new SAXBuilder();
-  try {
-    log.trace("xmlScan: Importing the main document");
-    Document document = (Document)builder.build(file);
-    md.xmlImport(document.getRootElement());
-  } catch(JDOMException | IOException e) {
-    e.printStackTrace();
-  } catch(InvalidUsernameException e){
-    //TODO
-  } catch(FileNotFoundException e){
-    //TODO
-  } catch(NotDirectoryException e) {
-    //TODO
-  } catch(NoSuchUserException e) {
-    //TODO
-  }catch(FileAlreadyExistsException e){
-    //TODO
-  }
-
-  log.trace("End of xmlScan");
-}
-
+	/*
+	* Prints a XML output to console
+	*/
+	@Atomic
+	public static void xmlPrint() {
+	  log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
+	  MyDrive md = MyDrive.getInstance();
+	  Document doc = md.xmlExport();
+	  XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
+	  try {
+	    xmlOutput.output(doc, new PrintStream(System.out));
+	  } catch (IOException e) {
+	    System.out.println(e);
+	  }
+	}
+	
+	/**
+	* Reads a XML file and imports the content to the filesystem
+	*
+	* @param File
+	*/
+	@Atomic
+	public static void xmlScan(File file) {
+	  log.trace("xmlScan: " + FenixFramework.getDomainRoot());
+	
+	  MyDrive md = MyDrive.getInstance();
+	  SAXBuilder builder = new SAXBuilder();
+	  try {
+	    log.trace("xmlScan: Importing the main document");
+	    Document document = (Document)builder.build(file);
+	    md.xmlImport(document.getRootElement());
+	  } catch(JDOMException | IOException e) {
+	    e.printStackTrace();
+	  } catch(InvalidUsernameException e){
+	    //TODO
+	  } catch(FileNotFoundException e){
+	    //TODO
+	  } catch(NotDirectoryException e) {
+	    //TODO
+	  } catch(NoSuchUserException e) {
+	    //TODO
+	  }catch(FileAlreadyExistsException e){
+	    //TODO
+	  }
+	
+	  log.trace("End of xmlScan");
+	}
+	
 
 }
