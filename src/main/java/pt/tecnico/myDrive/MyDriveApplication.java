@@ -14,11 +14,13 @@ import org.joda.time.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();
@@ -26,29 +28,26 @@ public class MyDriveApplication {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		try {
-			if(args.length==0){
-				
-			}
-			else{
-				for (String s: args) xmlScan(new File(s));
-			}
-		    setup();
-		    
+			setup();
+		    for (String s: args) xmlScan(new File(s));
+		    xmlPrint();
 		} finally { FenixFramework.shutdown(); }
 	
 	}
 	
-	
-   /* public static void init() {
+	@Atomic
+    public static void init() {
         log.trace("Init: " + FenixFramework.getDomainRoot());
-	MyDrive.getInstance().cleanup();
-    }*/
+//      MyDrive.getInstance().cleanup(); FIXME
+        MyDrive.getInstance();
+    }
 
    
     public static void setup() { 
 	    log.trace("Setup: " + FenixFramework.getDomainRoot());
 	    
 		MyDrive md = MyDrive.getInstance();
+		//System.out.println(md.toString());
 		//1
 		User rootUsr = md.getRootUser();
 		Directory rootDir = md.getRootDirectory();
@@ -72,7 +71,7 @@ public class MyDriveApplication {
 		md.incrementFileId();
 		Directory local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
 		md.incrementFileId();
-		Directory v = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
+		Directory bin = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 		
 		//3
 		System.out.println(file.getContent());
@@ -110,15 +109,13 @@ public class MyDriveApplication {
 		}	
 		
 		//7 
-		dir = homeDir;
-		ListDirVisitor v = new ListDirVisitor();
-		try{
-			dir.accept(v);
-		} catch (pt.tecnico.myDrive.exception.UnsupportedOperationException e) {
+		try {
+			System.out.println("Directory Listing: " + md.listDir("/home/README"));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 			// TODO Auto-generated catch block
-			log.debug("UnsupportedOperationException: " + e.getMessage());
+			e1.printStackTrace();
 		}
-		System.out.println("Directory Listing: " + v.getFileNames());
+		
         
     }
     

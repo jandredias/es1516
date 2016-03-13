@@ -32,12 +32,22 @@ public class MyDrive extends MyDrive_Base {
 	
     private MyDrive() {
     	setRoot(FenixFramework.getDomainRoot());
-    	//FIXME 
-    	/*
-    	 * Create / folder
-    	 * Create root?
-    	 
-    	 * */
+    	
+    	Root root = new Root();
+    	this.addUsers(root);
+    	incrementFileId();
+    	Directory rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
+    	this.setRootDirectory(rootDirectory);
+    	rootDirectory.setDir(rootDirectory);
+    	incrementFileId();
+    	new Directory("root",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+    	incrementFileId();
+    	Directory homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+    	incrementFileId();
+    	Directory home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+    	
+    	root.setUsersHome(home_root);
+ 
     }
     
     public File getFileFromPath(String path) throws FileNotFoundException, NotDirectoryException {
@@ -54,6 +64,7 @@ public class MyDrive extends MyDrive_Base {
     	return pieces;
     }
 	
+    //FIXME return root
 	public User getRootUser() {
 		Directory directory = getRootDirectory();
 		User root = directory.getOwner();
