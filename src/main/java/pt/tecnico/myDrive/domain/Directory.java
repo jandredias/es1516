@@ -39,6 +39,7 @@ public class Directory extends Directory_Base {
     @Override
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
     	if(getFilesSet().isEmpty()){
+    		//TODO if has user cannot delete without deleting the user too 
     		super.deleteFile();
     	}
     	else{

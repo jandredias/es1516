@@ -19,6 +19,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
@@ -54,24 +55,22 @@ public class MyDriveApplication {
 		Directory homeDir;
 		try {
 			homeDir = rootDir.getDirectory("home");
-		} catch (pt.tecnico.myDrive.exception.FileNotFoundException e) {
-			md.incrementFileId();
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
 			homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		}
-		
-		Directory dir = homeDir;
+			return;
+		};
 		md.incrementFileId();
 		PlainFile file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores");
-		dir.addFiles(file);
+		homeDir.addFiles(file);
 		
 		//2
-		dir = md.getRootDirectory();
 		md.incrementFileId();
-		Directory usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, dir);
+		Directory usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		md.incrementFileId();
 		Directory local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
 		md.incrementFileId();
-		Directory bin = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
+		new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 		
 		//3
 		try {
@@ -96,8 +95,8 @@ public class MyDriveApplication {
 			//Should never occur
 			log.error("The father directory isn't a directory");
 		}		
-		//5
-		//xmlPrint();
+		//5 TODO
+		//xmlPrint(); TODO
 		
 		//6
 		try{
@@ -116,33 +115,147 @@ public class MyDriveApplication {
 		
 		//7 
 		try {
-			System.out.println("Directory Listing: " + md.listDir("/home"));
+			System.out.println("Directory Listing /home: " + md.listDir("/home"));
 		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		
+		//TODO EXTRA WORK.. probably delete from this point onwards 
+		//8 
+		try {
+			System.out.println("Directory Listing /: " + md.listDir("/"));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//9
+		System.out.println("Deleting /usr");
+		try {
+			md.deleteFile("/usr");
+		} catch (DirectoryIsNotEmptyException e) {
+			System.out.println("ERROR: Directory not empty");
+		} catch (NotDirectoryException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//7 
+		try {
+			String folder = "/";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+		//7 
+		try {
+			String folder = "/usr";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			String folder = "/usr/";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+		//10
+		try {
+			System.out.println("Deleting /usr/local");
+			md.deleteFile("/usr/local");
+		} catch (DirectoryIsNotEmptyException e) {
+			System.out.println("ERROR: Directory not empty");
+		} catch (NotDirectoryException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//7 
+		try {
+			String folder = "/usr";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			String folder = "/usr/local";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			System.out.println("ERROR EXPECTED: FileNotFound : " + "/usr/local");
+		}
+		//10
+		try {
+			System.out.println("Deleting /usr");
+			md.deleteFile("/usr");
+		} catch (DirectoryIsNotEmptyException e) {
+			System.out.println("ERROR: Directory not empty");
+		} catch (NotDirectoryException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			String folder = "/";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}    
+		
+		try {
+			md.addUser("miguel",null,null,null);
+		} catch (InvalidUsernameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			String folder = "/home";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//10
+		try {
+			System.out.println("Deleting /home/miguel");
+			md.deleteFile("/home/miguel");
+		} catch (DirectoryIsNotEmptyException e) {
+			System.out.println("ERROR: Directory not empty");
+		} catch (NotDirectoryException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
     }
     
     public static void xmlPrint() {
         log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
         Document doc = MyDrive.getInstance().xmlExport();
         XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
-	try {
-		xmlOutput.output(doc, new PrintStream(System.out));
-	} catch (IOException e) { System.out.println(e); }
+        try {
+        	xmlOutput.output(doc, new PrintStream(System.out));
+        } catch (IOException e) { 
+        	System.out.println(e); 
+        }
     }
     
-    public static void xmlScan(File file) { } /* FIX ME
+    public static void xmlScan(File file) { 
     	log.trace("xmlScan: " + FenixFramework.getDomainRoot());
     	MyDrive md = MyDrive.getInstance();
     	SAXBuilder builder = new SAXBuilder();
     	try {
     		Document document = (Document)builder.build(file);
-    		md.xmlImport(document.getRootElement()); NO IMPORT METHOD IN MYDRIVE
+    		//FIXME md.xmlImport(document.getRootElement()); NO IMPORT METHOD IN MYDRIVE
     	} catch (JDOMException | IOException e) {
     		e.printStackTrace();
     	}
-    }*/
+    }
 
 
 }

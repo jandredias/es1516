@@ -66,7 +66,7 @@ public class MyDrive extends MyDrive_Base {
 
     private ArrayList<String> splitString(String s){
     	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(s.split("/")));
-    	if (pieces.get(0).equals(""))
+    	if (pieces.size() > 0 && pieces.get(0).equals(""))
             pieces.remove(0);
     	return pieces;
     }
@@ -152,32 +152,4 @@ public class MyDrive extends MyDrive_Base {
 	public void deleteFile (String path) throws NotDirectoryException, DirectoryIsNotEmptyException, FileNotFoundException{
 		getFileFromPath(path).deleteFile();
 	}
-	/*
-	public void createDirectory(String path, String name) { 
-		File directory;
-		try {
-			 directory = getFileFromPath(path);
-		}
-		catch (FileNotFoundException e) { 
-			log.error("The path requested does not exists"); return;
-		}
-		catch (NotDirectoryException e) { 
-			log.error("The path requested does not exists"); return;
-		}
-		try {
-			if (directory.hasFile(name)) {
-				log.error("The file already exists");
-				return;
-			}
-			else {
-		    	this.incrementFileId(); 
-				Directory newDirectory = new Directory(name, getFileId(), new DateTime(), 11111111, getRootUser(), (Directory) directory);
-			}
-		} catch (UnsupportedOperationException e){
-			log.error("The path requested does not exists");
-			return;		
-		}
-	}*/
-	
-	
 }
