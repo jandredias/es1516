@@ -14,15 +14,19 @@ public class Directory extends Directory_Base {
   public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) throws FileAlreadyExistsException {
 	    init(name, id, modification, permissions, owner, father);
   }
-  public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
+  
+  private Directory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
 	        setName(name);
 	        setId(id);
 	        setModification(modification);
 	        setPermissions(permissions);
 	        setOwner(owner);
 	        setDir(this);
-}
-
+  }
+  
+  public static Directory createRootDirectory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
+	  		return new Directory(name, id,modification, permissions, owner);
+  }
   /**
    * Constructor that is used to import Directory from a XML Element
    *

@@ -43,7 +43,7 @@ public class MyDrive extends MyDrive_Base {
     log.trace("Root");
 
     Directory rootDirectory;
-	rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root);
+	rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
 	incrementFileId();
     this.setRootDirectory(rootDirectory);
 
