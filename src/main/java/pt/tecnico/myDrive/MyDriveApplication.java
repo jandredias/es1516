@@ -24,7 +24,7 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 public class MyDriveApplication {
   static final Logger log = LogManager.getRootLogger();
 
@@ -302,16 +302,14 @@ public static void xmlScan(File file) {
   } catch(JDOMException | IOException e) {
     e.printStackTrace();
   } catch(InvalidUsernameException e){
-    e.printStackTrace();
     //TODO
   } catch(FileNotFoundException e){
-    e.printStackTrace();
     //TODO
   } catch(NotDirectoryException e) {
-    e.printStackTrace();
     //TODO
   } catch(NoSuchUserException e) {
-    e.printStackTrace();
+    //TODO
+  }catch(FileAlreadyExistsException e){
     //TODO
   }
 
