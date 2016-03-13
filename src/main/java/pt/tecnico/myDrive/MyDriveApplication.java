@@ -25,6 +25,7 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+
 public class MyDriveApplication {
   static final Logger log = LogManager.getRootLogger();
 
@@ -46,6 +47,7 @@ public class MyDriveApplication {
 
   @Atomic
   public static void setup() {
+	  teste_tiago();
     log.trace("Setup: " + FenixFramework.getDomainRoot());
 
     MyDrive md = MyDrive.getInstance();
@@ -302,6 +304,7 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
+	
  }
 
 	/*
@@ -351,6 +354,129 @@ public class MyDriveApplication {
 	
 	  log.trace("End of xmlScan");
 	}
-	
 
-}
+	public static void teste_tiago(){
+		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+		MyDrive md = MyDrive.getInstance();
+		Directory rootDir = md.getRootDirectory();
+		User rootUsr = md.getRootUser();
+		
+		Directory olaDir;
+		try {
+			olaDir = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+			md.incrementFileId();
+		} catch (FileAlreadyExistsException e2) {
+			try {
+				olaDir = rootDir.getDirectory("ola12345678");
+				md.incrementFileId();
+			} catch (FileNotFoundException e) {
+				/* Impossible case */ 
+				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+				return; 
+			}
+		}
+		
+		PlainFile file = null;
+		try {
+			file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, rootUsr, "cenas", olaDir);
+			md.incrementFileId();
+		} catch (FileAlreadyExistsException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		try{
+			md.deleteFile("/");
+			}
+			catch (FileNotFoundException e) {
+				log.debug("Couldn't find /");
+			}
+			catch (DirectoryIsNotEmptyException e){
+				log.debug("This should not occur, / is empty");
+			}
+			catch (NotDirectoryException e) {
+				e.printStackTrace();
+			}
+		
+		try {
+			String folder = "/";
+			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try{
+			olaDir.addFile(file);
+		}
+		catch (FileAlreadyExistsException e){
+			log.debug("Trying to add file that already exists");
+		}
+		try{
+		md.deleteFile("/ola12345678");
+		}
+		catch (FileNotFoundException e) {
+			log.debug("Couldn't find ola12345678");
+		}
+		catch (DirectoryIsNotEmptyException e){
+			log.debug("This should occur, ola12345678 is not empty");
+		}
+		catch (NotDirectoryException e) {
+			e.printStackTrace();
+		}
+		
+		try{
+			md.deleteFile("/ola12345678/README");
+			}
+			catch (FileNotFoundException e) {
+				log.debug("Couldn't find readme");
+			}
+			catch (DirectoryIsNotEmptyException e){
+				log.debug("This shouldn't occur, readme is a file");
+			}
+			catch (NotDirectoryException e) {
+				e.printStackTrace();
+			}
+		Directory olaDir1 = null;
+		try {
+			olaDir1 = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		} catch (FileAlreadyExistsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try{
+			olaDir.addFile(olaDir1);
+			}
+			catch (FileAlreadyExistsException e){
+				log.debug("Trying to add file that already exists");
+			}
+		
+		try{
+			md.deleteFile("/ola12345678/ola12345678");
+			}
+			catch (FileNotFoundException e) {
+				log.debug("Couldn't find /ola12345678/ola12345678");
+			}
+			catch (DirectoryIsNotEmptyException e){
+				log.debug("This should not occur, /ola12345678/ola12345678 is empty");
+			}
+			catch (NotDirectoryException e) {
+				e.printStackTrace();
+			}
+		try{
+			md.deleteFile("ola12345678/ola12345678");
+			}
+			catch (FileNotFoundException e) {
+				log.debug("This should occur, doesn't have /");
+			}
+			catch (DirectoryIsNotEmptyException e){
+				log.debug("This shouldn't occur, ola12345678/ola12345678");
+			}
+			catch (NotDirectoryException e) {
+				e.printStackTrace();
+			}
+		
+		
+		
+		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+	  }
+	}

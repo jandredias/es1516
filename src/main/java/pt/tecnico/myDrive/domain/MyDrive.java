@@ -95,6 +95,8 @@ public class MyDrive extends MyDrive_Base {
   }
 
   public File getFileFromPath(String path) throws FileNotFoundException, NotDirectoryException {
+	if(!(path.charAt(0) == '/'))
+		throw new FileNotFoundException();
     ArrayList<String> pieces = splitString(path);
     File currentFile = getRootDirectory();
     for(String currentPiece: pieces){
