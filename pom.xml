@@ -18,7 +18,7 @@
     <developers>
       <developer>
         <id>ist75741</id>
-	<name>jandredias</name> 
+	<name>jandredias</name>
 	<email>j.andre.dias@tecnico.ulisboa.pt</email>
 	<organization>es16 g05al</organization>
 	<roles>
@@ -174,7 +174,7 @@
               </execution>
             </executions>
             <configuration>
-    	      <mainClass>pt.tecnico.mydrive.MyDriveApplication</mainClass> <!-- FIXME -->
+    	      <mainClass>pt.tecnico.myDrive.MyDriveApplication</mainClass> <!-- FIXME -->
               <killAfter>-1</killAfter>
                 </configuration>
           </plugin>
@@ -187,7 +187,7 @@
              <configuration>
 		 <names>false</names>
 		 <outputDirectory>info</outputDirectory>
-		 <url>http://yuml.me/diagram/scruffy;dir:lr/class/</url> 
+		 <url>http://yuml.me/diagram/scruffy;dir:lr/class/</url>
              </configuration>
              <executions>
                <execution>

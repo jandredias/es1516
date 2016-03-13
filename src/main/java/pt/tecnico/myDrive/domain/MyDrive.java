@@ -78,15 +78,22 @@ public class MyDrive extends MyDrive_Base {
     	if(username != null && username != "" && StringUtils.isAlphanumeric(username)){
     		Directory rootDir = this.getRootDirectory();
         	User rootUser = this.getRootUser();
+        	File home;
+        	try {
+        		home = rootDir.getDirectory("home");
+        	}
+        	catch (FileNotFoundException e){
+            	this.incrementFileId();
+        		home = new Directory("home",getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser,rootDir);
+        	}
         	this.incrementFileId();
-        	Directory home = rootDir.getDirectory("home"); 
-        	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
+        	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, (Directory) home);
         	User newUser;
         	if(pwd == null || name == null || permissions == null){
         		newUser = new User(username, userHome);
         	}
         	else{
-        		 newUser = new User(username, pwd, name, permissions, userHome);
+        		newUser = new User(username, pwd, name, permissions, userHome);
         	}
         	userHome.setOwner(newUser);
         	userHome.setOwnerHome(newUser);
@@ -124,20 +131,8 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	
-	public void DeleteFile (String path){
-		try{
-			getFileFromPath(path).deleteFile();
-		}
-		catch (DirectoryIsNotEmptyException e) {
-			log.error("Cannot delete a non-empty folder");
-		}
-		catch (FileNotFoundException e){
-			log.error("The file doesn't exist");
-		}
-		catch (NotDirectoryException e) {
-			//Should never occur
-			log.error("The father directory isn't a directory");
-		}
+	public void deleteFile (String path) throws NotDirectoryException, DirectoryIsNotEmptyException, FileNotFoundException{
+		getFileFromPath(path).deleteFile();
 	}
 	/*
 	public void createDirectory(String path, String name) { 

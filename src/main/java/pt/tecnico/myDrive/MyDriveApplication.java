@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 
 public class MyDriveApplication {
@@ -50,9 +51,17 @@ public class MyDriveApplication {
 		MyDrive md = MyDrive.getInstance();
 		//1
 		User rootUsr = md.getRootUser();
-		Directory dir = md.getRootDirectory();
-		dir = dir.getDirectory("home");
-		md.setFileId(md.getFileId()+1);
+		Directory rootDir = md.getRootDirectory();
+		Directory homeDir;
+		try {
+			homeDir = rootDir.getDirectory("home");
+		} catch (pt.tecnico.myDrive.exception.FileNotFoundException e) {
+			md.incrementFileId();
+			homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		}
+		
+		Directory dir = homeDir;
+		md.incrementFileId();
 		PlainFile file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores");
 		dir.addFiles(file);
 		
@@ -63,30 +72,45 @@ public class MyDriveApplication {
 		md.incrementFileId();
 		Directory local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
 		md.incrementFileId();
-		Directory bin = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
+		Directory v = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 		
 		//3
 		System.out.println(file.getContent());
 		
 		//4
 		try{
-			bin.deleteFile();
+			md.deleteFile("/usr/local/bin");
 		}
-		catch (NotDirectoryException e){ log.trace("NotDirectoryException " + e.getMessage());}
-		catch (DirectoryIsNotEmptyException e){ log.trace("DirectoryIsNotEmptyException " + e.getMessage());}
-		
-		//5 TODO
+		catch (DirectoryIsNotEmptyException e) {
+			log.error("Cannot delete a non-empty folder");
+		}
+		catch (FileNotFoundException e){
+			log.error("The file doesn't exist");
+		}
+		catch (NotDirectoryException e) {
+			//Should never occur
+			log.error("The father directory isn't a directory");
+		}		
+		//5
 		xmlPrint();
 		
 		//6
 		try{
-			file.deleteFile();
+			md.deleteFile("/home/README");
 		}
-		catch (NotDirectoryException e){ log.trace("NotDirectoryException " + e.getMessage());}
-		catch (DirectoryIsNotEmptyException e){ log.trace("DirectoryIsNotEmptyException " + e.getMessage());}
+		catch (DirectoryIsNotEmptyException e) {
+			log.error("Cannot delete a non-empty folder");
+		}
+		catch (FileNotFoundException e){
+			log.error("The file doesn't exist");
+		}
+		catch (NotDirectoryException e) {
+			//Should never occur
+			log.error("The father directory isn't a directory");
+		}	
 		
 		//7 
-		dir = md.getRootDirectory().getDirectory("home");
+		dir = homeDir;
 		ListDirVisitor v = new ListDirVisitor();
 		try{
 			dir.accept(v);

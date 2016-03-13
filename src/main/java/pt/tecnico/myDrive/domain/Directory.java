@@ -29,11 +29,12 @@ public class Directory extends Directory_Base {
     }
 
     //FIXME
-    public Directory getDirectory(String fileName) {
-    	for(File file: getFilesSet())
-    		if(file.getName().equals(fileName) &&  file.getClass() == Directory.class)
-    			return (Directory) file;
-    	return null; //FIXME
+    public Directory getDirectory(String fileName) throws FileNotFoundException {
+    	File directory = getFile(fileName);
+    	if (directory.getClass() == Directory.class)
+    		return (Directory) directory;
+    	else
+    		throw new FileNotFoundException();
     }
     
     @Override
