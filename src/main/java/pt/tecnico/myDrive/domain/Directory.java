@@ -25,7 +25,7 @@ public class Directory extends Directory_Base {
     	for(File file: getFilesSet())
     		if(file.getName().equals(fileName))
     			return file;
-    	throw new FileNotFoundException();
+    	throw new FileNotFoundException("File: " + fileName + " not Found");
     }
 
     public Directory getDirectory(String fileName) throws FileNotFoundException {
@@ -33,19 +33,13 @@ public class Directory extends Directory_Base {
     	if (directory.getClass() == Directory.class)
     		return (Directory) directory;
     	else
-    		throw new FileNotFoundException();
+    		throw new FileNotFoundException("Directory: " + fileName + " not Found");
     }
     
     @Override
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
     	if(getFilesSet().isEmpty()){
-        	this.setDir(null);
-        	this.setOwner(null);
-        	deleteDomainObject();
-        	/*TODO changed this from comment
-        	Directory parentDirectory = getDir();
-        	parentDirectory.removeFiles(this);
-        	*/
+    		super.deleteFile();
     	}
     	else{
         	throw new DirectoryIsNotEmptyException();
