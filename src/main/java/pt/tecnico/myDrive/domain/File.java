@@ -58,10 +58,7 @@ public class File extends File_Base {
     	
     	return element;
     }
-    
-    public boolean hasFile(String fileName) throws UnsupportedOperationException {
-    	throw new UnsupportedOperationException();
-    }
+ 
     
 	public void accept(Visitor visitor) throws UnsupportedOperationException {
 		visitor.visitFile(this);

@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
 public class Directory extends Directory_Base {
     
@@ -56,8 +57,7 @@ public class Directory extends Directory_Base {
         return element;
     }
     
-    @Override
-    public boolean hasFile(String fileName) throws UnsupportedOperationException {
+    public boolean hasFile(String fileName)  {
     	try {
     		getFile(fileName);
     	} catch (FileNotFoundException e) {
@@ -68,7 +68,7 @@ public class Directory extends Directory_Base {
     
     public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
         if (hasFile(fileToBeAdded.getName()))
-            throw new NameAlreadyExistsException(contactToBeAdded.getName());
+            throw new FileAlreadyExistsException(fileToBeAdded.getName());
 
         super.addFiles(fileToBeAdded);
     }
