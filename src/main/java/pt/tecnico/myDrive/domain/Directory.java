@@ -73,9 +73,10 @@ public class Directory extends Directory_Base {
   public ArrayList<Element> xmlExport() {
     ArrayList<Element> array = super.xmlExport();
     array.get(0).setName("directory");
-    for(File file: getFilesSet())
-      for(Element el : file.xmlExport())
-        array.add(el);
+    for(File file : getFilesSet())
+      if(!file.getName().equals("/"))
+        for(Element el : file.xmlExport())
+          array.add(el);
     return array;
   }
 

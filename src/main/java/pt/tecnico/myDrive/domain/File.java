@@ -43,9 +43,7 @@ public class File extends File_Base {
 
   public String getPath() {
     String myName = getName();
-    if (myName.equals("/") )
-    // when the strings match
-    return myName;
+    if (myName.equals("/")) return myName;
     else {
       Directory fatherDir = getDir();
       if(fatherDir.getPath().equals("/")) return fatherDir.getPath() + myName;
@@ -70,6 +68,7 @@ public class File extends File_Base {
     element.setAttribute("modification",getModification().toString());//TODO
     element.setAttribute("permissions",Integer.toString(getPermissions()));
     element.setAttribute("owner",getOwner().getName());
+    element.setAttribute("path",getPath());
     array.add(element);
     return array;
   }
