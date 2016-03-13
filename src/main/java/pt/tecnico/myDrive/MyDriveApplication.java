@@ -31,10 +31,12 @@ public class MyDriveApplication {
   public static void main(String[] args) throws IOException {
     //TODO
     try {
-	  setup();
-      xmlPrint();
-
       for (String s: args) xmlScan(new File(s));
+<<<<<<< HEAD
+=======
+      setup();
+      xmlPrint();
+>>>>>>> 9fcfa2892965fe6d8b33931b336ee244a268d41f
     } finally { FenixFramework.shutdown(); }
 
   }
@@ -217,8 +219,8 @@ public class MyDriveApplication {
 	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}    
-	
+	}
+
 	try {
 		md.addUser("miguel");
 	} catch (InvalidUsernameException e) {
@@ -228,7 +230,7 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	
+
 	try {
 		md.addUser("miguel");
 	} catch (InvalidUsernameException e) {
@@ -238,7 +240,7 @@ public class MyDriveApplication {
 		System.out.println("ERROR (EXPECTED & INTENDED): duplicate user miguel");
 	}
 
-	
+
 	try {
 		String folder = "/home";
 		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -246,7 +248,7 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	
+
 	// 11
 	try {
 		md.getFileContents(usr);
@@ -254,9 +256,9 @@ public class MyDriveApplication {
 	} catch (UnsupportedOperationException e) {
 		log.debug("Thrown exception when trying to get the contents of a directory (expected)");
 	}
-	
+
 	//10
-	/* FIXME not Solved yet 
+	/* FIXME not Solved yet
 	try {
 		System.out.println("Deleting /home/miguel");
 		md.deleteFile("/home/miguel");
@@ -267,7 +269,6 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
-
  }
 
 /*

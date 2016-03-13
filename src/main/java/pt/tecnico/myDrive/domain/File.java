@@ -7,7 +7,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
-
+import java.util.ArrayList;
 
 public class File extends File_Base {
 
@@ -43,9 +43,7 @@ public class File extends File_Base {
 
   public String getPath() {
     String myName = getName();
-    if (myName.equals("/") )
-    // when the strings match
-    return myName;
+    if (myName.equals("/")) return myName;
     else {
       Directory fatherDir = getDir();
       if(fatherDir.getPath().equals("/")) return fatherDir.getPath() + myName;
@@ -61,16 +59,18 @@ public class File extends File_Base {
     deleteDomainObject();
   }
 
-  public Element xmlExport() {
+  public ArrayList<Element> xmlExport() {
+    ArrayList<Element> array = new ArrayList<Element>();
     Element element = new Element("file");
 
     element.setAttribute("name",getName());
     element.setAttribute("id",getId().toString());
     element.setAttribute("modification",getModification().toString());//TODO
     element.setAttribute("permissions",Integer.toString(getPermissions()));
-    element.setAttribute("owner",getOwner().getName());
-
-    return element;
+    element.setAttribute("owner",getOwner().getUsername());
+    element.setAttribute("path",getPath());
+    array.add(element);
+    return array;
   }
 
 

@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
-
   public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) {
     init(name, id, modification, permissions, owner);
     this.setDir(father);
@@ -70,17 +70,14 @@ public class Directory extends Directory_Base {
 
   }
 
-  public Element xmlExport() {
-    Element element = super.xmlExport();
-
-    element.setName("directory");
-
-    Element filesElement = new Element("files");
-    element.addContent(filesElement);
-
-    for (File file: getFilesSet())
-    filesElement.addContent(file.xmlExport());
-    return element;
+  public ArrayList<Element> xmlExport() {
+    ArrayList<Element> array = super.xmlExport();
+    array.get(0).setName("directory");
+    for(File file : getFilesSet())
+      if(!file.getName().equals("/"))
+        for(Element el : file.xmlExport())
+          array.add(el);
+    return array;
   }
 
   public boolean hasFile(String fileName)  {
