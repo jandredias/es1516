@@ -24,14 +24,17 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
+
 public class MyDriveApplication {
   static final Logger log = LogManager.getRootLogger();
 
   public static void main(String[] args) throws IOException {
     //TODO
     try {
+	  setup();
+      xmlPrint();
+
       for (String s: args) xmlScan(new File(s));
-      //setup();
       xmlPrint();
     } finally { FenixFramework.shutdown(); }
 
@@ -208,44 +211,73 @@ public class MyDriveApplication {
       e1.printStackTrace();
     }
 
-    try {
-      md.addUser("miguel",null,null,null);
-    } catch (InvalidUsernameException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }catch(UsernameAlreadyInUseException e){
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    try {
-      String folder = "/home";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
 
-    // 11
-    try {
-      md.getFileContents(usr);
-      log.error("Should have thrown exception");
-    } catch (UnsupportedOperationException e) {
-      log.debug("Thrown exception when trying to get the contents of a directory (expected)");
-    }
+	try {
+		String folder = "/";
+		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}    
+	
+	try {
+		md.addUser("miguel",null,null,null);
+	} catch (InvalidUsernameException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (UsernameAlreadyInUseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	try {
+		md.addUser("miguel",null,null,null);
+	} catch (InvalidUsernameException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (UsernameAlreadyInUseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
-    //10
-    /* FIXME not Solved yet
-    try {
-    System.out.println("Deleting /home/miguel");
-    md.deleteFile("/home/miguel");
-  } catch (DirectoryIsNotEmptyException e) {
-  System.out.println("ERROR: Directory not empty");
-} catch (NotDirectoryException | FileNotFoundException e) {
-// TODO Auto-generated catch block
-e.printStackTrace();
-}
-*/
-}
+	
+	try {
+		String folder = "/home";
+		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	
+	// 11
+	try {
+		md.getFileContents(usr);
+		log.error("Should have thrown exception");
+	} catch (UnsupportedOperationException e) {
+		log.debug("Thrown exception when trying to get the contents of a directory (expected)");
+	}
+	
+	//10
+	/* FIXME not Solved yet 
+	try {
+		System.out.println("Deleting /home/miguel");
+		md.deleteFile("/home/miguel");
+	} catch (DirectoryIsNotEmptyException e) {
+		System.out.println("ERROR: Directory not empty");
+	} catch (NotDirectoryException | FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	*/
+	try {
+		md.addUser("miguel",null,null,null);
+		System.out.println("EROOR !!! FIXME !!! SHOULD HAVE THROWN EXCEPTION DUPLICATE USER");
+	} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+     
+ }
 
 /*
 * Prints a XML output to console
