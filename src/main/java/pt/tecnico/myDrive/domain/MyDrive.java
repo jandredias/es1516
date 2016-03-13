@@ -115,21 +115,42 @@ public class MyDrive extends MyDrive_Base {
 		return visitor.getFileNames();
 	}
 	
-	//FIXME
-	public String getFileContents(File file) throws UnsupportedOperationException {
-		if(!(file instanceof PlainFile)){
-			throw new UnsupportedOperationException("Can only get the contents of a plain file");
+	//TODO: Remove
+//	public String getFileContents(File file) throws UnsupportedOperationException {
+//		if(!(file instanceof PlainFile)){
+//			throw new UnsupportedOperationException("Can only get the contents of a plain file");
+//		}
+//		PlainFile plainFile = (PlainFile) file;
+//		return plainFile.getContent();
+//	}
+//	
+//	
+//	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
+//		File file = getFileFromPath(filePath);
+//		return getFileContents(file);
+//	}
+
+	public String getFileContents(File file){
+		FileContentsVisitor visitor = new FileContentsVisitor();
+		try {
+			file.accept(visitor);
+		} catch (UnsupportedOperationException e) {
+			log.debug("Caught exception while obtaining file contents");
+			e.printStackTrace();
 		}
-		PlainFile plainFile = (PlainFile) file;
-		return plainFile.getContent();
+		return visitor.getFileContents();
 	}
 	
-	
-	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
-		File file = getFileFromPath(filePath);
+	public String getFileContents(String filePath) {
+		File file = null;
+		try {
+			file = getFileFromPath(filePath);
+		} catch (FileNotFoundException | NotDirectoryException e) {
+			log.debug("Caught exception while obtaining file contents");
+			e.printStackTrace();
+		}
 		return getFileContents(file);
 	}
-
 	
 	public void deleteFile (String path) throws NotDirectoryException, DirectoryIsNotEmptyException, FileNotFoundException{
 		getFileFromPath(path).deleteFile();
