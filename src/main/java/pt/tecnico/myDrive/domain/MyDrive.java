@@ -153,14 +153,14 @@ public class MyDrive extends MyDrive_Base {
 	}
 	
 	public String getFileContents(String filePath) {
-		File file = null;
 		try {
-			file = getFileFromPath(filePath);
+			File file = getFileFromPath(filePath);
+			return getFileContents(file);
 		} catch (FileNotFoundException | NotDirectoryException e) {
 			log.debug("Caught exception while obtaining file contents");
 			e.printStackTrace();
 		}
-		return getFileContents(file);
+		return null;
 	}
 	
 	public void deleteFile (String path) throws NotDirectoryException, DirectoryIsNotEmptyException, FileNotFoundException{
