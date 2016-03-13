@@ -7,7 +7,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
-
+import java.util.ArrayList;
 
 public class File extends File_Base {
 
@@ -61,7 +61,8 @@ public class File extends File_Base {
     deleteDomainObject();
   }
 
-  public Element xmlExport() {
+  public ArrayList<Element> xmlExport() {
+    ArrayList<Element> array = new ArrayList<Element>();
     Element element = new Element("file");
 
     element.setAttribute("name",getName());
@@ -69,8 +70,8 @@ public class File extends File_Base {
     element.setAttribute("modification",getModification().toString());//TODO
     element.setAttribute("permissions",Integer.toString(getPermissions()));
     element.setAttribute("owner",getOwner().getName());
-
-    return element;
+    array.add(element);
+    return array;
   }
 
 

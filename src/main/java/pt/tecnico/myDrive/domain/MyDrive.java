@@ -148,8 +148,8 @@ public class MyDrive extends MyDrive_Base {
     for(User user: getUsersSet())
       element.addContent(user.xmlExport());
 
-    //Directory rootDirectory = getRootDirectory();
-    //element.addContent(rootDirectory.xmlExport());
+    for(Element el : getRootDirectory().xmlExport())
+      element.addContent(el);
 
     return doc;
   }
