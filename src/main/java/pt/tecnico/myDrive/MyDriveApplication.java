@@ -186,7 +186,7 @@ public class MyDriveApplication {
 			String folder = "/usr/local";
 			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
 		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-			System.out.println("ERROR EXPECTED: FileNotFound : " + "/usr/local");
+			System.out.println("ERROR (EXPECTED): FileNotFound : " + "/usr/local");
 		}
 		//10
 		try {
