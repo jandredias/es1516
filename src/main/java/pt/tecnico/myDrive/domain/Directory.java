@@ -10,71 +10,92 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
 public class Directory extends Directory_Base {
-    
-    public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) {
-        init(name, id, modification, permissions, owner);
-        this.setDir(father);
+
+  public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) {
+    init(name, id, modification, permissions, owner);
+    this.setDir(father);
+  }
+
+  /**
+   * Constructor that is used to import Directory from a XML Element
+   *
+   * @param XML Element Node
+   * @param Directory parent
+   */
+  public Directory(Element e, Directory parent, User owner){
+    this(
+      e.getAttribute("name").getValue(),
+      Integer.parseInt(e.getAttribute("id").getValue()),
+      DateTime.parse(e.getAttribute("modification").getValue()),
+      Integer.parseInt(e.getAttribute("permissions").getValue()),
+      owner,
+      parent);
+  }
+
+  /**
+   * Throws exception when File cannot be a parent File
+   *
+   * @throws NotDirectoryException
+   */
+  public void isParentable() throws NotDirectoryException{}
+
+  public void accept(Visitor visitor) throws UnsupportedOperationException {
+    visitor.visitDirectory(this);
+  }
+
+  public File getFile(String fileName) throws FileNotFoundException {
+    for(File file: getFilesSet())
+    if(file.getName().equals(fileName))
+    return file;
+    throw new FileNotFoundException("File: " + fileName + " not Found");
+  }
+
+  public Directory getDirectory(String fileName) throws FileNotFoundException {
+    File directory = getFile(fileName);
+    if (directory.getClass() == Directory.class)
+    return (Directory) directory;
+    else
+    throw new FileNotFoundException("Directory: " + fileName + " not Found");
+  }
+
+  @Override
+  public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
+    if(getFilesSet().isEmpty()){
+      //TODO if has user cannot delete without deleting the user too
+      super.deleteFile();
+    }
+    else{
+      throw new DirectoryIsNotEmptyException();
     }
 
+  }
 
-    public void accept(Visitor visitor) throws UnsupportedOperationException {
-    	visitor.visitDirectory(this);
-    }
+  public Element xmlExport() {
+    Element element = super.xmlExport();
 
-    public File getFile(String fileName) throws FileNotFoundException {
-    	for(File file: getFilesSet())
-    		if(file.getName().equals(fileName))
-    			return file;
-    	throw new FileNotFoundException("File: " + fileName + " not Found");
-    }
+    element.setName("directory");
 
-    public Directory getDirectory(String fileName) throws FileNotFoundException {
-    	File directory = getFile(fileName);
-    	if (directory.getClass() == Directory.class)
-    		return (Directory) directory;
-    	else
-    		throw new FileNotFoundException("Directory: " + fileName + " not Found");
-    }
-    
-    @Override
-    public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
-    	if(getFilesSet().isEmpty()){
-    		//TODO if has user cannot delete without deleting the user too 
-    		super.deleteFile();
-    	}
-    	else{
-        	throw new DirectoryIsNotEmptyException();
-    	}
+    Element filesElement = new Element("files");
+    element.addContent(filesElement);
 
-    }
-    
-    public Element xmlExport() {
-     	Element element = super.xmlExport();
-     	
-     	element.setName("directory");
-     	
-     	Element filesElement = new Element("files");
-        element.addContent(filesElement);
+    for (File file: getFilesSet())
+    filesElement.addContent(file.xmlExport());
+    return element;
+  }
 
-        for (File file: getFilesSet())
-            filesElement.addContent(file.xmlExport());
-        return element;
+  public boolean hasFile(String fileName)  {
+    try {
+      getFile(fileName);
+    } catch (FileNotFoundException e) {
+      return false;
     }
-    
-    public boolean hasFile(String fileName)  {
-    	try {
-    		getFile(fileName);
-    	} catch (FileNotFoundException e) {
-    		return false;
-    	}
-    	return true;
-    }
-    
-    public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
-        if (hasFile(fileToBeAdded.getName()))
-            throw new FileAlreadyExistsException(fileToBeAdded.getName());
+    return true;
+  }
 
-        super.addFiles(fileToBeAdded);
-    }
+  public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
+    if (hasFile(fileToBeAdded.getName()))
+    throw new FileAlreadyExistsException(fileToBeAdded.getName());
+
+    super.addFiles(fileToBeAdded);
+  }
 }
-
