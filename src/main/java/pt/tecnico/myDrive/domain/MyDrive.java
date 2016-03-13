@@ -201,8 +201,8 @@ public class MyDrive extends MyDrive_Base {
       throw new InvalidUsernameException(
         "Username must be not empty and can only have numbers and letters");
     }
-
   }
+
   public void incrementFileId(){
     this.setFileId(getFileId()+1);
   }
@@ -217,20 +217,14 @@ public class MyDrive extends MyDrive_Base {
     return visitor.getFileNames();
   }
 
-  public String getFileContents(File file){
-    FileContentsVisitor visitor = new FileContentsVisitor();
-    try {
-      file.accept(visitor);
-    } catch (UnsupportedOperationException e) {
-      log.debug("Caught exception while obtaining file contents");
-      e.printStackTrace();
-    }
-    return visitor.getFileContents();
+  public String getFileContents(File file) throws UnsupportedOperationException{
+		FileContentsVisitor visitor = new FileContentsVisitor();
+		file.accept(visitor);
+		return visitor.getFileContents();
   }
-
   public String getFileContents(String filePath)
     throws FileNotFoundException,
-    NotDirectoryException {
+    NotDirectoryException, UnsupportedOperationException {
     File file = getFileFromPath(filePath);
     return getFileContents(file);
   }

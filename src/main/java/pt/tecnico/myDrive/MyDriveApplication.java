@@ -76,8 +76,7 @@ public class MyDriveApplication {
     //3
     try {
       System.out.println("File contents: " + md.getFileContents("/home/README"));
-    } catch (FileNotFoundException | NotDirectoryException e) {
-      // TODO Auto-generated catch block
+    } catch (FileNotFoundException | NotDirectoryException | UnsupportedOperationException e) {
       log.debug("Caught exception while obtaining file contents");
       e.printStackTrace();
     }
@@ -96,6 +95,7 @@ public class MyDriveApplication {
       //Should never occur
       log.error("The father directory isn't a directory");
     }
+
     //5 TODO
     //xmlPrint(); TODO
 
@@ -213,7 +213,7 @@ public class MyDriveApplication {
     } catch (InvalidUsernameException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    } catch (UsernameAlreadyInUseException e) {
+    }catch(UsernameAlreadyInUseException e){
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
@@ -225,69 +225,77 @@ public class MyDriveApplication {
       e1.printStackTrace();
     }
 
+    // 11
+    try {
+      md.getFileContents(usr);
+      log.error("Should have thrown exception");
+    } catch (UnsupportedOperationException e) {
+      log.debug("Thrown exception when trying to get the contents of a directory (expected)");
+    }
+
     //10
     /* FIXME not Solved yet
     try {
     System.out.println("Deleting /home/miguel");
     md.deleteFile("/home/miguel");
-    } catch (DirectoryIsNotEmptyException e) {
-    System.out.println("ERROR: Directory not empty");
-  } catch (NotDirectoryException | FileNotFoundException e) {
-  // TODO Auto-generated catch block
-  e.printStackTrace();
+  } catch (DirectoryIsNotEmptyException e) {
+  System.out.println("ERROR: Directory not empty");
+} catch (NotDirectoryException | FileNotFoundException e) {
+// TODO Auto-generated catch block
+e.printStackTrace();
+}
+*/
+}
+
+/*
+* Prints a XML output to console
+*/
+@Atomic
+public static void xmlPrint() {
+  log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
+  MyDrive md = MyDrive.getInstance();
+  Document doc = md.xmlExport();
+  XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
+  try {
+    xmlOutput.output(doc, new PrintStream(System.out));
+  } catch (IOException e) {
+    System.out.println(e);
   }
-  */
+}
+
+/**
+* Reads a XML file and imports the content to the filesystem
+*
+* @param File
+*/
+@Atomic
+public static void xmlScan(File file) {
+  log.trace("xmlScan: " + FenixFramework.getDomainRoot());
+
+  MyDrive md = MyDrive.getInstance();
+  SAXBuilder builder = new SAXBuilder();
+  try {
+    log.trace("xmlScan: Importing the main document");
+    Document document = (Document)builder.build(file);
+    md.xmlImport(document.getRootElement());
+  } catch(JDOMException | IOException e) {
+    e.printStackTrace();
+  } catch(InvalidUsernameException e){
+    e.printStackTrace();
+    //TODO
+  } catch(FileNotFoundException e){
+    e.printStackTrace();
+    //TODO
+  } catch(NotDirectoryException e) {
+    e.printStackTrace();
+    //TODO
+  } catch(NoSuchUserException e) {
+    e.printStackTrace();
+    //TODO
   }
 
-  /*
-   * Prints a XML output to console
-   */
-   @Atomic
-   public static void xmlPrint() {
-    log.trace("xmlPrint: " + FenixFramework.getDomainRoot());
-    MyDrive md = MyDrive.getInstance();
-    Document doc = md.xmlExport();
-    XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
-    try {
-      xmlOutput.output(doc, new PrintStream(System.out));
-    } catch (IOException e) {
-      System.out.println(e);
-    }
-  }
-
-  /**
-   * Reads a XML file and imports the content to the filesystem
-   *
-   * @param File
-   */
-  @Atomic
-  public static void xmlScan(File file) {
-    log.trace("xmlScan: " + FenixFramework.getDomainRoot());
-
-    MyDrive md = MyDrive.getInstance();
-    SAXBuilder builder = new SAXBuilder();
-    try {
-      log.trace("xmlScan: Importing the main document");
-      Document document = (Document)builder.build(file);
-      md.xmlImport(document.getRootElement());
-    } catch(JDOMException | IOException e) {
-      e.printStackTrace();
-    } catch(InvalidUsernameException e){
-      e.printStackTrace();
-      //TODO
-    } catch(FileNotFoundException e){
-      e.printStackTrace();
-      //TODO
-    } catch(NotDirectoryException e) {
-      e.printStackTrace();
-      //TODO
-    } catch(NoSuchUserException e) {
-      e.printStackTrace();
-      //TODO
-    }
-
-    log.trace("End of xmlScan");
-  }
+  log.trace("End of xmlScan");
+}
 
 
 }
