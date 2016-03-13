@@ -99,7 +99,7 @@ public class MyDrive extends MyDrive_Base {
   }
 
   /**
-   * Receives the root element of a XML document and imports the filesystem
+   * Receives the root element of a XML document and imports the file system
    *
    * @param Element
    */
