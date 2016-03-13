@@ -75,7 +75,7 @@ relation DirectoryHasFiles {
 
 relation MyDriveHasRoot {
   MyDrive playsRole myDrive {
-    multiplicity 1..1;
+    multiplicity 0..1;
   }
   Directory playsRole rootDirectory {
     multiplicity 1..1;

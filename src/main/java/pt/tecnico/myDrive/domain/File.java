@@ -43,8 +43,14 @@ public class File extends File_Base {
     }
     
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
+    	/*
     	Directory parentDirectory = getDir();
     	parentDirectory.removeFiles(this);
+    	*/
+    	this.setDir(null);
+    	this.setOwner(null);
+
+    	deleteDomainObject();
     }
     
     public Element xmlExport() {

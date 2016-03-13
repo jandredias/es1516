@@ -30,7 +30,7 @@ public class MyDriveApplication {
 		try {
 			setup();
 		    for (String s: args) xmlScan(new File(s));
-		    xmlPrint();
+		    //xmlPrint();
 		} finally { FenixFramework.shutdown(); }
 	
 	}
@@ -42,13 +42,13 @@ public class MyDriveApplication {
         MyDrive.getInstance();
     }
 
-   
+	@Atomic
     public static void setup() { 
 	    log.trace("Setup: " + FenixFramework.getDomainRoot());
 	    
 		MyDrive md = MyDrive.getInstance();
-		//System.out.println(md.toString());
 		//1
+		
 		User rootUsr = md.getRootUser();
 		Directory rootDir = md.getRootDirectory();
 		Directory homeDir;
@@ -74,7 +74,13 @@ public class MyDriveApplication {
 		Directory bin = new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 		
 		//3
-		System.out.println(file.getContent());
+		try {
+			System.out.println("File contents: " + md.getFileContents("/home/README"));
+		} catch (FileNotFoundException | NotDirectoryException e) {
+			// TODO Auto-generated catch block
+			log.debug("Caught exception while obtaining file contents");
+			e.printStackTrace();
+		}
 		
 		//4
 		try{
@@ -91,7 +97,7 @@ public class MyDriveApplication {
 			log.error("The father directory isn't a directory");
 		}		
 		//5
-		xmlPrint();
+		//xmlPrint();
 		
 		//6
 		try{
@@ -110,13 +116,11 @@ public class MyDriveApplication {
 		
 		//7 
 		try {
-			System.out.println("Directory Listing: " + md.listDir("/home/README"));
+			System.out.println("Directory Listing: " + md.listDir("/home"));
 		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-        
     }
     
     public static void xmlPrint() {

@@ -28,7 +28,6 @@ public class Directory extends Directory_Base {
     	throw new FileNotFoundException();
     }
 
-    //FIXME
     public Directory getDirectory(String fileName) throws FileNotFoundException {
     	File directory = getFile(fileName);
     	if (directory.getClass() == Directory.class)
@@ -40,8 +39,13 @@ public class Directory extends Directory_Base {
     @Override
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
     	if(getFilesSet().isEmpty()){
+        	this.setDir(null);
+        	this.setOwner(null);
+        	deleteDomainObject();
+        	/*TODO changed this from comment
         	Directory parentDirectory = getDir();
         	parentDirectory.removeFiles(this);
+        	*/
     	}
     	else{
         	throw new DirectoryIsNotEmptyException();

@@ -33,16 +33,21 @@ public class MyDrive extends MyDrive_Base {
     private MyDrive() {
     	setRoot(FenixFramework.getDomainRoot());
     	
+    	this.setFileId(0);
+    	
     	Root root = new Root();
     	this.addUsers(root);
-    	incrementFileId();
+    	
     	Directory rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
-    	this.setRootDirectory(rootDirectory);
     	rootDirectory.setDir(rootDirectory);
+    	this.setRootDirectory(rootDirectory);
+    	
     	incrementFileId();
     	new Directory("root",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+
     	incrementFileId();
     	Directory homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+    	
     	incrementFileId();
     	Directory home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
     	
@@ -61,6 +66,8 @@ public class MyDrive extends MyDrive_Base {
 
     private ArrayList<String> splitString(String s){
     	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(s.split("/")));
+    	if (pieces.get(0).equals(""))
+            pieces.remove(0);
     	return pieces;
     }
 	
@@ -125,21 +132,6 @@ public class MyDrive extends MyDrive_Base {
 		file.accept(visitor);
 		return visitor.getFileNames();
 	}
-	
-	//TODO: Remove
-//	public String getFileContents(File file) throws UnsupportedOperationException {
-//		if(!(file instanceof PlainFile)){
-//			throw new UnsupportedOperationException("Can only get the contents of a plain file");
-//		}
-//		PlainFile plainFile = (PlainFile) file;
-//		return plainFile.getContent();
-//	}
-//	
-//	
-//	public String getFileContents(String filePath) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
-//		File file = getFileFromPath(filePath);
-//		return getFileContents(file);
-//	}
 
 	public String getFileContents(File file){
 		FileContentsVisitor visitor = new FileContentsVisitor();
@@ -152,15 +144,9 @@ public class MyDrive extends MyDrive_Base {
 		return visitor.getFileContents();
 	}
 	
-	public String getFileContents(String filePath) {
-		try {
-			File file = getFileFromPath(filePath);
-			return getFileContents(file);
-		} catch (FileNotFoundException | NotDirectoryException e) {
-			log.debug("Caught exception while obtaining file contents");
-			e.printStackTrace();
-		}
-		return null;
+	public String getFileContents(String filePath) throws FileNotFoundException, NotDirectoryException {
+		File file = getFileFromPath(filePath);
+		return getFileContents(file);
 	}
 	
 	public void deleteFile (String path) throws NotDirectoryException, DirectoryIsNotEmptyException, FileNotFoundException{
@@ -192,4 +178,6 @@ public class MyDrive extends MyDrive_Base {
 			return;		
 		}
 	}*/
+	
+	
 }
