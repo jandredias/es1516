@@ -230,7 +230,7 @@ public class MyDrive extends MyDrive_Base {
     return visitor.getFileNames();
   }
 
-  public String getFileContents(File file) throws UnsupportedOperationException{
+  private String getFileContents(File file) throws UnsupportedOperationException{
 		FileContentsVisitor visitor = new FileContentsVisitor();
 		file.accept(visitor);
 		return visitor.getFileContents();

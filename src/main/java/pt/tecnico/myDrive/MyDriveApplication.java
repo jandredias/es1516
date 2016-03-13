@@ -248,10 +248,16 @@ public class MyDriveApplication {
 
 	// 11
 	try {
-		md.getFileContents(usr);
+		md.getFileContents("/home");
 		log.error("Should have thrown exception");
 	} catch (UnsupportedOperationException e) {
 		log.debug("Thrown exception when trying to get the contents of a directory (expected)");
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (NotDirectoryException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
 
 	//10
