@@ -31,10 +31,13 @@ public class MyDriveApplication {
 
   public static void main(String[] args) throws IOException {
     //TODO
+	
     try {
       for (String s: args) xmlScan(new File(s));
+
       setup();
       xmlPrint();
+//      teste_tiago();
     } finally { FenixFramework.shutdown(); }
 
   }
@@ -47,10 +50,11 @@ public class MyDriveApplication {
 
   @Atomic
   public static void setup() {
-	  teste_tiago();
     log.trace("Setup: " + FenixFramework.getDomainRoot());
 
     MyDrive md = MyDrive.getInstance();
+    log.trace("Setup: Create MyDrive");
+
     //1
 
     User rootUsr = md.getRootUser();
@@ -70,7 +74,7 @@ public class MyDriveApplication {
       return;
     };
     try {
-		PlainFile file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
+		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
 		md.incrementFileId();
 	} catch (FileAlreadyExistsException e2) {
 		// TODO Auto-generated catch block

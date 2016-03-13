@@ -27,28 +27,24 @@ public class MyDrive extends MyDrive_Base {
   public static MyDrive getInstance() {
     MyDrive md = FenixFramework.getDomainRoot().getMyDrive();
     if (md != null) return md;
-
+    md = new MyDrive();;
     log.trace("new MyDrive");
-    return new MyDrive();
+
+    return md;
   }
 
   private MyDrive() {
     setRoot(FenixFramework.getDomainRoot());
+    log.trace("FenixRoot");
 
     this.setFileId(0);
-
     Root root = new Root();
     this.addUsers(root);
+    log.trace("Root");
 
     Directory rootDirectory;
-	try {
-		rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
-		incrementFileId();
-	} catch (FileAlreadyExistsException e) {
-		rootDirectory = this.getRootDirectory();
-		//Root Exists no need to recreate it
-	}
-    rootDirectory.setDir(rootDirectory);
+	rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root);
+	incrementFileId();
     this.setRootDirectory(rootDirectory);
 
     Directory homeFolder;
