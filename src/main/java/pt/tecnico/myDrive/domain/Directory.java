@@ -66,5 +66,11 @@ public class Directory extends Directory_Base {
     	return true;
     }
     
+    public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
+        if (hasContact(fileToBeAdded.getName()))
+            throw new NameAlreadyExistsException(contactToBeAdded.getName());
+
+        super.addFile(fileToBeAdded);
+    }
 }
 

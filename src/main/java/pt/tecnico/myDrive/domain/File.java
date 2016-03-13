@@ -54,7 +54,7 @@ public class File extends File_Base {
     	element.setAttribute("id",getId().toString());
     	element.setAttribute("modification",getModification().toString());//TODO
     	element.setAttribute("permissions",Integer.toString(getPermissions()));
-    	element.setAttribute("father-dir",getDir().getPath());
+    	element.setAttribute("owner",getOwner().getName());
     	
     	return element;
     }

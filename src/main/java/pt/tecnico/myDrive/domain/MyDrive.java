@@ -52,7 +52,7 @@ public class MyDrive extends MyDrive_Base {
     	return pieces;
     }
 	
-	private User getRootUser() {
+	public User getRootUser() {
 		Directory directory = getRootDirectory();
 		User root = directory.getOwner();
 		return root;
@@ -75,9 +75,10 @@ public class MyDrive extends MyDrive_Base {
     public void addUser(String username, String pwd, String name, Integer permissions){
     	Directory rootDir = this.getRootDirectory();
     	User rootUser = this.getRootUser();
-    	this.setFileId(getFileId()+1);
+    	this.incrementFileId(); 
     	Directory home = rootDir.getDirectory("home"); 
     	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111, rootUser, home); //TODO not sure 11111111
+
     	User newUser;
     	if(pwd == null || name == null || permissions == null){
     		newUser = new User(username, userHome);
@@ -89,6 +90,9 @@ public class MyDrive extends MyDrive_Base {
     	userHome.setOwnerHome(newUser);
     	this.addUsers(newUser);
     	
+    }
+    public void incrementFileId(){
+    	this.setFileId(getFileId()+1);
     }
 
 	public ArrayList<String> listDir(String path) throws UnsupportedOperationException, FileNotFoundException, NotDirectoryException {
@@ -147,6 +151,7 @@ public class MyDrive extends MyDrive_Base {
 				return;
 			}
 			else {
+		    	this.incrementFileId(); 
 				Directory newDirectory = new Directory(name, getFileId(), new DateTime(), 11111111, getRootUser(), (Directory) directory);
 			}
 		} catch (UnsupportedOperationException e){
