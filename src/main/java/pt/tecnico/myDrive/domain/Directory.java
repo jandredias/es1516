@@ -11,9 +11,8 @@ import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
-  public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) {
-    init(name, id, modification, permissions, owner);
-    this.setDir(father);
+  public Directory(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory father) throws FileAlreadyExistsException {
+	    init(name, id, modification, permissions, owner, father);
   }
 
   /**
@@ -21,8 +20,10 @@ public class Directory extends Directory_Base {
    *
    * @param XML Element Node
    * @param Directory parent
+ * @throws FileAlreadyExistsException 
+ * @throws NumberFormatException 
    */
-  public Directory(Element e, Directory parent, User owner){
+  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileAlreadyExistsException{
     this(
       e.getAttribute("name").getValue(),
       Integer.parseInt(e.getAttribute("id").getValue()),
@@ -38,20 +39,6 @@ public class Directory extends Directory_Base {
    * @throws NotDirectoryException
    */
   public void isParentable() throws NotDirectoryException{}
-
-  /**
-   * Checks if file exists on Files set and Adds it
-   *
-   * @param File
-   * @throws FileAlreadyExistsException
-   */
-  public void addChildFile(File f) throws FileAlreadyExistsException {
-    try{
-      getFile(f.getName());
-    }catch(FileNotFoundException e){
-      addFiles(f);
-    }
-  }
 
   public void accept(Visitor visitor) throws UnsupportedOperationException {
     visitor.visitDirectory(this);
@@ -105,8 +92,30 @@ public class Directory extends Directory_Base {
 
   public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
     if (hasFile(fileToBeAdded.getName()))
-    throw new FileAlreadyExistsException(fileToBeAdded.getName());
+    	throw new FileAlreadyExistsException(fileToBeAdded.getName());
 
     super.addFiles(fileToBeAdded);
   }
+  
+  /**
+   * Checks if file exists on Files set and Adds it
+   *
+   * @param File
+   * @throws FileAlreadyExistsException
+   */
+  public void addChildFile(File f) throws FileAlreadyExistsException {
+    try{
+      getFile(f.getName());
+    }catch(FileNotFoundException e){
+      addFiles(f);
+    }
+  }
+  
+  /*
+  @Override
+  public void addFiles(File fileToBeAdded) throws FileAlreadyExistsException {
+	  if (hasFile(fileToBeAdded.getName()))
+	    	throw new FileAlreadyExistsException(fileToBeAdded.getName());
+	  super.addFiles(fileToBeAdded);
+  }*/
 }
