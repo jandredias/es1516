@@ -27,8 +27,7 @@ public class Directory extends Directory_Base {
     	throw new FileNotFoundException();
     }
     
-   /* FIX ME */ 
-   
+    //FIXME
     public Directory getDirectory(String fileName) {
     	for(File file: getFilesSet())
     		if(file.getName().equals(fileName) &&  file.getClass() == Directory.class)
@@ -38,9 +37,14 @@ public class Directory extends Directory_Base {
     
     @Override
     public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
-    	if(getFilesSet().isEmpty())
-    		super.deleteFile();
-    	throw new DirectoryIsNotEmptyException();
+    	if(getFilesSet().isEmpty()){
+        	Directory parentDirectory = getDir();
+        	parentDirectory.removeFiles(this);
+    	}
+    	else{
+        	throw new DirectoryIsNotEmptyException();
+    	}
+
     }
     
     public Element xmlExport() {

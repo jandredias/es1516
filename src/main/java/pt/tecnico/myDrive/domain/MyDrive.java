@@ -3,6 +3,7 @@ package pt.tecnico.myDrive.domain;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
@@ -14,6 +15,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -72,22 +74,27 @@ public class MyDrive extends MyDrive_Base {
         return doc;
     }
 
-    public void addUser(String username, String pwd, String name, Integer permissions){
-    	Directory rootDir = this.getRootDirectory();
-    	User rootUser = this.getRootUser();
-    	this.incrementFileId();
-    	Directory home = rootDir.getDirectory("home"); 
-    	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
-    	User newUser;
-    	if(pwd == null || name == null || permissions == null){
-    		newUser = new User(username, userHome);
+    public void addUser(String username, String pwd, String name, Integer permissions) throws InvalidUsernameException {
+    	if(username != null && username != "" && StringUtils.isAlphanumeric(username)){
+    		Directory rootDir = this.getRootDirectory();
+        	User rootUser = this.getRootUser();
+        	this.incrementFileId();
+        	Directory home = rootDir.getDirectory("home"); 
+        	Directory userHome = new Directory(username, getFileId(), new DateTime(), 11111111 /* not sure about this*/, rootUser, home);
+        	User newUser;
+        	if(pwd == null || name == null || permissions == null){
+        		newUser = new User(username, userHome);
+        	}
+        	else{
+        		 newUser = new User(username, pwd, name, permissions, userHome);
+        	}
+        	userHome.setOwner(newUser);
+        	userHome.setOwnerHome(newUser);
+        	this.addUsers(newUser);
     	}
     	else{
-    		 newUser = new User(username, pwd, name, permissions, userHome);
+    		throw new InvalidUsernameException("Username must be not empty and can only have numbers and letters"); 
     	}
-    	userHome.setOwner(newUser);
-    	userHome.setOwnerHome(newUser);
-    	this.addUsers(newUser);
     	
     }
     public void incrementFileId(){
