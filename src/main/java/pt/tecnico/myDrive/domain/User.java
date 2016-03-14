@@ -38,7 +38,7 @@ public class User extends User_Base {
      	Element nameElement = new Element("name");
      	nameElement.addContent(getName());
 
-     	Element permissionsElement = new Element("permissions");
+     	Element permissionsElement = new Element("mask");
      	permissionsElement.addContent(Integer.toString(getPermissions()));
 
      	Element homeElement = new Element("home");

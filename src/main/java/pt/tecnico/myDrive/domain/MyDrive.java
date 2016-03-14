@@ -136,7 +136,7 @@ public class MyDrive extends MyDrive_Base {
       rootUser.setName(root.getChild("name").getValue());
       rootUser.setUsername(root.getAttribute("username").getValue());
       rootUser.setPassword(root.getChild("password").getValue());
-      rootUser.setPermissions(Integer.parseInt(root.getChild("permissions").getValue()));
+      rootUser.setPermissions(Integer.parseInt(root.getChild("mask").getValue()));
     }
     for(Element node : e.getChildren("user")){
       log.trace("Adding user to filesystem: " + node.getAttribute("username").getValue());
@@ -145,26 +145,60 @@ public class MyDrive extends MyDrive_Base {
           node.getAttribute("username").getValue(),
           node.getChild("password").getValue(),
           node.getChild("name").getValue(),
-          Integer.parseInt(node.getChild("permissions").getValue())
+          Integer.parseInt(node.getChild("mask").getValue())
         );
       }catch(UsernameAlreadyInUseException ex){ //Update user
         User user = getUserByUsername(node.getAttribute("username").getValue());
         user.setName(node.getChild("name").getValue());
         user.setPassword(node.getChild("password").getValue());
-        user.setPermissions(Integer.parseInt(node.getChild("permissions").getValue()));
-        user.setUsersHome(getDirectoryFromPath(node.getChild("home").getValue()));
+        user.setPermissions(Integer.parseInt(node.getChild("mask").getValue()));
       }
     }
 
     //Import Directories
-    for(Element dir : e.getChildren("directory")){
-        Directory parent = (Directory) this.getFileFromPath(dir.getChild("path").getValue());
-        User owner = getUserByUsername(dir.getChild("owner").getValue());
+    for(Element dir : e.getChildren("dir")){
+
+      String name = dir.getChild("name").getValue();
+      String path = dir.getChild("path").getValue();
+      String ownerUsername = dir.getChild("owner").getValue();
+
+      log.trace("Importing directory " + name + " on " + path);
+
+        Directory parent = (Directory) this.getFileFromPath(path);
+        User owner = getUserByUsername(ownerUsername);
         try{
-          parent.getFile(dir.getAttribute("name").getValue());
+          parent.getFile(name);
         }catch(FileNotFoundException es){
           new Directory(dir, owner, parent);
         }
+    }
+
+    for(Element plain : e.getChildren("plain")){
+      String name = plain.getChild("name").getValue();
+      String path = plain.getChild("path").getValue();
+      String ownerUsername = plain.getChild("owner").getValue();
+      log.trace("Importing plain-file " + name + " on " + path);
+      Directory parent = (Directory) this.getFileFromPath(path);
+      User owner = getUserByUsername(ownerUsername);
+      try{
+        parent.getFile(name);
+      }catch(FileNotFoundException es){
+        new PlainFile(plain, owner, parent);
+      }
+    }
+
+    //Need to repeat this for setting users home correctly
+    for(Element node : e.getChildren("root")){
+      log.trace("Setting user " + node.getAttribute("username").getValue() +
+        " home directory: " + node.getChild("home").getValue());
+        User user = getUserByUsername(node.getAttribute("username").getValue());
+        user.setUsersHome(getDirectoryFromPath(node.getChild("home").getValue()));
+    }
+    for(Element node : e.getChildren("user")){
+      log.trace("Setting user " + node.getAttribute("username").getValue() +
+        " home directory: " + node.getChild("home").getValue());
+        User user = getUserByUsername(node.getAttribute("username").getValue());
+        user.setUsersHome(getDirectoryFromPath(node.getChild("home").getValue()));
     }
   }
 
