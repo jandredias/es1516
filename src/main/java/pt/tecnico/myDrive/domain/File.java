@@ -77,6 +77,10 @@ public class File extends File_Base {
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
     throw new NotDirectoryException(fileName);
   }
+  
+  public File getInnerFile(String fileName) throws NotDirectoryException, FileNotFoundException {
+	    throw new NotDirectoryException(fileName);
+  }
 
   public String getPath() {
 	  String myName = getName();

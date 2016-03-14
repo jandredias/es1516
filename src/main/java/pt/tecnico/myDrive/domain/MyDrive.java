@@ -239,12 +239,12 @@ public class MyDrive extends MyDrive_Base {
 
       log.trace("Importing directory " + name + " on " + path);
 
-        Directory parent = (Directory) this.getFile(path);
+        Directory parent = this.getDirectory(path);
         User owner = getUserByUsername(ownerUsername);
         try{
           parent.getFile(name);
         }catch(FileNotFoundException es){
-          new Directory(dir, owner, parent);
+          parent.addFile("", new Directory(dir, owner, parent));
         }
     }
 

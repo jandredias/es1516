@@ -115,7 +115,7 @@ public class Directory extends Directory_Base {
 
 	public Directory getDirectory(String fileName)
 	throws FileNotFoundException {
-		File directory = getFile(fileName);
+		File directory = getInnerFile(fileName);
 		if (directory.getClass() == Directory.class)
 			return (Directory) directory;
 		else
@@ -147,7 +147,7 @@ public class Directory extends Directory_Base {
 
 	public boolean hasFile(String fileName)  {
 		try {
-		  getFile(fileName);
+		  getInnerFile(fileName);
 		} catch (FileNotFoundException e) {
 		  return false;
 		}
@@ -171,7 +171,7 @@ public class Directory extends Directory_Base {
 	    	pieces.remove(0);
 
 		if (pieces.size() == 1) {
-			File fileToBeDeleted = this.getFile(pieces.get(0));
+			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
 			fileToBeDeleted.deleteFile();
