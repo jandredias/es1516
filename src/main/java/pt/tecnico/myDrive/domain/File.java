@@ -45,23 +45,28 @@ public class File extends File_Base {
 
   protected void init(String name, Integer id , DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileExistsException{
+	
+	setName(name);
 
+	try {
+		parent.addFile("",this);
+	} catch (FileNotFoundException e) {
+		// Impossible condition
+	} catch (FileExistsException e ) {
+		this.deleteDomainObject();
+		throw e;
+	}
+	
 	if( name.equals(".") || name.equals("..") ) {
-//		this.deleteDomainObject();
+		this.deleteDomainObject();
 		throw new FileExistsException(name);
 	}
 
-	setName(name);
     setId(id);
     setModification(modification);
     setPermissions(permissions);
     setOwner(owner);
     
-	try {
-		parent.addFile("",this);
-	} catch (FileNotFoundException e) {
-		// Impossible condition
-	}
 	
   }
 
@@ -78,9 +83,10 @@ public class File extends File_Base {
     throw new NotDirectoryException(fileName);
   }
   
-  public File getInnerFile(String fileName) throws NotDirectoryException, FileNotFoundException {
+  /*
+  public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
 	    throw new NotDirectoryException(fileName);
-  }
+  }*/
 
   public String getPath() {
 	  String myName = getName();

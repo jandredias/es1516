@@ -163,6 +163,8 @@ public class MyDrive extends MyDrive_Base {
    * Get File from a directory
    */
   public File getFile(String path) throws FileNotFoundException {
+	if (path.equals("/"))
+		return getRootDirectory();
     return getRootDirectory().getFile(MyDrive.getSubPath(path));
   }
 
