@@ -248,7 +248,7 @@ public class MyDrive extends MyDrive_Base {
         }
     }
 
-    for(Element plain : e.getChildren("plain")){
+    /*for(Element plain : e.getChildren("plain")){
       String name = plain.getChild("name").getValue();
       String path = plain.getChild("path").getValue();
       String ownerUsername = plain.getChild("owner").getValue();
@@ -286,7 +286,7 @@ public class MyDrive extends MyDrive_Base {
       }catch(FileNotFoundException es){
         new Application(app, owner, parent);
       }
-    }
+    }*/
     //Need to repeat this for setting users home correctly
     for(Element node : e.getChildren("root")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +

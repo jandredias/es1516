@@ -198,13 +198,9 @@ public class Directory extends Directory_Base {
       try{
 			  nextDir = getDirectory(pieces.get(0));
       }catch(FileNotFoundException e){
-        try{
-          nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getOwner(), this);
-          this.addChildFile(nextDir);
+        nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getOwner(), this);
+        this.addChildFile(nextDir);
 
-        }catch(FileExistsException es){
-          //Won't happen
-        }
       }
 
       pieces.remove(0);
