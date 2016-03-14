@@ -39,10 +39,10 @@ public class File extends File_Base {
 
   protected void init(String name, DateTime modification,
 		    Integer permissions, User owner, Directory parent) throws FileExistsException{
-	  
+
 	  init(name, MyDrive.getNewFileId() ,modification,permissions, owner, parent);
   }
-  
+
   protected void init(String name, Integer id , DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileExistsException{
 
@@ -50,7 +50,7 @@ public class File extends File_Base {
 //		this.deleteDomainObject();
 		throw new FileExistsException(name);
 	}
-	  
+
 	setName(name);
     setId(id);
     setModification(modification);
@@ -59,7 +59,7 @@ public class File extends File_Base {
 
 //    	parent.addFile(this);
   }
-  
+
   /**
    * Throws exception when File cannot be a parent File
    *

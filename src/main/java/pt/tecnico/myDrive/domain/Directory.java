@@ -21,7 +21,7 @@ public class Directory extends Directory_Base {
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
-	protected Directory(String name, DateTime modification,
+	public Directory(String name, DateTime modification,
 									Integer permissions, User owner, Directory father)
 									throws FileExistsException {
 	    init(name, modification, permissions, owner, father);
