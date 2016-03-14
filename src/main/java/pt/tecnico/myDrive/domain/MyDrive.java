@@ -345,23 +345,28 @@ public class MyDrive extends MyDrive_Base {
    * @return User
    */
   public void addUser(String username, String password, String name,
-  Integer mask, String home) throws NotDirectoryException{
+  Integer mask, String home) throws NotDirectoryException, InvalidUsernameException,
+  UsernameAlreadyInUseException{
 
     ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(home.split("/")));
     String userHomeName = pieces.get(pieces.size()-1);
 
     Directory rootHome;
     Directory usersHome;
-
     try{
-    rootHome = getDirectory(MyDrive.getPathWithoutFile(home));
-      usersHome = getDirectory(home);
-    }catch(FileNotFoundException e){
-      addFile(MyDrive.getPathWithoutFile(home),
-          new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
-      usersHome = getDirectory(home)
+        rootHome = getDirectory(MyDrive.getPathWithoutFile(home));
+        try{
+          usersHome = getDirectory(home);
+        }catch(FileNotFoundException e){
+          addFile(MyDrive.getPathWithoutFile(home),
+              new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
+          usersHome = getDirectory(home);
+        }
+        this.addUser(username, password, name, mask, usersHome);
+    }catch(FileNotFoundException | FileExistsException e){
+      //won't happen
     }
-    this.addUser(username, password, name, mask, usersHome);
+
   }
 
   public void addUser(String username, String password, String name, Integer mask,
@@ -381,7 +386,8 @@ public class MyDrive extends MyDrive_Base {
   }
 
   public void addUser(String username)
-    throws InvalidUsernameException, UsernameAlreadyInUseException{
+    throws InvalidUsernameException, UsernameAlreadyInUseException,
+    NotDirectoryException{
 	  addUser(username, username, username, 11110000, "/home/" + username);
   }
 
