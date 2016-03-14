@@ -3,7 +3,7 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
 
@@ -11,15 +11,15 @@ public class PlainFile extends PlainFile_Base {
 
     protected PlainFile() { /*for derived classes*/ }
 
-	public PlainFile(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException{
+	public PlainFile(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException{
 		init(name, id, modification, permissions, owner, content, father);
     }
 
-	public PlainFile(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+	public PlainFile(Element xml, User owner, Directory parent) throws FileExistsException {
 		this.xmlImport(xml, owner, parent);
 	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
 		super.xmlImport(xml, owner, parent);
 		this.importContent(xml);
 	}
@@ -28,7 +28,7 @@ public class PlainFile extends PlainFile_Base {
     setContent(xml.getChild("contents").getValue());
   }
 
-	public void init(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException {
+	public void init(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException {
 		super.init(name, id, modification, permissions, owner, father); //File Init
 		this.setContent(content);
 	}

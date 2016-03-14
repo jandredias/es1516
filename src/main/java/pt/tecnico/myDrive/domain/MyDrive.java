@@ -18,7 +18,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -48,7 +48,7 @@ public class MyDrive extends MyDrive_Base {
 	try {
 		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
 		incrementFileId();
-	} catch (FileAlreadyExistsException e) {
+	} catch (FileExistsException e) {
 		try {
 			homeFolder = rootDirectory.getDirectory("home");
 		} catch (FileNotFoundException e1) {
@@ -62,7 +62,7 @@ public class MyDrive extends MyDrive_Base {
   	try {
   		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
   		incrementFileId();
-  	} catch (FileAlreadyExistsException e) {
+  	} catch (FileExistsException e) {
   		try {
   			home_root = rootDirectory.getDirectory("root");
   		} catch (FileNotFoundException e1) {
@@ -128,7 +128,7 @@ public class MyDrive extends MyDrive_Base {
    */
   public void xmlImport(Element e)
     throws InvalidUsernameException, FileNotFoundException,
-    NotDirectoryException, NoSuchUserException, FileAlreadyExistsException {
+    NotDirectoryException, NoSuchUserException, FileExistsException {
     Element root = e.getChild("root");
     if(root != null){
       User rootUser = getRootUser();
@@ -274,7 +274,7 @@ public class MyDrive extends MyDrive_Base {
         try {
 			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
 			this.incrementFileId();
-		} catch (FileAlreadyExistsException e1) {
+		} catch (FileExistsException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 			return;
@@ -288,7 +288,7 @@ public class MyDrive extends MyDrive_Base {
 		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
 		this.incrementFileId();
 
-      } catch (FileAlreadyExistsException e) {
+      } catch (FileExistsException e) {
     	try {
 			userHome = home.getDirectory(username);
 		} catch (FileNotFoundException e1) {

@@ -4,7 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,15 +14,15 @@ public class File extends File_Base {
 
   protected File() { /* for deriver classes */ }
 
-  public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
+  public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException{
     init(name, id, modification, permissions, owner, parent);
   }
 
-  public File(Element xml, User owner, Directory parent) throws FileAlreadyExistsException{
+  public File(Element xml, User owner, Directory parent) throws FileExistsException{
 	  this.xmlImport(xml, owner, parent);
   }
 
-  protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+  protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
 
     Integer id = Integer.parseInt(xml.getAttribute("id").getValue());
     DateTime modification = new DateTime();
@@ -46,13 +46,13 @@ public class File extends File_Base {
   public void isParentable() throws NotDirectoryException{
     throw new NotDirectoryException();
   }
-
+  
   protected void init(String name, Integer id, DateTime modification,
-    Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
+    Integer permissions, User owner, Directory parent) throws FileExistsException{
 
 	if( name.equals(".") || name.equals("..") ) {
 		this.deleteDomainObject();
-		throw new FileAlreadyExistsException(name);
+		throw new FileExistsException(name);
 	}
 	  
 	setName(name);

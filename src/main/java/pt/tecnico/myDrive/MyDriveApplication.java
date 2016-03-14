@@ -18,7 +18,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -69,7 +69,7 @@ public class MyDriveApplication {
       try {
 		homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		md.incrementFileId();
-      } catch (FileAlreadyExistsException e) {
+      } catch (FileExistsException e) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 			return;
@@ -79,7 +79,7 @@ public class MyDriveApplication {
     try {
 		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
 		md.incrementFileId();
-	} catch (FileAlreadyExistsException e2) {
+	} catch (FileExistsException e2) {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();
 	}
@@ -89,7 +89,7 @@ public class MyDriveApplication {
 	try {
 		usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		md.incrementFileId();
-	} catch (FileAlreadyExistsException e2) {
+	} catch (FileExistsException e2) {
 		try {
 			usr = rootDir.getDirectory("usr");
 		} catch (FileNotFoundException e) {
@@ -103,7 +103,7 @@ public class MyDriveApplication {
 	try {
 		local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
 		md.incrementFileId();
-	} catch (FileAlreadyExistsException e2) {
+	} catch (FileExistsException e2) {
 		try {
 			local = rootDir.getDirectory("local");
 		} catch (FileNotFoundException e) {
@@ -115,7 +115,7 @@ public class MyDriveApplication {
 
     try {
 		new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
-	} catch (FileAlreadyExistsException e2) {
+	} catch (FileExistsException e2) {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();
 	}
@@ -334,6 +334,13 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
+	try {
+		String folder = "/home/../home/.";
+		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 	log.debug("Setup Complete");
  }
 
@@ -379,7 +386,7 @@ public class MyDriveApplication {
 	    System.out.println("Only directories can contain another files");
 	  } catch(NoSuchUserException e) {
 	    System.out.println("There is not such a user on XML import file");
-	  }catch(FileAlreadyExistsException e){
+	  }catch(FileExistsException e){
 	    System.out.println("Duplicated file on XML import file");
 	  }
 
@@ -400,7 +407,7 @@ public class MyDriveApplication {
 		  new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		  log.debug(md.listDir("/testDir"));
 
-	  } catch (FileAlreadyExistsException e) {
+	  } catch (FileExistsException e) {
 	    e.printStackTrace();
 	  }
 	  catch (UnsupportedOperationException e) {
@@ -426,7 +433,7 @@ public class MyDriveApplication {
 		try {
 			olaDir = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 			md.incrementFileId();
-		} catch (FileAlreadyExistsException e2) {
+		} catch (FileExistsException e2) {
 			try {
 				olaDir = rootDir.getDirectory("ola12345678");
 				md.incrementFileId();
@@ -441,7 +448,7 @@ public class MyDriveApplication {
 		try {
 			file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, rootUsr, "cenas", olaDir);
 			md.incrementFileId();
-		} catch (FileAlreadyExistsException e2) {
+		} catch (FileExistsException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
@@ -469,7 +476,7 @@ public class MyDriveApplication {
 		try{
 			olaDir.addChildFile(file);
 		}
-		catch (FileAlreadyExistsException e){
+		catch (FileExistsException e){
 			log.debug("Trying to add file that already exists");
 		}
 		try{
@@ -500,14 +507,14 @@ public class MyDriveApplication {
 		Directory olaDir1 = null;
 		try {
 			olaDir1 = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		} catch (FileAlreadyExistsException e1) {
+		} catch (FileExistsException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try{
 			olaDir.addChildFile(olaDir1);
 			}
-			catch (FileAlreadyExistsException e){
+			catch (FileExistsException e){
 				log.debug("Trying to add file that already exists");
 			}
 
