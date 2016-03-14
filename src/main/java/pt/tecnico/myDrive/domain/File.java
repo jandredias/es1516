@@ -50,7 +50,11 @@ public class File extends File_Base {
   protected void init(String name, Integer id, DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
 
-
+	if( name.equals(".") || name.equals("..") ) {
+		this.deleteDomainObject();
+		throw new FileAlreadyExistsException(name);
+	}
+	  
 	setName(name);
     setId(id);
     setModification(modification);

@@ -51,13 +51,13 @@ relation UserHasFiles {
     multiplicity 1..1;
   }
   File playsRole ownedFiles {
-    multiplicity 1..*;
+    multiplicity 0..*;
   }
 }
 
 relation UserHasHome {
   User playsRole ownerHome {
-   multiplicity 0..1;
+   multiplicity 0..*;
   }
   Directory playsRole usersHome {
     multiplicity 1..1;

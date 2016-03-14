@@ -306,7 +306,7 @@ public class MyDrive extends MyDrive_Base {
       }
 
       userHome.setOwner(newUser);
-      userHome.setOwnerHome(newUser);
+      userHome.addOwnerHome(newUser);
       this.addUsers(newUser);
     }
     else{

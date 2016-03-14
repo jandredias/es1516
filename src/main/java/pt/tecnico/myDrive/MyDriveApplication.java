@@ -32,10 +32,10 @@ public class MyDriveApplication {
   public static void main(String[] args) throws IOException {
     //TODO
     try {
-      init();
-      for (String s: args) xmlScan(new File(s));
+      //init();
+      //for (String s: args) xmlScan(new File(s));
 
-      //setup();
+      setup();
       xmlPrint();
       //teste_tiago();
       //listDirectoryTest();

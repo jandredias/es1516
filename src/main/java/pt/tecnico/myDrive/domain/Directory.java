@@ -65,7 +65,8 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
-  public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+  
+  	public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
 		this.xmlImport(xml, owner, parent);
 	}
 
@@ -106,8 +107,7 @@ public class Directory extends Directory_Base {
 	public void deleteFile() throws NotDirectoryException,
 	DirectoryIsNotEmptyException {
 		if(getFilesSet().isEmpty()){
-			User user = getOwnerHome();
-			if( user != null) {
+			for (User user : getOwnerHomeSet()) {
 				Directory newHome = this.getDir();
 				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
 				user.setUsersHome(newHome);
