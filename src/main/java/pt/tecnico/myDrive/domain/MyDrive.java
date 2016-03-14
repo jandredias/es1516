@@ -55,14 +55,14 @@ public class MyDrive extends MyDrive_Base {
 
     Directory rootDirectory;
     rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
-    incrementFileId();
+    getNewFileId();
 
     this.setRootDirectory(rootDirectory);
 
     Directory homeFolder;
 	try {
 		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
-		incrementFileId();
+		getNewFileId();
 	} catch (FileExistsException e) {
 		try {
 			homeFolder = rootDirectory.getDirectory("home");
@@ -76,7 +76,7 @@ public class MyDrive extends MyDrive_Base {
     Directory home_root;
   	try {
   		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
-  		incrementFileId();
+  		getNewFileId();
   	} catch (FileExistsException e) {
   		try {
   			home_root = rootDirectory.getDirectory("root");
@@ -97,13 +97,7 @@ public class MyDrive extends MyDrive_Base {
    * @param File file to be added
    */
   public void addFile(String path, File f) throws FileExistsException {
-    Directory root = getRootDirectory();
-
-    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-    if (pieces.size() > 0 && pieces.get(0).equals(""))
-    pieces.remove(0);
-    pieces.join("/");
-    root.addFile(pieces, f);
+	  //TODO
   }
 
 
@@ -316,7 +310,7 @@ public class MyDrive extends MyDrive_Base {
       catch (FileNotFoundException e){
         try {
 			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
-			this.incrementFileId();
+			this.getNewFileId();
 		} catch (FileExistsException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -329,7 +323,7 @@ public class MyDrive extends MyDrive_Base {
 
       try {
 		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
-		this.incrementFileId();
+		this.getNewFileId();
 
       } catch (FileExistsException e) {
     	try {

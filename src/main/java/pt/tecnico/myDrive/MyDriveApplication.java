@@ -68,7 +68,6 @@ public class MyDriveApplication {
     } catch (FileNotFoundException e2) {
       try {
 		homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		md.incrementFileId();
       } catch (FileExistsException e) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -78,7 +77,6 @@ public class MyDriveApplication {
     };
     try {
 		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
-		md.incrementFileId();
 	} catch (FileExistsException e2) {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();
@@ -88,7 +86,6 @@ public class MyDriveApplication {
     Directory usr;
 	try {
 		usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		md.incrementFileId();
 	} catch (FileExistsException e2) {
 		try {
 			usr = rootDir.getDirectory("usr");
@@ -102,7 +99,6 @@ public class MyDriveApplication {
     Directory local;
 	try {
 		local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
-		md.incrementFileId();
 	} catch (FileExistsException e2) {
 		try {
 			local = rootDir.getDirectory("local");
@@ -119,7 +115,6 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();
 	}
-    md.incrementFileId();
 
     //3
     try {
@@ -131,7 +126,7 @@ public class MyDriveApplication {
 
     //4
     try{
-      md.deleteFile("/usr/local/bin");
+      md.removeFile("/usr/local/bin");
     }
     catch (DirectoryIsNotEmptyException e) {
       log.error("Cannot delete a non-empty folder");
@@ -147,7 +142,7 @@ public class MyDriveApplication {
 
     //6
     try{
-      md.deleteFile("/home/README");
+      md.removeFile("/home/README");
     }
     catch (DirectoryIsNotEmptyException e) {
       log.error("Cannot delete a non-empty folder");
@@ -181,7 +176,7 @@ public class MyDriveApplication {
     //9
     System.out.println("Deleting /usr");
     try {
-      md.deleteFile("/usr");
+      md.removeFile("/usr");
     } catch (DirectoryIsNotEmptyException e) {
       System.out.println("ERROR: Directory not empty");
     } catch (NotDirectoryException | FileNotFoundException e) {
@@ -214,7 +209,7 @@ public class MyDriveApplication {
     //10
     try {
       System.out.println("Deleting /usr/local");
-      md.deleteFile("/usr/local");
+      md.removeFile("/usr/local");
     } catch (DirectoryIsNotEmptyException e) {
       System.out.println("ERROR: Directory not empty");
     } catch (NotDirectoryException | FileNotFoundException e) {
@@ -238,7 +233,7 @@ public class MyDriveApplication {
     //10
     try {
       System.out.println("Deleting /usr");
-      md.deleteFile("/usr");
+      md.removeFile("/usr");
     } catch (DirectoryIsNotEmptyException e) {
       System.out.println("ERROR: Directory not empty");
     } catch (NotDirectoryException | FileNotFoundException e) {
@@ -283,7 +278,7 @@ public class MyDriveApplication {
 	}
     try {
         System.out.println("Deleting /home/miguel");
-        md.deleteFile("/home/miguel");
+        md.removeFile("/home/miguel");
       } catch (DirectoryIsNotEmptyException e) {
         System.out.println("ERROR: Directory not empty");
       } catch (NotDirectoryException | FileNotFoundException e) {
@@ -315,17 +310,15 @@ public class MyDriveApplication {
 	}
 
 	//10
-	/* FIXME not Solved yet
 	try {
 		System.out.println("Deleting /home/miguel");
-		md.deleteFile("/home/miguel");
+		md.removeFile("/home/miguel");
 	} catch (DirectoryIsNotEmptyException e) {
 		System.out.println("ERROR: Directory not empty");
 	} catch (NotDirectoryException | FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	*/
 
 	try {
 		String folder = "/";
@@ -432,11 +425,9 @@ public class MyDriveApplication {
 		Directory olaDir;
 		try {
 			olaDir = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-			md.incrementFileId();
 		} catch (FileExistsException e2) {
 			try {
 				olaDir = rootDir.getDirectory("ola12345678");
-				md.incrementFileId();
 			} catch (FileNotFoundException e) {
 				/* Impossible case */
 				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -447,14 +438,13 @@ public class MyDriveApplication {
 		PlainFile file = null;
 		try {
 			file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, rootUsr, "cenas", olaDir);
-			md.incrementFileId();
 		} catch (FileExistsException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 
 		try{
-			md.deleteFile("/");
+			md.removeFile("/");
 			}
 			catch (FileNotFoundException e) {
 				log.debug("Couldn't find /");
@@ -480,7 +470,7 @@ public class MyDriveApplication {
 			log.debug("Trying to add file that already exists");
 		}
 		try{
-		md.deleteFile("/ola12345678");
+		md.removeFile("/ola12345678");
 		}
 		catch (FileNotFoundException e) {
 			log.debug("Couldn't find ola12345678");
@@ -493,7 +483,7 @@ public class MyDriveApplication {
 		}
 
 		try{
-			md.deleteFile("/ola12345678/README");
+			md.removeFile("/ola12345678/README");
 			}
 			catch (FileNotFoundException e) {
 				log.debug("Couldn't find readme");
@@ -519,7 +509,7 @@ public class MyDriveApplication {
 			}
 
 		try{
-			md.deleteFile("/ola12345678/ola12345678");
+			md.removeFile("/ola12345678/ola12345678");
 			}
 			catch (FileNotFoundException e) {
 				log.debug("Couldn't find /ola12345678/ola12345678");
@@ -531,7 +521,7 @@ public class MyDriveApplication {
 				e.printStackTrace();
 			}
 		try{
-			md.deleteFile("ola12345678/ola12345678");
+			md.removeFile("ola12345678/ola12345678");
 			}
 			catch (FileNotFoundException e) {
 				log.debug("This should occur, doesn't have /");
