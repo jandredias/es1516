@@ -1,4 +1,6 @@
 package pt.tecnico.myDrive.domain;
+import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.MyDrive;
 
 import org.jdom2.Element;
 
@@ -6,14 +8,14 @@ public class User extends User_Base {
 
     protected User() {/*for subclasses to use*/}
 
-    public User(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
+    public User(String username, String pwd, String name, Integer permissions, Directory home) {
     	init(username, pwd, name, permissions, home);
     }
     public User(String username, Directory home){
     	init(username, username, username, 11110000, home);
     }
 
-    protected void init(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
+    protected void init(String username, String pwd, String name, Integer permissions, Directory home) {
     	setUsername(username);
         setPassword(pwd);
         setName(name);
@@ -39,7 +41,7 @@ public class User extends User_Base {
      	nameElement.addContent(getName());
 
      	Element permissionsElement = new Element("mask");
-     	permissionsElement.addContent(Integer.toString(getPermissions()));
+     	permissionsElement.addContent(MyDrive.permissions(getPermissions()));
 
      	Element homeElement = new Element("home");
      	homeElement.addContent(getUsersHome().getPath());

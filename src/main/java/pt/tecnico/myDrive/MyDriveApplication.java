@@ -20,6 +20,7 @@ import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -32,10 +33,16 @@ public class MyDriveApplication {
   public static void main(String[] args) throws IOException {
     //TODO
     try {
-      //init();
-      //for (String s: args) xmlScan(new File(s));
 
-      setup();
+      init();
+      for (String s: args) xmlScan(new File(s));
+
+      try {
+		setup();
+	} catch (InvalidFileNameException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       xmlPrint();
       //teste_tiago();
       //listDirectoryTest();
@@ -51,125 +58,88 @@ public class MyDriveApplication {
   }
 
   @Atomic
-  public static void setup() {
+  public static void setup() throws InvalidFileNameException {
     log.trace("Setup: " + FenixFramework.getDomainRoot());
 
 
     MyDrive md = MyDrive.getInstance();
     log.trace("Setup: Create MyDrive");
 
-    //1
+    step1(md);
+    step2(md);
+    step3(md);
+    step4(md);
+    step5(md);
+    step6(md);
+    step7(md);
+    step8(md);
+    step9(md);
+    step10(md);
+  }
 
-    User rootUsr = md.getRootUser();
-    Directory rootDir = md.getRootDirectory();
-    Directory homeDir;
-    try {
-      homeDir = rootDir.getDirectory("home");
-    } catch (FileNotFoundException e2) {
-      try {
-		homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		md.incrementFileId();
-      } catch (FileExistsException e) {
-			/* Impossible case */
-			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return;
-      }
-      return;
-    };
-    try {
-		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
-		md.incrementFileId();
-	} catch (FileExistsException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-	}
 
-    //2
-    Directory usr;
-	try {
-		usr = new Directory("usr", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		md.incrementFileId();
-	} catch (FileExistsException e2) {
-		try {
-			usr = rootDir.getDirectory("usr");
-		} catch (FileNotFoundException e) {
-			/* Impossible case */
-			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return;
-		}
-
-	}
-    Directory local;
-	try {
-		local = new Directory("local", md.getFileId(), new DateTime(), 11111010, rootUsr, usr);
-		md.incrementFileId();
-	} catch (FileExistsException e2) {
-		try {
-			local = rootDir.getDirectory("local");
-		} catch (FileNotFoundException e) {
-			/* Impossible case */
-			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return;
-		}
-	}
-
-    try {
-		new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
-	} catch (FileExistsException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-	}
-    md.incrementFileId();
-
-    //3
-    try {
-      System.out.println("File contents: " + md.getFileContents("/home/README"));
-    } catch (FileNotFoundException | NotDirectoryException | UnsupportedOperationException e) {
-      log.debug("Caught exception while obtaining file contents");
-      e.printStackTrace();
-    }
-
-    //4
+  public static void step1(MyDrive md){
     try{
-      md.deleteFile("/usr/local/bin");
+      User rootUsr = md.getRootUser();
+      md.addFile("/home", new PlainFile("README",  new DateTime(), 11111011,
+    		  md.getRootUser(), "lista de utilizadores", md.getDirectory("/home")));
+
+    }catch(FileNotFoundException | FileExistsException | NotDirectoryException | InvalidFileNameException e){
+      //Do nothing
     }
-    catch (DirectoryIsNotEmptyException e) {
-      log.error("Cannot delete a non-empty folder");
+  }
+  public static void step2(MyDrive md){
+	  try {
+		  new Directory("usr",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/"));
+		  new Directory("local",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/usr"));
+		  new Directory("bin",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/usr/local"));
+			
+	  } catch (FileExistsException | FileNotFoundException | InvalidFileNameException | NotDirectoryException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	  }
+
+	  
+  }
+  public static void step3(MyDrive md){
+    try{
+      pt.tecnico.myDrive.domain.File f = md.getFile("/home/README");
+      if(f.getClass() == PlainFile.class)
+        System.out.println( ((PlainFile)f ).getContent());
+    }catch(FileNotFoundException e){
+      //Do nothing
     }
-    catch (FileNotFoundException e){
+  }
+  public static void step4(MyDrive md){
+    try {
+      md.removeFile("/usr/local/bin");
+    } catch (FileNotFoundException | DirectoryIsNotEmptyException e2) {
+      e2.printStackTrace();
+    }
+  }
+  public static void step5(MyDrive md){
+    //xmlPrint
+  }
+  public static void step6(MyDrive md){
+    try{
+      md.removeFile("/home/README");
+    } catch (FileNotFoundException | DirectoryIsNotEmptyException e2) {
+      //e2.printStackTrace();
       log.error("The file doesn't exist");
     }
-    catch (NotDirectoryException e) {
-      //Should never occur
-      log.error("The father directory isn't a directory");
-    }
-
-
-    //6
-    try{
-      md.deleteFile("/home/README");
-    }
-    catch (DirectoryIsNotEmptyException e) {
-      log.error("Cannot delete a non-empty folder");
-    }
-    catch (FileNotFoundException e){
-      log.error("The file doesn't exist");
-    }
-    catch (NotDirectoryException e) {
-      //Should never occur
-      log.error("The father directory isn't a directory");
-    }
-
-    //7
+  }
+  public static void step7(MyDrive md){
     try {
       System.out.println("Directory Listing /home: " + md.listDir("/home"));
     } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-
-
-    //TODO EXTRA WORK.. probably delete from this point onwards
+  }
+  public static void step8(MyDrive md){
     //8
     try {
       System.out.println("Directory Listing /: " + md.listDir("/"));
@@ -177,18 +147,19 @@ public class MyDriveApplication {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-
-    //9
+  }
+  public static void step9(MyDrive md){
     System.out.println("Deleting /usr");
     try {
-      md.deleteFile("/usr");
+      md.removeFile("/usr");
     } catch (DirectoryIsNotEmptyException e) {
       System.out.println("ERROR: Directory not empty");
-    } catch (NotDirectoryException | FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    //7
+  }
+  public static void step10(MyDrive md){
     try {
       String folder = "/";
       System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -196,154 +167,7 @@ public class MyDriveApplication {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-    //7
-    try {
-      String folder = "/usr";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    try {
-      String folder = "/usr/";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    //10
-    try {
-      System.out.println("Deleting /usr/local");
-      md.deleteFile("/usr/local");
-    } catch (DirectoryIsNotEmptyException e) {
-      System.out.println("ERROR: Directory not empty");
-    } catch (NotDirectoryException | FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    //7
-    try {
-      String folder = "/usr";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    try {
-      String folder = "/usr/local";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      System.out.println("ERROR (EXPECTED & INTENDED): FileNotFound : " + "/usr/local");
-    }
-    //10
-    try {
-      System.out.println("Deleting /usr");
-      md.deleteFile("/usr");
-    } catch (DirectoryIsNotEmptyException e) {
-      System.out.println("ERROR: Directory not empty");
-    } catch (NotDirectoryException | FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    try {
-      String folder = "/";
-      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-
-
-	try {
-		String folder = "/";
-		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-
-	try {
-		md.addUser("miguel");
-	} catch (InvalidUsernameException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (UsernameAlreadyInUseException e) {
-		// TODO Auto-generated catch block
-		System.out.println("duplicate user miguel");
-	}
-
-	try {
-		md.addUser("miguel");
-	} catch (InvalidUsernameException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (UsernameAlreadyInUseException e) {
-		System.out.println("ERROR (EXPECTED & INTENDED): duplicate user miguel");
-	}
-    try {
-        System.out.println("Deleting /home/miguel");
-        md.deleteFile("/home/miguel");
-      } catch (DirectoryIsNotEmptyException e) {
-        System.out.println("ERROR: Directory not empty");
-      } catch (NotDirectoryException | FileNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-
-	try {
-		String folder = "/home";
-		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-
-	// 11
-	try {
-		md.getFileContents("/home");
-		log.error("Should have thrown exception");
-	} catch (UnsupportedOperationException e) {
-		log.debug("Thrown exception when trying to get the contents of a directory (expected)");
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (NotDirectoryException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-	//10
-	/* FIXME not Solved yet
-	try {
-		System.out.println("Deleting /home/miguel");
-		md.deleteFile("/home/miguel");
-	} catch (DirectoryIsNotEmptyException e) {
-		System.out.println("ERROR: Directory not empty");
-	} catch (NotDirectoryException | FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	*/
-
-	try {
-		String folder = "/";
-		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-	try {
-		String folder = "/home/../home/.";
-		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-	log.debug("Setup Complete");
- }
-
+  }
 
 	/*
 	* Prints a XML output to console
@@ -381,6 +205,7 @@ public class MyDriveApplication {
 	  } catch(InvalidUsernameException e){
 	    System.out.println("Invalid username on XML import file");
 	  } catch(FileNotFoundException e){
+      e.printStackTrace();
 	    System.out.println("File not found on XML import file");
 	  } catch(NotDirectoryException e) {
 	    System.out.println("Only directories can contain another files");
@@ -388,13 +213,15 @@ public class MyDriveApplication {
 	    System.out.println("There is not such a user on XML import file");
 	  }catch(FileExistsException e){
 	    System.out.println("Duplicated file on XML import file");
-	  }
+	  } catch (InvalidFileNameException e) {
+		System.out.println("Invalid charater somewhere");
+	}
 
 	  log.trace("End of xmlScan");
 	}
-	
+
 	@Atomic
-	public static void listDirectoryTest() {
+	public static void listDirectoryTest() throws InvalidFileNameException {
 
 	  try {
 
@@ -402,9 +229,9 @@ public class MyDriveApplication {
 
 		  User rootUsr = md.getRootUser();
 		  Directory rootDir = md.getRootDirectory();
-		  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		  new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
-		  new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		  Directory testDir = new Directory("testDir",  new DateTime(), 11111010, rootUsr, rootDir);
+		  new Directory("testDir2",  new DateTime(), 11111010, rootUsr, testDir);
+		  new Directory("testDir3",  new DateTime(), 11111010, rootUsr, rootDir);
 		  log.debug(md.listDir("/testDir"));
 
 	  } catch (FileExistsException e) {
@@ -423,128 +250,5 @@ public class MyDriveApplication {
 	}
 
 	@Atomic
-	public static void teste_tiago(){
-		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-		MyDrive md = MyDrive.getInstance();
-		Directory rootDir = md.getRootDirectory();
-		User rootUsr = md.getRootUser();
-
-		Directory olaDir;
-		try {
-			olaDir = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-			md.incrementFileId();
-		} catch (FileExistsException e2) {
-			try {
-				olaDir = rootDir.getDirectory("ola12345678");
-				md.incrementFileId();
-			} catch (FileNotFoundException e) {
-				/* Impossible case */
-				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-				return;
-			}
-		}
-
-		PlainFile file = null;
-		try {
-			file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, rootUsr, "cenas", olaDir);
-			md.incrementFileId();
-		} catch (FileExistsException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-
-		try{
-			md.deleteFile("/");
-			}
-			catch (FileNotFoundException e) {
-				log.debug("Couldn't find /");
-			}
-			catch (DirectoryIsNotEmptyException e){
-				log.debug("This should not occur, / is empty");
-			}
-			catch (NotDirectoryException e) {
-				e.printStackTrace();
-			}
-
-		try {
-			String folder = "/";
-			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
-		} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try{
-			olaDir.addChildFile(file);
-		}
-		catch (FileExistsException e){
-			log.debug("Trying to add file that already exists");
-		}
-		try{
-		md.deleteFile("/ola12345678");
-		}
-		catch (FileNotFoundException e) {
-			log.debug("Couldn't find ola12345678");
-		}
-		catch (DirectoryIsNotEmptyException e){
-			log.debug("This should occur, ola12345678 is not empty");
-		}
-		catch (NotDirectoryException e) {
-			e.printStackTrace();
-		}
-
-		try{
-			md.deleteFile("/ola12345678/README");
-			}
-			catch (FileNotFoundException e) {
-				log.debug("Couldn't find readme");
-			}
-			catch (DirectoryIsNotEmptyException e){
-				log.debug("This shouldn't occur, readme is a file");
-			}
-			catch (NotDirectoryException e) {
-				e.printStackTrace();
-			}
-		Directory olaDir1 = null;
-		try {
-			olaDir1 = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		} catch (FileExistsException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try{
-			olaDir.addChildFile(olaDir1);
-			}
-			catch (FileExistsException e){
-				log.debug("Trying to add file that already exists");
-			}
-
-		try{
-			md.deleteFile("/ola12345678/ola12345678");
-			}
-			catch (FileNotFoundException e) {
-				log.debug("Couldn't find /ola12345678/ola12345678");
-			}
-			catch (DirectoryIsNotEmptyException e){
-				log.debug("This should not occur, /ola12345678/ola12345678 is empty");
-			}
-			catch (NotDirectoryException e) {
-				e.printStackTrace();
-			}
-		try{
-			md.deleteFile("ola12345678/ola12345678");
-			}
-			catch (FileNotFoundException e) {
-				log.debug("This should occur, doesn't have /");
-			}
-			catch (DirectoryIsNotEmptyException e){
-				log.debug("This shouldn't occur, ola12345678/ola12345678");
-			}
-			catch (NotDirectoryException e) {
-				e.printStackTrace();
-			}
-
-
-
-		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-	  }
-	}
+	public static void teste_tiago(){}
+}

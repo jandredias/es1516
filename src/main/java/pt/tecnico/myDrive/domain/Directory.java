@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,21 +11,22 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
-import pt.tecnico.myDrive.exception.FileExistsException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Directory extends Directory_Base {
 
-	static final Logger log = LogManager.getRootLogger();	
-	
+	static final Logger log = LogManager.getRootLogger();
+
 	/**
 	 * This is the most used constructor is used to create directories
+	 * @throws InvalidFileNameException 
 	 */
-	public Directory(String name, Integer id, DateTime modification,
-	Integer permissions, User owner, Directory father)
-	throws FileExistsException {
-	    init(name, id, modification, permissions, owner, father);
+	public Directory(String name, DateTime modification,
+									Integer permissions, User owner, Directory father)
+									throws FileExistsException, InvalidFileNameException {
+	    init(name, modification, permissions, owner, father);
 	}
 
 	/**
@@ -37,42 +39,25 @@ public class Directory extends Directory_Base {
 	 * @param Integer permissions
 	 * @param User owner
 	 */
-	private Directory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
+	private Directory(String name, DateTime modification, Integer permissions, User owner) {
 	        setName(name);
-	        setId(id);
+	        setId(MyDrive.getNewFileId());
 	        setModification(modification);
 	        setPermissions(permissions);
 	        setOwner(owner);
 	        setDir(this);
-  }
+	  }
 
-  public static Directory createRootDirectory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
-	  		return new Directory(name, id,modification, permissions, owner);
-  }
-  /**
-   * Constructor that is used to import Directory from a XML Element
-   *
-   * @param XML Element Node
-   * @param Directory parent
-   * @throws FileExistsException
-   * @throws NumberFormatException
-   */
-  /* TODO ANDRE this was here, probably remove
-  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileExistsException {
-    this(
-      e.getAttribute("name").getValue(),
-      Integer.parseInt(e.getAttribute("id").getValue()),
-      DateTime.parse(e.getAttribute("modification").getValue()),
-      Integer.parseInt(e.getAttribute("permissions").getValue()),
-      owner,
-      parent);
-  }*/
-  
-  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
+	  public static Directory createRootDirectory(User owner) {
+		  		return new Directory("/", new DateTime(),11111010, owner);
+	  }
+
+
+  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 		this.xmlImport(xml, owner, parent);
 	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException {
 		super.xmlImport(xml, owner, parent);
 	}
 
@@ -87,8 +72,32 @@ public class Directory extends Directory_Base {
 	throws UnsupportedOperationException {
 		visitor.visitDirectory(this);
 	}
-
+	
 	public File getFile(String fileName)
+			throws FileNotFoundException {
+
+		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
+		//Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+	    	pieces.remove(0);
+
+		if (pieces.size() == 1) {
+			return getInnerFile(pieces.get(0));
+		}
+		
+		Directory nextDir = getDirectory(pieces.get(0));
+		pieces.remove(0);
+
+	    String newPath = "";
+
+	    for (String s : pieces)
+	    	newPath += (s + "/");
+
+		return nextDir.getFile(newPath);
+		
+	}
+	
+	public File getInnerFile(String fileName)
 	throws FileNotFoundException {
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName))
@@ -104,7 +113,7 @@ public class Directory extends Directory_Base {
 
 	public Directory getDirectory(String fileName)
 	throws FileNotFoundException {
-		File directory = getFile(fileName);
+		File directory = getInnerFile(fileName);
 		if (directory.getClass() == Directory.class)
 			return (Directory) directory;
 		else
@@ -112,8 +121,7 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void deleteFile() throws NotDirectoryException,
-	DirectoryIsNotEmptyException {
+	public void deleteFile() throws DirectoryIsNotEmptyException {
 		if(getFilesSet().isEmpty()){
 			for (User user : getOwnerHomeSet()) {
 				Directory newHome = this.getDir();
@@ -137,33 +145,84 @@ public class Directory extends Directory_Base {
 
 	public boolean hasFile(String fileName)  {
 		try {
-		  getFile(fileName);
+		  getInnerFile(fileName);
 		} catch (FileNotFoundException e) {
 		  return false;
 		}
 		return true;
 	}
 
-	/**
-	* Checks if file exists on Files set and Adds it
-	*
-	* @param File
-	* @throws FileExistsException
-	*/
-	public void addChildFile(File f) throws FileExistsException {
-		  if(hasFile(f.getName()))
-			  throw new  FileExistsException(f.getName());
-		  else
-			  addFiles(f);
-	}
-	
-	public void addFile(String path, File file) throws FileExistsException{
+
+
+  /**
+   * Remove a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @throws FileNotFoundException
+ * @throws DirectoryIsNotEmptyException
+   */
+  public void removeFile(String path) throws FileNotFoundException, DirectoryIsNotEmptyException{
+  		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+
+	    //Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+	    	pieces.remove(0);
+
+		if (pieces.size() == 1) {
+			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
+			if (fileToBeDeleted == null)
+				throw new FileNotFoundException(pieces.get(0));
+			fileToBeDeleted.deleteFile();
+
+		} else {
+			Directory nextDir = getDirectory(pieces.get(0));
+			pieces.remove(0);
+
+		    String newPath = "";
+
+		    for (String s : pieces)
+		    	newPath += (s + "/");
+
+			nextDir.removeFile(newPath);
+		}
+  }
+
+  /**
+   * Adds a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @param File
+   * @throws FileExistsException
+   * @throws FileNotFoundException
+   */
+	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
+
 		if(path.equals("")){
-			this.addChildFile(file);
+			if(hasFile(file.getName()))
+				  throw new  FileExistsException(file.getName());
+			  else
+				  addFiles(file);
 			return;
 		}
-		//TODO recursive shit
-		
-	}
+		else {
+			ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+
+		    //Removing empty String due to / in first position
+			if (pieces.size() > 0 && pieces.get(0).equals(""))
+		    	pieces.remove(0);
+
+			Directory nextDir = null;
+			nextDir = getDirectory(pieces.get(0));
+			
+			pieces.remove(0);
 	
+		    String newPath = "";
+	
+		    for (String s : pieces)
+		    	newPath += (s + "/");
+	
+			nextDir.addFile(newPath, file);
+		}
+	}
+
 }
