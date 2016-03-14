@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
 
-	static final Logger log = LogManager.getRootLogger();	
-	
+	static final Logger log = LogManager.getRootLogger();
+
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
@@ -65,7 +65,7 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
-  
+
   	public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
 		this.xmlImport(xml, owner, parent);
 	}

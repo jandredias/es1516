@@ -24,39 +24,54 @@ public class MyDrive extends MyDrive_Base {
 
   static final Logger log = LogManager.getRootLogger();
 
+  /**
+   * Used for singleton
+   *
+   * @return MyDrive
+   */
   public static MyDrive getInstance() {
+
     MyDrive md = FenixFramework.getDomainRoot().getMyDrive();
+
     if (md != null) return md;
+
     md = new MyDrive();
     log.trace("new MyDrive");
 
     return md;
   }
 
+  /**
+   * Constructor
+   */
   private MyDrive() {
+
     setRoot(FenixFramework.getDomainRoot());
 
     this.setFileId(0);
+
     Root root = new Root();
     this.addUsers(root);
+
     Directory rootDirectory;
-	rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
-	incrementFileId();
+    rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
+    incrementFileId();
+
     this.setRootDirectory(rootDirectory);
 
     Directory homeFolder;
-	try {
-		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
-		incrementFileId();
-	} catch (FileAlreadyExistsException e) {
-		try {
-			homeFolder = rootDirectory.getDirectory("home");
-		} catch (FileNotFoundException e1) {
-			/* Impossible case */
-			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return;
-		}
-	}
+    try {
+  		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+  		incrementFileId();
+    } catch (FileAlreadyExistsException e) {
+      try {
+      	homeFolder = rootDirectory.getDirectory("home");
+      } catch (FileNotFoundException e1) {
+      	/* Impossible case */
+      	log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+      	return;
+      }
+    }
 
     Directory home_root;
   	try {
@@ -70,10 +85,38 @@ public class MyDrive extends MyDrive_Base {
   			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
   			return;
   		}
-	}
+	   }
 
     root.setUsersHome(home_root);
   }
+
+  /**
+   * Add file to Directory
+   *
+   * @param String path
+   * @param File file to be added
+   */
+  public void addFile(String path, File f) throws FileExistsException {
+    Directory root = getRootDirectory();
+
+    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+    if (pieces.size() > 0 && pieces.get(0).equals(""))
+    pieces.remove(0);
+    pieces.join("/");
+    root.addFile(pieces, f);
+  }
+
+
+  /**
+   * Get a new file id
+   *
+   * @return int
+   */
+  public static int getNewFileId(){
+    Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId() + 1;
+    FenixFramework.getDomainRoot().getMyDrive().setFileId(id);
+  }
+
 
   public Directory getDirectoryFromPath(String path)
     throws FileNotFoundException{
@@ -315,9 +358,7 @@ public class MyDrive extends MyDrive_Base {
     }
   }
 
-  public void incrementFileId(){
-    this.setFileId(getFileId()+1);
-  }
+
 
   public ArrayList<String> listDir(String path)
     throws UnsupportedOperationException,
