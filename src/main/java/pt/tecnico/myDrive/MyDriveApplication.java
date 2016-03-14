@@ -32,8 +32,9 @@ public class MyDriveApplication {
   public static void main(String[] args) throws IOException {
     //TODO
     try {
-      //init();
-      //for (String s: args) xmlScan(new File(s));
+
+      init();
+      for (String s: args) xmlScan(new File(s));
 
       setup();
       xmlPrint();
@@ -52,7 +53,7 @@ public class MyDriveApplication {
 
   @Atomic
   public static void setup() {
-                      
+
 
   }
 
@@ -92,6 +93,7 @@ public class MyDriveApplication {
 	  } catch(InvalidUsernameException e){
 	    System.out.println("Invalid username on XML import file");
 	  } catch(FileNotFoundException e){
+      e.printStackTrace();
 	    System.out.println("File not found on XML import file");
 	  } catch(NotDirectoryException e) {
 	    System.out.println("Only directories can contain another files");
