@@ -270,7 +270,7 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	} catch (UsernameAlreadyInUseException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		System.out.println("duplicate user miguel");
 	}
 
 	try {
@@ -317,13 +317,15 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
-    try {
-		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
-		md.incrementFileId();
-	} catch (FileAlreadyExistsException e2) {
+	
+	try {
+		String folder = "/";
+		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+	} catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
 		// TODO Auto-generated catch block
-		e2.printStackTrace();
+		e1.printStackTrace();
 	}
+	log.debug("Setup Complete");
  }
 
 

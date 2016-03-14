@@ -35,12 +35,10 @@ public class MyDrive extends MyDrive_Base {
 
   private MyDrive() {
     setRoot(FenixFramework.getDomainRoot());
-    log.trace("FenixRoot");
 
     this.setFileId(0);
     Root root = new Root();
     this.addUsers(root);
-    log.trace("Root");
 
     Directory rootDirectory;
 	rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);

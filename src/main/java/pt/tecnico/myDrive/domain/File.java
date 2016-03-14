@@ -37,7 +37,9 @@ public class File extends File_Base {
 
   protected void init(String name, Integer id, DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
-    setName(name);
+	
+    
+	setName(name);
     setId(id);
     setModification(modification);
     setPermissions(permissions);
@@ -81,7 +83,7 @@ public class File extends File_Base {
     element.setAttribute("id",getId().toString());
 
     Element pathElement = new Element("path");
-    pathElement.addContent(getPath());
+    pathElement.addContent(getFatherPath());
  	element.addContent(pathElement);
     
     Element ownerElement = new Element("owner");

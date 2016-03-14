@@ -134,10 +134,9 @@ public class Directory extends Directory_Base {
 	* @throws FileAlreadyExistsException
 	*/
 	public void addChildFile(File f) throws FileAlreadyExistsException {
-		try{
-		  getFile(f.getName());
-		}catch(FileNotFoundException e){
-		  addFiles(f);
-		}
+		  if(hasFile(f.getName()))
+			  throw new FileAlreadyExistsException(f.getName());
+		  else
+			  addFiles(f);
 	}
 }
