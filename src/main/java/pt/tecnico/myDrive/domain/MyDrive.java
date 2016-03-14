@@ -92,32 +92,58 @@ public class MyDrive extends MyDrive_Base {
   }
 
   /**
+   * Returns path without the leading /
+   *
+   * @param String
+   * @return String
+   */
+  public static void getSubPath(String path){
+    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+    if (pieces.size() > 0 && pieces.get(0).equals(""))
+      pieces.remove(0);
+
+    String newPath = "";
+    for(String s : pieces)
+      newPath += (s + "/");
+    return newPath;
+  }
+
+  /**
    * Add file to Directory
    *
-   * @param String path
+   * @param String path that doesn't not include the filename
    * @param File file to be added
    */
   public void addFile(String path, File f) throws FileExistsException {
-    Directory root = getRootDirectory();
-
-    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-    if (pieces.size() > 0 && pieces.get(0).equals(""))
-    pieces.remove(0);
-    pieces.join("/");
-    root.addFile(pieces, f);
+    getRootDirectory().addFile(this.getSubPath(path), f);
   }
 
+  /**
+   * Removes a file from a Directory
+   *
+   * @param String path that includes the file to delete
+   */
+  public void removeFile(String path) {
+    getRootDirectory().removeFile(this.getSubPath(path));
+  }
 
   /**
    * Get a new file id
    *
    * @return int
+   *
    */
   public static int getNewFileId(){
     Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId() + 1;
     FenixFramework.getDomainRoot().getMyDrive().setFileId(id);
   }
 
+  /**
+   * Get File from a directory
+   */
+  public File getFile(String path){
+    getRootDirectory().getFile(this.getSubPath(path));
+  }
 
   public Directory getDirectoryFromPath(String path)
     throws FileNotFoundException{
