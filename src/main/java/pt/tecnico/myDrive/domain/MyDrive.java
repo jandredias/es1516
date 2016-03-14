@@ -174,7 +174,10 @@ public class MyDrive extends MyDrive_Base {
           parent.getFile(dir.getAttribute("name").getValue());
 
         }catch(FileNotFoundException es){
-          parent.addChildFile(new Directory(dir, parent, owner));
+        	
+          // TODO compilaitio error had to comment 
+          // FIXME parent.addChildFile(new Directory(dir, parent, owner));
+        	
         }
     }
   }

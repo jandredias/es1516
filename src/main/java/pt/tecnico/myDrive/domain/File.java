@@ -17,8 +17,16 @@ public class File extends File_Base {
   public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
     init(name, id, modification, permissions, owner, parent);
   }
+  
+  public File(Element xml){
+	  this.xmlImport(xml);
+  }
 
-  /**
+  protected void xmlImport(Element xml) {
+	// TODO Auto-generated method stub
+  }
+
+/**
    * Throws exception when File cannot be a parent File
    *
    * @throws NotDirectoryException
@@ -40,7 +48,7 @@ public class File extends File_Base {
   }
 
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
-    throw new NotDirectoryException();
+    throw new NotDirectoryException(fileName);
   }
 
   public String getPath() {

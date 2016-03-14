@@ -12,9 +12,22 @@ public class Link extends Link_Base {
     public Link(){ super(); }
 
     public Link(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException{
-   	 //init(name, id, modification, permissions, owner,content, father);
+   	 init(name, id, modification, permissions, owner,content, father);
    }
-    
+
+    public Link(Element xml) {
+		this.xmlImport(xml);
+	}
+	
+	protected void xmlImport(Element xml) {
+		super.xmlImport(xml);
+	}
+
+	protected void importContent(Element xml) {
+		// TODO Auto-generated method stub
+		
+	}
+	
     public ArrayList<Element> xmlExport() {
         ArrayList<Element> array = super.xmlExport();
        	array.get(0).setName("link");

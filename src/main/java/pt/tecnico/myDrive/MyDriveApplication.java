@@ -25,7 +25,6 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
 public class MyDriveApplication {
   static final Logger log = LogManager.getRootLogger();
@@ -385,8 +384,8 @@ public class MyDriveApplication {
 		  User rootUsr = md.getRootUser();
 		  Directory rootDir = md.getRootDirectory();
 		  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-		  Directory testDir2 = new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
-		  Directory testDir3 = new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		  new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
+		  new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		  log.debug(md.listDir("/testDir"));
 	    
 	  } catch (FileAlreadyExistsException e) {

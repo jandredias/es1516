@@ -19,6 +19,20 @@ public class Application extends Application_Base {
       	 init(name, id, modification, permissions, owner,content, father);
     }
 
+    public Application(Element xml) {
+		this.xmlImport(xml);
+	}
+	
+	protected void xmlImport(Element xml) {
+		super.xmlImport(xml);
+	}
+
+	protected void importContent(Element xml) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    
     public ArrayList<Element> xmlExport() {
       ArrayList<Element> array = super.xmlExport();
      	array.get(0).setName("app");

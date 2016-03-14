@@ -15,6 +15,20 @@ public class PlainFile extends PlainFile_Base {
 		init(name, id, modification, permissions, owner,content, father);
     }
 	
+	public PlainFile(Element xml) {
+		this.xmlImport(xml);
+	}
+	
+	protected void xmlImport(Element xml) {
+		super.xmlImport(xml);
+		this.importContent(xml); //TODO Template Method
+	}
+
+	protected void importContent(Element xml) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void init(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException {
 		super.init(name, id, modification, permissions, owner, father); //File Init
 		this.setContent(content);

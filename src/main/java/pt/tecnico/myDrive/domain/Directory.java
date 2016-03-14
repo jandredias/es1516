@@ -51,6 +51,7 @@ public class Directory extends Directory_Base {
  * @throws FileAlreadyExistsException 
  * @throws NumberFormatException 
    */
+  /* TODO ANDRE this was here, probably remove 
   public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileAlreadyExistsException{
     this(
       e.getAttribute("name").getValue(),
@@ -59,7 +60,14 @@ public class Directory extends Directory_Base {
       Integer.parseInt(e.getAttribute("permissions").getValue()),
       owner,
       parent);
-  }
+  }*/
+  	public Directory(Element xml) {
+		this.xmlImport(xml);
+	}
+	
+	protected void xmlImport(Element xml) {
+		super.xmlImport(xml);
+	}	
 
 	/**
 	* Throws exception when File cannot be a parent File

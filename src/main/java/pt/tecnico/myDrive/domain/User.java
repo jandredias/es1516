@@ -7,10 +7,10 @@ public class User extends User_Base {
     protected User() {/*for subclasses to use*/}
 
     public User(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
-	init(username, pwd, name, permissions, home);
+    	init(username, pwd, name, permissions, home);
     }
-    public User(String username, pt.tecnico.myDrive.domain.Directory home){
-    	init(username, username, username, 11111010, home);
+    public User(String username, Directory home){
+    	init(username, username, username, 11110000, home);
     }
 
     protected void init(String username, String pwd, String name, Integer permissions, pt.tecnico.myDrive.domain.Directory home) {
@@ -20,7 +20,14 @@ public class User extends User_Base {
         setPermissions(permissions);
         setUsersHome(home);
     }
-    
+  	public User(Element xml) {
+		this.xmlImport(xml);
+	}
+	
+	protected void xmlImport(Element xml) {
+		//TODO Auto generated stub
+	}	
+	
     public Element xmlExport() {
      	Element element = new Element("user"); 
      	element.setAttribute("username", getUsername());
