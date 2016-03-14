@@ -21,7 +21,11 @@ public class Application extends Application_Base {
 
     public ArrayList<Element> xmlExport() {
       ArrayList<Element> array = super.xmlExport();
-     	array.get(0).setName("application");
+     	array.get(0).setName("app");
+     	
+     	Element methotdElement = array.get(0).getChild("contents");
+     	methotdElement.setName("method");
+     	
      	return array;
     }
     public void accept(Visitor visitor) throws UnsupportedOperationException {

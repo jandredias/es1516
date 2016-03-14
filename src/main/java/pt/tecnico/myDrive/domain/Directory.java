@@ -102,7 +102,7 @@ public class Directory extends Directory_Base {
 
 	public ArrayList<Element> xmlExport() {
 		ArrayList<Element> array = super.xmlExport();
-		array.get(0).setName("directory");
+		array.get(0).setName("dir");
 		for(File file : getFilesSet())
 		  if(!file.getName().equals("/"))
 			for(Element el : file.xmlExport())
@@ -119,13 +119,6 @@ public class Directory extends Directory_Base {
 		return true;
 	}
 
-	public void addFile(File fileToBeAdded) throws FileAlreadyExistsException {
-	if (hasFile(fileToBeAdded.getName()))
-		throw new FileAlreadyExistsException(fileToBeAdded.getName());
-
-	super.addFiles(fileToBeAdded);
-	}
-
 	/**
 	* Checks if file exists on Files set and Adds it
 	*
@@ -133,18 +126,10 @@ public class Directory extends Directory_Base {
 	* @throws FileAlreadyExistsException
 	*/
 	public void addChildFile(File f) throws FileAlreadyExistsException {
-	try{
-	  getFile(f.getName());
-	}catch(FileNotFoundException e){
-	  addFiles(f);
+		try{
+		  getFile(f.getName());
+		}catch(FileNotFoundException e){
+		  addFiles(f);
+		}
 	}
-	}
-
-	/*
-	@Override
-	public void addFiles(File fileToBeAdded) throws FileAlreadyExistsException {
-	  if (hasFile(fileToBeAdded.getName()))
-			throw new FileAlreadyExistsException(fileToBeAdded.getName());
-	  super.addFiles(fileToBeAdded);
-	}*/
-	}
+}

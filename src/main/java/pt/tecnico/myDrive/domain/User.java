@@ -23,12 +23,25 @@ public class User extends User_Base {
     
     public Element xmlExport() {
      	Element element = new Element("user"); 
-     	
      	element.setAttribute("username", getUsername());
-     	element.setAttribute("password", getPassword());
-     	element.setAttribute("name", getName());
-     	element.setAttribute("permissions", Integer.toString(getPermissions()));
-     	element.setAttribute("home",getUsersHome().getPath());
+     	
+     	Element passwordElement = new Element("password");
+     	passwordElement.addContent(getPassword());
+     	
+     	Element nameElement = new Element("name");
+     	nameElement.addContent(getName());
+     	
+     	Element permissionsElement = new Element("permissions");
+     	permissionsElement.addContent(Integer.toString(getPermissions()));
+     	
+     	Element homeElement = new Element("home");
+     	homeElement.addContent(getUsersHome().getPath());
+     	
+     	element.addContent(passwordElement);
+     	element.addContent(nameElement);
+     	element.addContent(permissionsElement);
+     	element.addContent(homeElement);
+     	
      	
      	return element;
     }

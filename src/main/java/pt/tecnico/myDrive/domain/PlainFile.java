@@ -22,8 +22,12 @@ public class PlainFile extends PlainFile_Base {
 
      public ArrayList<Element> xmlExport() {
        ArrayList<Element> array = super.xmlExport();
-        array.get(0).setName("plain-file");
-        array.get(0).setAttribute("content",getContent());
+        array.get(0).setName("plain");
+        
+        Element contentsElement = new Element("contents");
+        contentsElement.addContent(getContent());
+        array.get(0).addContent(contentsElement);
+     	
         return array;
      }
      public void accept(Visitor visitor) throws UnsupportedOperationException {

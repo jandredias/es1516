@@ -16,9 +16,13 @@ public class Link extends Link_Base {
    }
     
     public ArrayList<Element> xmlExport() {
-      ArrayList<Element> array = super.xmlExport();
-     	array.get(0).setName("link");
-     	return array;
+        ArrayList<Element> array = super.xmlExport();
+       	array.get(0).setName("link");
+       	
+       	Element methotdElement = array.get(0).getChild("contents");
+       	methotdElement.setName("value");
+       	
+       	return array;
     }
     public void accept(Visitor visitor) throws UnsupportedOperationException {
     	visitor.visitLink(this);

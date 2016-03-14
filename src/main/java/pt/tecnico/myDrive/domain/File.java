@@ -7,7 +7,6 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
 import java.util.ArrayList;
 
 public class File extends File_Base {
@@ -45,13 +44,19 @@ public class File extends File_Base {
   }
 
   public String getPath() {
-    String myName = getName();
-    if (myName.equals("/")) return myName;
-    else {
+	  String myName = getName();
+	  if (myName.equals("/")) 
+		  return myName;
+	  else {
+	      Directory fatherDir = getDir();
+	      if(fatherDir.getPath().equals("/")) return fatherDir.getPath() + myName;
+	      return fatherDir.getPath() + "/" + myName;
+	  }
+  }
+  
+  public String getFatherPath() {
       Directory fatherDir = getDir();
-      if(fatherDir.getPath().equals("/")) return fatherDir.getPath() + myName;
-      return fatherDir.getPath() + "/" + myName;
-    }
+      return fatherDir.getPath();
   }
 
   public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
@@ -65,13 +70,28 @@ public class File extends File_Base {
   public ArrayList<Element> xmlExport() {
     ArrayList<Element> array = new ArrayList<Element>();
     Element element = new Element("file");
-
-    element.setAttribute("name",getName());
     element.setAttribute("id",getId().toString());
-    element.setAttribute("modification",getModification().toString());//TODO
-    element.setAttribute("permissions",Integer.toString(getPermissions()));
-    element.setAttribute("owner",getOwner().getUsername());
-    element.setAttribute("path",getPath());
+
+    Element pathElement = new Element("path");
+    pathElement.addContent(getPath());
+ 	element.addContent(pathElement);
+    
+    Element ownerElement = new Element("owner");
+    ownerElement.addContent(getOwner().getUsername());
+ 	element.addContent(ownerElement);
+
+    Element nameElement = new Element("name");
+    nameElement.addContent(getName());
+ 	element.addContent(nameElement);
+ 	
+ 	Element modificationElement = new Element("modification");
+ 	modificationElement.addContent(getModification().toString());
+ 	element.addContent(modificationElement);
+ 	
+ 	Element permissionsElement = new Element("permissions");
+ 	permissionsElement.addContent(Integer.toString(getPermissions()));
+ 	element.addContent(permissionsElement);
+ 	
     array.add(element);
     return array;
   }

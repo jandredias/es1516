@@ -39,6 +39,8 @@ public class MyDriveApplication {
       setup();
       xmlPrint();
 //      teste_tiago();
+//      listDirectoryTest();
+
     } finally { FenixFramework.shutdown(); }
 
   }
@@ -53,7 +55,6 @@ public class MyDriveApplication {
   public static void setup() {
     log.trace("Setup: " + FenixFramework.getDomainRoot());
 
-    listDirectoryTest();
 
     MyDrive md = MyDrive.getInstance();
     log.trace("Setup: Create MyDrive");
@@ -317,7 +318,13 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
-	
+    try {
+		new PlainFile("README", md.getFileId(), new DateTime(), 11111011, md.getRootUser(), "lista de utilizadores", homeDir);
+		md.incrementFileId();
+	} catch (FileAlreadyExistsException e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	}
  }
 
 
@@ -373,16 +380,14 @@ public class MyDriveApplication {
 
 	  try {
 
-	  MyDrive md = MyDrive.getInstance();
-
-	  User rootUsr = md.getRootUser();
-	  Directory rootDir = md.getRootDirectory();
-	  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-	  Directory testDir2 = new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
-	  testDir.addFile(testDir2);
-	  Directory testDir3 = new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
-	  testDir.addFile(testDir3);
-	  log.debug(md.listDir("/testDir"));
+		  MyDrive md = MyDrive.getInstance();
+	
+		  User rootUsr = md.getRootUser();
+		  Directory rootDir = md.getRootDirectory();
+		  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		  Directory testDir2 = new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
+		  Directory testDir3 = new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+		  log.debug(md.listDir("/testDir"));
 	    
 	  } catch (FileAlreadyExistsException e) {
 	    e.printStackTrace();
@@ -450,7 +455,7 @@ public class MyDriveApplication {
 			e1.printStackTrace();
 		}
 		try{
-			olaDir.addFile(file);
+			olaDir.addChildFile(file);
 		}
 		catch (FileAlreadyExistsException e){
 			log.debug("Trying to add file that already exists");
@@ -488,7 +493,7 @@ public class MyDriveApplication {
 			e1.printStackTrace();
 		}
 		try{
-			olaDir.addFile(olaDir1);
+			olaDir.addChildFile(olaDir1);
 			}
 			catch (FileAlreadyExistsException e){
 				log.debug("Trying to add file that already exists");
