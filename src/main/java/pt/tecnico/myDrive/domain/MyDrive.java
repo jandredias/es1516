@@ -54,7 +54,7 @@ public class MyDrive extends MyDrive_Base {
     this.addUsers(root);
 
     Directory rootDirectory;
-    rootDirectory = Directory.createRootDirectory("/", new DateTime(), 11111010 , root);
+    rootDirectory = Directory.createRootDirectory(root);
     getNewFileId();
 
     this.setRootDirectory(rootDirectory);

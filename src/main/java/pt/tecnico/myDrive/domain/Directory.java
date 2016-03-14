@@ -21,7 +21,7 @@ public class Directory extends Directory_Base {
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
-	protected Directory(String name, DateTime modification,
+	public Directory(String name, DateTime modification,
 									Integer permissions, User owner, Directory father)
 									throws FileExistsException {
 	    init(name, modification, permissions, owner, father);
@@ -44,14 +44,14 @@ public class Directory extends Directory_Base {
 	        setPermissions(permissions);
 	        setOwner(owner);
 	        setDir(this);
-  }
+	  }
+	
+	  public static Directory createRootDirectory(User owner) {
+		  		return new Directory("/", new DateTime(),11111010, owner);
+	  }
 
-  public static Directory createRootDirectory(User owner) {
-	  		return new Directory("/", new DateTime(),11111010, owner);
-  }
 
-
-  public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
+  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException{
 		this.xmlImport(xml, owner, parent);
 	}
 

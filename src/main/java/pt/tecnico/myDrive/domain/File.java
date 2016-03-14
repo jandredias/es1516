@@ -56,8 +56,13 @@ public class File extends File_Base {
     setModification(modification);
     setPermissions(permissions);
     setOwner(owner);
-
-//    	parent.addFile(this);
+    
+    try {
+		parent.addFile("",this);
+	} catch (FileNotFoundException e) {
+		// IMPOSSIBLE CONDITION
+	}
+    
   }
   
   /**
