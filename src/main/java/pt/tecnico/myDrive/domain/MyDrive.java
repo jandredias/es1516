@@ -244,7 +244,11 @@ public class MyDrive extends MyDrive_Base {
         try{
           parent.getFile(name);
         }catch(FileNotFoundException es){
-          new Directory(dir, owner, parent);
+          try{
+            parent.addFile("",new Directory(dir, owner, parent));
+          }catch(FileNotFoundException | FileExistsException ex){
+            //won't happen... i think... sorry if I'm mistaken
+          }
         }
     }
 
@@ -288,7 +292,7 @@ public class MyDrive extends MyDrive_Base {
       }
     }*/
     //Need to repeat this for setting users home correctly
-    for(Element node : e.getChildren("root")){
+    /*for(Element node : e.getChildren("root")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +
         " home directory: " + node.getChild("home").getValue());
         User user = getUserByUsername(node.getAttribute("username").getValue());
@@ -299,7 +303,7 @@ public class MyDrive extends MyDrive_Base {
         " home directory: " + node.getChild("home").getValue());
         User user = getUserByUsername(node.getAttribute("username").getValue());
         user.setUsersHome(getDirectory(node.getChild("home").getValue()));
-    }
+    }*/
   }
 
   /**
