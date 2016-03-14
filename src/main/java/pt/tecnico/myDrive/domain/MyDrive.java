@@ -207,7 +207,7 @@ public class MyDrive extends MyDrive_Base {
    * Receives the root element of a XML document and imports the file system
    *
    * @param Element
- * @throws InvalidFileNameException 
+ * @throws InvalidFileNameException
    */
   public void xmlImport(Element e)
     throws InvalidUsernameException, FileNotFoundException,
@@ -300,7 +300,7 @@ public class MyDrive extends MyDrive_Base {
       }
     }
     //Need to repeat this for setting users home correctly
-    /*for(Element node : e.getChildren("root")){
+    for(Element node : e.getChildren("root")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +
         " home directory: " + node.getChild("home").getValue());
         User user = getUserByUsername(node.getAttribute("username").getValue());
@@ -308,10 +308,14 @@ public class MyDrive extends MyDrive_Base {
     }
     for(Element node : e.getChildren("user")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +
-        " home directory: " + node.getChild("home").getValue());
+        " home directory: " +
+        ((node.getChild("home") == null) ? "/home/" + node.getAttribute("username") : node.getChild("home").getValue())
+        );
         User user = getUserByUsername(node.getAttribute("username").getValue());
-        user.setUsersHome(getDirectory(node.getChild("home").getValue()));
-    }*/
+        user.setUsersHome(getDirectory(
+        ((node.getChild("home") == null) ? "/home/" + node.getAttribute("username") : node.getChild("home").getValue())
+        ));
+    }
   }
 
   /**
