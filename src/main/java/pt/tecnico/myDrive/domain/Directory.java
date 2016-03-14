@@ -145,7 +145,7 @@ public class Directory extends Directory_Base {
    *
    * @param String
    * @throws FileNotFoundException
- * @throws DirectoryIsNotEmptyException 
+ * @throws DirectoryIsNotEmptyException
    */
   public void removeFile(String path) throws FileNotFoundException, DirectoryIsNotEmptyException{
   		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
@@ -159,7 +159,7 @@ public class Directory extends Directory_Base {
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
 			fileToBeDeleted.deleteFile();
-			
+
 		} else {
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
@@ -177,7 +177,7 @@ public class Directory extends Directory_Base {
    * Adds a file if it's a child or call a child element to do it for him
    *
    * @param String
-   * @param File 
+   * @param File
    * @throws FileExistsException
    * @throws FileNotFoundException
    */

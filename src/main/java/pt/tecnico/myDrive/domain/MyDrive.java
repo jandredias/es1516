@@ -347,8 +347,8 @@ public class MyDrive extends MyDrive_Base {
   public void addUser(String username, String password, String name,
   Integer mask, String home) throws NotDirectoryException{
 
-    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-    String userHomeName = pieces.get(piecies.size()-1);
+    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(home.split("/")));
+    String userHomeName = pieces.get(pieces.size()-1);
 
     Directory rootHome;
     Directory usersHome;
@@ -357,8 +357,9 @@ public class MyDrive extends MyDrive_Base {
     rootHome = getDirectory(MyDrive.getPathWithoutFile(home));
       usersHome = getDirectory(home);
     }catch(FileNotFoundException e){
-      usersHome = addFile(MyDrive.getPathWithoutFile(home),
-          new Directory(userHomeName, getRootUser(), rootHome));
+      addFile(MyDrive.getPathWithoutFile(home),
+          new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
+      usersHome = getDirectory(home)
     }
     this.addUser(username, password, name, mask, usersHome);
   }
