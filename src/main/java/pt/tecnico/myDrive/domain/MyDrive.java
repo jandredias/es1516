@@ -239,7 +239,7 @@ public class MyDrive extends MyDrive_Base {
 
       log.trace("Importing directory " + name + " on " + path);
 
-        Directory parent = (Directory) this.getFile(path);
+        Directory parent = this.getDirectory(path);
         User owner = getUserByUsername(ownerUsername);
         try{
           parent.getFile(name);
@@ -249,10 +249,11 @@ public class MyDrive extends MyDrive_Base {
           }catch(FileNotFoundException | FileExistsException ex){
             //won't happen... i think... sorry if I'm mistaken
           }
+
         }
     }
 
-    /*for(Element plain : e.getChildren("plain")){
+    for(Element plain : e.getChildren("plain")){
       String name = plain.getChild("name").getValue();
       String path = plain.getChild("path").getValue();
       String ownerUsername = plain.getChild("owner").getValue();
@@ -290,7 +291,7 @@ public class MyDrive extends MyDrive_Base {
       }catch(FileNotFoundException es){
         new Application(app, owner, parent);
       }
-    }*/
+    }
     //Need to repeat this for setting users home correctly
     /*for(Element node : e.getChildren("root")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +
