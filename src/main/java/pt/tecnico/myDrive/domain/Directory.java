@@ -67,13 +67,8 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
-<<<<<<< HEAD
 
-  	public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
-=======
-  
-  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
->>>>>>> 28c27f86a161a8d710451bb29e4757dd5f398561
+  public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
 		this.xmlImport(xml, owner, parent);
 	}
 
@@ -161,14 +156,14 @@ public class Directory extends Directory_Base {
 		  else
 			  addFiles(f);
 	}
-	
+
 	public void addFile(String path, File file) throws FileExistsException{
 		if(path.equals("")){
 			this.addChildFile(file);
 			return;
 		}
 		//TODO recursive shit
-		
+
 	}
-	
+
 }
