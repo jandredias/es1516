@@ -21,7 +21,7 @@ public class Directory extends Directory_Base {
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
-	public Directory(String name, DateTime modification,
+	protected Directory(String name, DateTime modification,
 									Integer permissions, User owner, Directory father)
 									throws FileExistsException {
 	    init(name, modification, permissions, owner, father);
@@ -37,9 +37,9 @@ public class Directory extends Directory_Base {
 	 * @param Integer permissions
 	 * @param User owner
 	 */
-	private Directory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
+	private Directory(String name, DateTime modification, Integer permissions, User owner) {
 	        setName(name);
-	        setId(id);
+	        setId(MyDrive.getNewFileId());
 	        setModification(modification);
 	        setPermissions(permissions);
 	        setOwner(owner);
@@ -47,7 +47,7 @@ public class Directory extends Directory_Base {
   }
 
   public static Directory createRootDirectory(User owner) {
-	  		return new Directory(name, id,modification, permissions, owner);
+	  		return new Directory("/", new DateTime(),11111010, owner);
   }
   /**
    * Constructor that is used to import Directory from a XML Element
