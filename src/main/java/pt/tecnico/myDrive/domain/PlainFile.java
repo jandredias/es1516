@@ -21,13 +21,12 @@ public class PlainFile extends PlainFile_Base {
 
 	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
 		super.xmlImport(xml, owner, parent);
-		this.importContent(xml); //TODO Template Method
+		this.importContent(xml);
 	}
 
 	protected void importContent(Element xml) {
-		// TODO Auto-generated method stub
-
-	}
+    setContent(xml.getChild("contents").getValue());
+  }
 
 	public void init(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException {
 		super.init(name, id, modification, permissions, owner, father); //File Init

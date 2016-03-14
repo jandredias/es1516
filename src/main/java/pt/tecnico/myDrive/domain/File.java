@@ -23,14 +23,19 @@ public class File extends File_Base {
   }
 
   protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
-    init(
-      xml.getChild("name").getValue(),
-      Integer.parseInt(xml.getAttribute("id").getValue()),
-      DateTime.parse(xml.getChild("modification").getValue()),
-      Integer.parseInt(xml.getChild("permissions").getValue()),
-      owner,
-      parent
-      );
+
+    Integer id = Integer.parseInt(xml.getAttribute("id").getValue());
+    DateTime modification = new DateTime();
+    Integer permissions = 1;
+
+    if(xml.getChild("modification") != null)
+      modification = DateTime.parse(xml.getChild("modification").getValue());
+
+    if(xml.getChild("permissions") != null)
+      permissions = Integer.parseInt(xml.getChild("permissions").getValue());
+
+    init(xml.getChild("name").getValue(),
+      id, modification, permissions, owner, parent);
   }
 
 /**

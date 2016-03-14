@@ -35,10 +35,10 @@ public class MyDriveApplication {
       init();
       for (String s: args) xmlScan(new File(s));
 
-      setup();
+      //setup();
       xmlPrint();
-//      teste_tiago();
-//      listDirectoryTest();
+      //teste_tiago();
+      //listDirectoryTest();
 
     } finally { FenixFramework.shutdown(); }
 
