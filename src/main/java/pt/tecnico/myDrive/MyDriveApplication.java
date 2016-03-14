@@ -79,7 +79,14 @@ public class MyDriveApplication {
 
 
   public static void step1(MyDrive md){
+    try{
+      User rootUsr = md.getRootUser();
+      md.addFile("/home", new PlainFile("README",  new DateTime(), 11111011,
+      md.getRootUser(), "lista de utilizadores", md.getDirectory("/home")));
 
+    }catch(FileNotFoundException | FileExistsException | NotDirectoryException | InvalidFileNameException e){
+      //Do nothing
+    }
   }
   public static void step2(MyDrive md){
 
