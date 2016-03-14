@@ -49,24 +49,7 @@ public class Directory extends Directory_Base {
   public static Directory createRootDirectory(User owner) {
 	  		return new Directory("/", new DateTime(),11111010, owner);
   }
-  /**
-   * Constructor that is used to import Directory from a XML Element
-   *
-   * @param XML Element Node
-   * @param Directory parent
-   * @throws FileExistsException
-   * @throws NumberFormatException
-   */
-  /* TODO ANDRE this was here, probably remove
-  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileExistsException {
-    this(
-      e.getAttribute("name").getValue(),
-      Integer.parseInt(e.getAttribute("id").getValue()),
-      DateTime.parse(e.getAttribute("modification").getValue()),
-      Integer.parseInt(e.getAttribute("permissions").getValue()),
-      owner,
-      parent);
-  }*/
+
 
   public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
 		this.xmlImport(xml, owner, parent);
