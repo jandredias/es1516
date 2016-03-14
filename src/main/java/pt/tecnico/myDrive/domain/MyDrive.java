@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
@@ -59,7 +60,7 @@ public class MyDrive extends MyDrive_Base {
 
     this.setRootDirectory(rootDirectory);
 
-    Directory homeFolder;
+    Directory homeFolder = null;
 
 	try {
 		homeFolder = new Directory("home", new DateTime(), 11111010 , root, rootDirectory);
@@ -72,9 +73,11 @@ public class MyDrive extends MyDrive_Base {
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 			return;
 		}
+	} catch (InvalidFileNameException e) {
+		// Will never happen
 	}
 
-    Directory home_root;
+    Directory home_root = null;
   	try {
   		home_root = new Directory("root", new DateTime(), 11111010 , root, homeFolder);
   		getNewFileId();
@@ -86,7 +89,9 @@ public class MyDrive extends MyDrive_Base {
   			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
   			return;
   		}
-	   }
+  	} catch (InvalidFileNameException e) {
+		// Will never happen
+	}
 
     root.setUsersHome(home_root);
   }
@@ -202,10 +207,11 @@ public class MyDrive extends MyDrive_Base {
    * Receives the root element of a XML document and imports the file system
    *
    * @param Element
+ * @throws InvalidFileNameException 
    */
   public void xmlImport(Element e)
     throws InvalidUsernameException, FileNotFoundException,
-    NotDirectoryException, NoSuchUserException, FileExistsException {
+    NotDirectoryException, NoSuchUserException, FileExistsException, InvalidFileNameException {
     Element root = e.getChild("root");
     if(root != null){
       User rootUser = getRootUser();
@@ -365,8 +371,12 @@ public class MyDrive extends MyDrive_Base {
         try{
           usersHome = getDirectory(home);
         }catch(FileNotFoundException e){
-          addFile(MyDrive.getPathWithoutFile(home),
-              new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
+          try {
+			addFile(MyDrive.getPathWithoutFile(home),
+			      new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
+		} catch (InvalidFileNameException e1) {
+			throw new InvalidUsernameException();
+		}
           usersHome = getDirectory(home);
         }
         this.addUser(username, password, name, mask, usersHome);
@@ -412,8 +422,7 @@ public class MyDrive extends MyDrive_Base {
         try {
 			home = new Directory("home", new DateTime(), permissions , rootUser,rootDir);
 
-			MyDrive.getNewFileId();
-		} catch (FileExistsException e1) {
+		} catch (FileExistsException | InvalidFileNameException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 			return;
@@ -426,7 +435,6 @@ public class MyDrive extends MyDrive_Base {
       try {
 		userHome = new Directory(username, new DateTime(),permissions, rootUser, home);
 
-		MyDrive.getNewFileId();
 
       } catch (FileExistsException e) {
     	try {
@@ -436,7 +444,9 @@ public class MyDrive extends MyDrive_Base {
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 			return;
 		}
-      } finally {
+      } catch (InvalidFileNameException e) {
+    	  throw new InvalidUsernameException(username);
+	} finally {
 	    if(pwd == null || name == null || permissions == null){
 	      newUser = new User(username, userHome);
 	    }

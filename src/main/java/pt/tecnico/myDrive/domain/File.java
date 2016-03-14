@@ -7,6 +7,8 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
+
 import java.util.ArrayList;
 
 public class File extends File_Base {
@@ -14,16 +16,15 @@ public class File extends File_Base {
 
   protected File() { /* for deriver classes */ }
 
-  public File(String name, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException{
+  public File(String name, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
     init(name, modification, permissions, owner, parent);
   }
 
-  public File(Element xml, User owner, Directory parent) throws FileExistsException{
+  public File(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 	  this.xmlImport(xml, owner, parent);
   }
 
-  protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
-
+  protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException {
     Integer id = Integer.parseInt(xml.getAttribute("id").getValue());
     DateTime modification = new DateTime();
     Integer permissions = 1;
@@ -38,14 +39,17 @@ public class File extends File_Base {
   }
 
   protected void init(String name, DateTime modification,
-		    Integer permissions, User owner, Directory parent) throws FileExistsException{
+		    Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 
 	  init(name, MyDrive.getNewFileId() ,modification,permissions, owner, parent);
   }
 
   protected void init(String name, Integer id , DateTime modification,
-    Integer permissions, User owner, Directory parent) throws FileExistsException{
-	
+    Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
+	if(name.contains("/") || name.contains("\0")){
+		throw new InvalidFileNameException(name);
+	}
+
 	setName(name);
 
 	try {

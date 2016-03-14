@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 import java.util.ArrayList;
@@ -15,15 +16,15 @@ public class Application extends Application_Base {
         super();
     }
 
-    public Application(String name,  DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException{
+    public Application(String name,  DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException, InvalidFileNameException{
       	 init(name,  modification, permissions, owner,content, father);
     }
 
-    public Application(Element xml, User owner, Directory parent) throws FileExistsException{
+    public Application(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 		this.xmlImport(xml, owner, parent);
 	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent)throws FileExistsException {
+	protected void xmlImport(Element xml, User owner, Directory parent)throws FileExistsException, InvalidFileNameException {
 		super.xmlImport(xml, owner, parent);
 	}
 

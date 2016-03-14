@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,10 +21,11 @@ public class Directory extends Directory_Base {
 
 	/**
 	 * This is the most used constructor is used to create directories
+	 * @throws InvalidFileNameException 
 	 */
 	public Directory(String name, DateTime modification,
 									Integer permissions, User owner, Directory father)
-									throws FileExistsException {
+									throws FileExistsException, InvalidFileNameException {
 	    init(name, modification, permissions, owner, father);
 	}
 
@@ -51,11 +53,11 @@ public class Directory extends Directory_Base {
 	  }
 
 
-  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException{
+  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 		this.xmlImport(xml, owner, parent);
 	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException {
 		super.xmlImport(xml, owner, parent);
 	}
 
@@ -70,7 +72,7 @@ public class Directory extends Directory_Base {
 	throws UnsupportedOperationException {
 		visitor.visitDirectory(this);
 	}
-
+	
 	public File getFile(String fileName)
 			throws FileNotFoundException {
 
@@ -80,10 +82,9 @@ public class Directory extends Directory_Base {
 	    	pieces.remove(0);
 
 		if (pieces.size() == 1) {
-      System.out.println(pieces.get(0));
 			return getInnerFile(pieces.get(0));
 		}
-
+		
 		Directory nextDir = getDirectory(pieces.get(0));
 		pieces.remove(0);
 
@@ -93,9 +94,9 @@ public class Directory extends Directory_Base {
 	    	newPath += (s + "/");
 
 		return nextDir.getFile(newPath);
-
+		
 	}
-
+	
 	public File getInnerFile(String fileName)
 	throws FileNotFoundException {
 		for(File file: getFilesSet())
@@ -210,25 +211,16 @@ public class Directory extends Directory_Base {
 			if (pieces.size() > 0 && pieces.get(0).equals(""))
 		    	pieces.remove(0);
 
-      Directory nextDir = null;
-      try{
-			  nextDir = getDirectory(pieces.get(0));
-      }catch(FileNotFoundException e){
-        nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getOwner(), this);
-        if(hasFile(nextDir.getName()))
-			  throw new  FileExistsException(nextDir.getName());
-	    else
-			  addFiles(file);
-
-      }
-
-      pieces.remove(0);
-
+			Directory nextDir = null;
+			nextDir = getDirectory(pieces.get(0));
+			
+			pieces.remove(0);
+	
 		    String newPath = "";
-
+	
 		    for (String s : pieces)
 		    	newPath += (s + "/");
-
+	
 			nextDir.addFile(newPath, file);
 		}
 	}
