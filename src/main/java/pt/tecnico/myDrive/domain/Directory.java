@@ -70,7 +70,7 @@ public class Directory extends Directory_Base {
 	throws UnsupportedOperationException {
 		visitor.visitDirectory(this);
 	}
-	
+
 	public File getFile(String fileName)
 			throws FileNotFoundException {
 
@@ -80,9 +80,10 @@ public class Directory extends Directory_Base {
 	    	pieces.remove(0);
 
 		if (pieces.size() == 1) {
+      System.out.println(pieces.get(0));
 			return getInnerFile(pieces.get(0));
 		}
-		
+
 		Directory nextDir = getDirectory(pieces.get(0));
 		pieces.remove(0);
 
@@ -92,9 +93,9 @@ public class Directory extends Directory_Base {
 	    	newPath += (s + "/");
 
 		return nextDir.getFile(newPath);
-		
+
 	}
-	
+
 	public File getInnerFile(String fileName)
 	throws FileNotFoundException {
 		for(File file: getFilesSet())
