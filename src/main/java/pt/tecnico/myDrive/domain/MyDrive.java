@@ -55,29 +55,29 @@ public class MyDrive extends MyDrive_Base {
 
     Directory rootDirectory;
     rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
-    incrementFileId();
+    getNewFileId();
 
     this.setRootDirectory(rootDirectory);
 
     Directory homeFolder;
 
-  	try {
-  		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
-  		incrementFileId();
-  	} catch (FileExistsException e) {
-  		try {
-  			homeFolder = rootDirectory.getDirectory("home");
-  		} catch (FileNotFoundException e1) {
-  			/* Impossible case */
-  			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-  			return;
-  		}
-  	}
+	try {
+		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+		getNewFileId();
+	} catch (FileExistsException e) {
+		try {
+			homeFolder = rootDirectory.getDirectory("home");
+		} catch (FileNotFoundException e1) {
+			/* Impossible case */
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return;
+		}
+	}
 
     Directory home_root;
   	try {
   		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
-  		incrementFileId();
+  		getNewFileId();
   	} catch (FileExistsException e) {
   		try {
   			home_root = rootDirectory.getDirectory("root");
@@ -97,7 +97,7 @@ public class MyDrive extends MyDrive_Base {
    * @param String
    * @return String
    */
-  public static void getSubPath(String path){
+  public static String getSubPath(String path){
     ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
     if (pieces.size() > 0 && pieces.get(0).equals(""))
       pieces.remove(0);
@@ -114,7 +114,8 @@ public class MyDrive extends MyDrive_Base {
    * @param String path that doesn't not include the filename
    * @param File file to be added
    */
-  public void addFile(String path, File f) throws FileExistsException {
+  public void addFile(String path, File f)
+  throws FileExistsException, FileNotFoundException {
     getRootDirectory().addFile(this.getSubPath(path), f);
   }
 
@@ -123,7 +124,7 @@ public class MyDrive extends MyDrive_Base {
    *
    * @param String path that includes the file to delete
    */
-  public void removeFile(String path) {
+  public void removeFile(String path) throws FileNotFoundException{
     getRootDirectory().removeFile(this.getSubPath(path));
   }
 
@@ -134,15 +135,16 @@ public class MyDrive extends MyDrive_Base {
    *
    */
   public static int getNewFileId(){
-    Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId() + 1;
-    FenixFramework.getDomainRoot().getMyDrive().setFileId(id);
+    Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId();
+    FenixFramework.getDomainRoot().getMyDrive().setFileId(id + 1);
+    return id;
   }
 
   /**
    * Get File from a directory
    */
-  public File getFile(String path){
-    getRootDirectory().getFile(this.getSubPath(path));
+  public File getFile(String path) throws FileNotFoundException {
+    return getRootDirectory().getFile(this.getSubPath(path));
   }
 
   public Directory getDirectoryFromPath(String path)
@@ -343,7 +345,7 @@ public class MyDrive extends MyDrive_Base {
       catch (FileNotFoundException e){
         try {
 			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
-			this.incrementFileId();
+			this.getNewFileId();
 		} catch (FileExistsException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -356,7 +358,7 @@ public class MyDrive extends MyDrive_Base {
 
       try {
 		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
-		this.incrementFileId();
+		this.getNewFileId();
 
       } catch (FileExistsException e) {
     	try {

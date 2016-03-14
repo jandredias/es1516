@@ -13,6 +13,7 @@ import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Directory extends Directory_Base {
 
@@ -157,13 +158,49 @@ public class Directory extends Directory_Base {
 			  addFiles(f);
 	}
 
-	public void addFile(String path, File file) throws FileExistsException{
+
+  /**
+   * Remove a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @throws FileNotFoundException
+   */
+  public void removeFile(String path) throws FileNotFoundException{
+    throw new FileNotFoundException();
+    //TODO
+  }
+
+  /**
+   * Adds a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @param File 
+   * @throws FileExistsException
+   * @throws FileNotFoundException
+   */
+	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
+
 		if(path.equals("")){
 			this.addChildFile(file);
 			return;
 		}
-		//TODO recursive shit
+		else {
+			ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
 
+		    //Removing empty String due to / in first position
+			if (pieces.size() > 0 && pieces.get(0).equals(""))
+		    	pieces.remove(0);
+
+			Directory nextDir = getDirectory(pieces.get(0));
+			pieces.remove(0);
+
+		    String newPath = "";
+
+		    for (String s : pieces)
+		    	newPath += (s + "/");
+
+			nextDir.addFile(newPath, file);
+		}
 	}
 
 }
