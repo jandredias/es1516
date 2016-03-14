@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.MyDrive;
 
 import org.jdom2.Element;
 
@@ -40,7 +41,7 @@ public class User extends User_Base {
      	nameElement.addContent(getName());
 
      	Element permissionsElement = new Element("mask");
-     	permissionsElement.addContent(Integer.toString(getPermissions()));
+     	permissionsElement.addContent(MyDrive.permissions(getPermissions()));
 
      	Element homeElement = new Element("home");
      	homeElement.addContent(getUsersHome().getPath());

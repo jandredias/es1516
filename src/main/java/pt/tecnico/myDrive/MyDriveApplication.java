@@ -56,7 +56,7 @@ public class MyDriveApplication {
 
     MyDrive md = MyDrive.getInstance();
     log.trace("Setup: Create MyDrive");
-    step1(md);
+    //step1(md);
     step2(md);
     step3(md);
     step4(md);
@@ -78,15 +78,73 @@ public class MyDriveApplication {
       //Do nothing
     }
   }
-  public static void step2(MyDrive md){}
-  public static void step3(MyDrive md){}
-  public static void step4(MyDrive md){}
-  public static void step5(MyDrive md){}
-  public static void step6(MyDrive md){}
-  public static void step7(MyDrive md){}
-  public static void step8(MyDrive md){}
-  public static void step9(MyDrive md){}
-  public static void step10(MyDrive md){}
+  public static void step2(MyDrive md){
+
+  }
+  public static void step3(MyDrive md){
+    try{
+      pt.tecnico.myDrive.domain.File f = md.getFile("/home/README");
+      if(f.getClass() == PlainFile.class)
+        System.out.println( ((PlainFile)f ).getContent());
+    }catch(FileNotFoundException e){
+      //Do nothing
+    }
+  }
+  public static void step4(MyDrive md){
+    try {
+      md.removeFile("/usr/local/bin");
+    } catch (FileNotFoundException | DirectoryIsNotEmptyException e2) {
+      e2.printStackTrace();
+    }
+  }
+  public static void step5(MyDrive md){
+    //xmlPrint
+  }
+  public static void step6(MyDrive md){
+    try{
+      md.removeFile("/home/README");
+    } catch (FileNotFoundException | DirectoryIsNotEmptyException e2) {
+      //e2.printStackTrace();
+      log.error("The file doesn't exist");
+    }
+  }
+  public static void step7(MyDrive md){
+    try {
+      System.out.println("Directory Listing /home: " + md.listDir("/home"));
+    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+  }
+  public static void step8(MyDrive md){
+    //8
+    try {
+      System.out.println("Directory Listing /: " + md.listDir("/"));
+    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+  }
+  public static void step9(MyDrive md){
+    System.out.println("Deleting /usr");
+    try {
+      md.removeFile("/usr");
+    } catch (DirectoryIsNotEmptyException e) {
+      System.out.println("ERROR: Directory not empty");
+    } catch (FileNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  public static void step10(MyDrive md){
+    try {
+      String folder = "/";
+      System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
+    } catch (UnsupportedOperationException | FileNotFoundException | NotDirectoryException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+  }
 
 	/*
 	* Prints a XML output to console
