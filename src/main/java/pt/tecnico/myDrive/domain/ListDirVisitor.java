@@ -22,7 +22,8 @@ public class ListDirVisitor implements Visitor{
 	fileNames.add(".");
 	fileNames.add("..");
         for(File file : d.getFilesSet()){
-            fileNames.add(file.getName());
+	    if(file.getName() != "/")
+                fileNames.add(file.getName());
         }
     }
 

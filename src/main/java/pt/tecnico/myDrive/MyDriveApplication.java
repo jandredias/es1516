@@ -18,6 +18,7 @@ import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -48,6 +49,8 @@ public class MyDriveApplication {
   @Atomic
   public static void setup() {
     log.trace("Setup: " + FenixFramework.getDomainRoot());
+
+    listDirectoryTest();
 
     MyDrive md = MyDrive.getInstance();
     //1
@@ -316,6 +319,36 @@ public static void xmlScan(File file) {
   }
 
   log.trace("End of xmlScan");
+}
+
+public static void listDirectoryTest() {
+
+  try {
+
+  MyDrive md = MyDrive.getInstance();
+
+  User rootUsr = md.getRootUser();
+  Directory rootDir = md.getRootDirectory();
+  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+  Directory testDir2 = new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
+  testDir.addFile(testDir2);
+  Directory testDir3 = new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
+  testDir.addFile(testDir3);
+  log.debug(md.listDir("/testDir"));
+    
+  } catch (FileAlreadyExistsException e) {
+    e.printStackTrace();
+  }
+  catch (UnsupportedOperationException e) {
+    e.printStackTrace();
+  }
+  catch (FileNotFoundException e) {
+    e.printStackTrace();
+  }
+  catch (NotDirectoryException e) {
+    e.printStackTrace();
+  }
+
 }
 
 
