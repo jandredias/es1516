@@ -44,14 +44,14 @@ public class Directory extends Directory_Base {
 	        setPermissions(permissions);
 	        setOwner(owner);
 	        setDir(this);
-  }
+	  }
+	
+	  public static Directory createRootDirectory(User owner) {
+		  		return new Directory("/", new DateTime(),11111010, owner);
+	  }
 
-  public static Directory createRootDirectory(User owner) {
-	  		return new Directory("/", new DateTime(),11111010, owner);
-  }
 
-
-  public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
+  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException{
 		this.xmlImport(xml, owner, parent);
 	}
 
