@@ -34,8 +34,8 @@ public class MyDriveApplication {
     //TODO
     try {
 
-//      init();
-//      for (String s: args) xmlScan(new File(s));
+      init();
+      for (String s: args) xmlScan(new File(s));
 
       try {
 		setup();
@@ -65,7 +65,7 @@ public class MyDriveApplication {
     MyDrive md = MyDrive.getInstance();
     log.trace("Setup: Create MyDrive");
 
-    //step1(md);
+    step1(md);
     step2(md);
     step3(md);
     step4(md);
@@ -82,14 +82,27 @@ public class MyDriveApplication {
     try{
       User rootUsr = md.getRootUser();
       md.addFile("/home", new PlainFile("README",  new DateTime(), 11111011,
-      md.getRootUser(), "lista de utilizadores", md.getDirectory("/home")));
+    		  md.getRootUser(), "lista de utilizadores", md.getDirectory("/home")));
 
     }catch(FileNotFoundException | FileExistsException | NotDirectoryException | InvalidFileNameException e){
       //Do nothing
     }
   }
   public static void step2(MyDrive md){
+	  try {
+		  new Directory("usr",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/"));
+		  new Directory("local",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/usr"));
+		  new Directory("bin",  new DateTime(), 11111011,
+				  md.getRootUser(),  md.getDirectory("/usr/local"));
+			
+	  } catch (FileExistsException | FileNotFoundException | InvalidFileNameException | NotDirectoryException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	  }
 
+	  
   }
   public static void step3(MyDrive md){
     try{
