@@ -14,8 +14,8 @@ public class File extends File_Base {
 
   protected File() { /* for deriver classes */ }
 
-  public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException{
-    init(name, id, modification, permissions, owner, parent);
+  public File(String name, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException{
+    init(name, modification, permissions, owner, parent);
   }
 
   public File(Element xml, User owner, Directory parent) throws FileExistsException{
@@ -33,25 +33,21 @@ public class File extends File_Base {
 
     if(xml.getChild("permissions") != null)
       permissions = Integer.parseInt(xml.getChild("permissions").getValue());
-
     init(xml.getChild("name").getValue(),
       id, modification, permissions, owner, parent);
   }
 
-/**
-   * Throws exception when File cannot be a parent File
-   *
-   * @throws NotDirectoryException
-   */
-  public void isParentable() throws NotDirectoryException{
-    throw new NotDirectoryException();
+  protected void init(String name, DateTime modification,
+		    Integer permissions, User owner, Directory parent) throws FileExistsException{
+	  
+	  init(name, MyDrive.getNewFileId() ,modification,permissions, owner, parent);
   }
   
-  protected void init(String name, Integer id, DateTime modification,
+  protected void init(String name, Integer id , DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileExistsException{
 
 	if( name.equals(".") || name.equals("..") ) {
-		this.deleteDomainObject();
+//		this.deleteDomainObject();
 		throw new FileExistsException(name);
 	}
 	  
@@ -61,8 +57,16 @@ public class File extends File_Base {
     setPermissions(permissions);
     setOwner(owner);
 
-    parent.addChildFile(this);
-
+//    	parent.addFile(this);
+  }
+  
+  /**
+   * Throws exception when File cannot be a parent File
+   *
+   * @throws NotDirectoryException
+   */
+  public void isParentable() throws NotDirectoryException{
+	  throw new NotDirectoryException();
   }
 
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
@@ -85,7 +89,7 @@ public class File extends File_Base {
       return fatherDir.getPath();
   }
 
-  public void deleteFile() throws NotDirectoryException, DirectoryIsNotEmptyException {
+  public void deleteFile() throws DirectoryIsNotEmptyException {
 
     this.setDir(null);
     this.setOwner(null);

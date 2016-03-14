@@ -11,9 +11,9 @@ public class Link extends Link_Base {
 
     public Link(){ super(); }
 
-    public Link(String name, Integer id, DateTime modification,
+    public Link(String name, DateTime modification,
     Integer permissions, User owner, String content, Directory father) throws FileExistsException{
-   	  init(name, id, modification, permissions, owner, content, father);
+   	  init(name,  modification, permissions, owner, content, father);
     }
 
     public Link(Element xml, User owner, Directory parent)throws FileExistsException {

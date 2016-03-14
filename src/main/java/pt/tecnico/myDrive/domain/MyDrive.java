@@ -62,7 +62,7 @@ public class MyDrive extends MyDrive_Base {
     Directory homeFolder;
 
 	try {
-		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+		homeFolder = new Directory("home", new DateTime(), 11111010 , root, rootDirectory);
 		getNewFileId();
 	} catch (FileExistsException e) {
 		try {
@@ -76,7 +76,7 @@ public class MyDrive extends MyDrive_Base {
 
     Directory home_root;
   	try {
-  		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+  		home_root = new Directory("root", new DateTime(), 11111010 , root, homeFolder);
   		getNewFileId();
   	} catch (FileExistsException e) {
   		try {
@@ -116,16 +116,17 @@ public class MyDrive extends MyDrive_Base {
    */
   public void addFile(String path, File f)
   throws FileExistsException, FileNotFoundException {
-    getRootDirectory().addFile(this.getSubPath(path), f);
+    getRootDirectory().addFile(MyDrive.getSubPath(path), f);
   }
 
   /**
    * Removes a file from a Directory
    *
    * @param String path that includes the file to delete
+ * @throws DirectoryIsNotEmptyException 
    */
-  public void removeFile(String path) throws FileNotFoundException{
-    getRootDirectory().removeFile(this.getSubPath(path));
+  public void removeFile(String path) throws FileNotFoundException, DirectoryIsNotEmptyException{
+    getRootDirectory().removeFile(MyDrive.getSubPath(path));
   }
 
   /**
@@ -144,7 +145,7 @@ public class MyDrive extends MyDrive_Base {
    * Get File from a directory
    */
   public File getFile(String path) throws FileNotFoundException {
-    return getRootDirectory().getFile(this.getSubPath(path));
+    return getRootDirectory().getFile(MyDrive.getSubPath(path));
   }
 
   public Directory getDirectoryFromPath(String path)
@@ -344,8 +345,8 @@ public class MyDrive extends MyDrive_Base {
       }
       catch (FileNotFoundException e){
         try {
-			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
-			this.getNewFileId();
+			home = new Directory("home", new DateTime(), permissions , rootUser,rootDir);
+			MyDrive.getNewFileId();
 		} catch (FileExistsException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -357,8 +358,8 @@ public class MyDrive extends MyDrive_Base {
       User newUser;
 
       try {
-		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
-		this.getNewFileId();
+		userHome = new Directory(username, new DateTime(),permissions, rootUser, home);
+		MyDrive.getNewFileId();
 
       } catch (FileExistsException e) {
     	try {
