@@ -33,8 +33,8 @@ public class MyDriveApplication {
     //TODO
     try {
 
-      init();
-      for (String s: args) xmlScan(new File(s));
+//      init();
+//      for (String s: args) xmlScan(new File(s));
 
       setup();
       xmlPrint();
@@ -257,7 +257,10 @@ public class MyDriveApplication {
     } catch (UsernameAlreadyInUseException e) {
     // TODO Auto-generated catch block
     System.out.println("duplicate user miguel");
-    }
+    } catch (NotDirectoryException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
     try {
     md.addUser("miguel");
@@ -266,7 +269,10 @@ public class MyDriveApplication {
     e.printStackTrace();
     } catch (UsernameAlreadyInUseException e) {
     System.out.println("ERROR (EXPECTED & INTENDED): duplicate user miguel");
-    }
+    } catch (NotDirectoryException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     try {
     System.out.println("Deleting /home/miguel");
     md.removeFile("/home/miguel");

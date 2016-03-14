@@ -73,6 +73,11 @@ public class Directory extends Directory_Base {
 	
 	public File getFile(String fileName)
 			throws FileNotFoundException {
+		if (!fileName.equals("")){
+			System.out.println("PATH" + fileName); //TODO DELETE
+		} else {
+			throw new FileNotFoundException("FODAXE");
+		}
 		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
 		//Removing empty String due to / in first position
 		if (pieces.size() > 0 && pieces.get(0).equals(""))
