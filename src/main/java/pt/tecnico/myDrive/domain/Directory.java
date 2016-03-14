@@ -70,8 +70,31 @@ public class Directory extends Directory_Base {
 	throws UnsupportedOperationException {
 		visitor.visitDirectory(this);
 	}
-
+	
 	public File getFile(String fileName)
+			throws FileNotFoundException {
+		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
+		//Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+	    	pieces.remove(0);
+
+		if (pieces.size() == 1) {
+			return getInnerFile(pieces.get(0));
+		}
+		
+		Directory nextDir = getDirectory(pieces.get(0));
+		pieces.remove(0);
+
+	    String newPath = "";
+
+	    for (String s : pieces)
+	    	newPath += (s + "/");
+
+		return nextDir.getFile(newPath);
+		
+	}
+	
+	public File getInnerFile(String fileName)
 	throws FileNotFoundException {
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName))
@@ -190,7 +213,10 @@ public class Directory extends Directory_Base {
 			  nextDir = getDirectory(pieces.get(0));
       }catch(FileNotFoundException e){
         nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getOwner(), this);
-        this.addChildFile(nextDir);
+        if(hasFile(nextDir.getName()))
+			  throw new  FileExistsException(nextDir.getName());
+	    else
+			  addFiles(file);
 
       }
 
