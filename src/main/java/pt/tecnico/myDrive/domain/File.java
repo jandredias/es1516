@@ -17,13 +17,20 @@ public class File extends File_Base {
   public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
     init(name, id, modification, permissions, owner, parent);
   }
-  
-  public File(Element xml){
-	  this.xmlImport(xml);
+
+  public File(Element xml, User owner, Directory parent) throws FileAlreadyExistsException{
+	  this.xmlImport(xml, owner, parent);
   }
 
-  protected void xmlImport(Element xml) {
-	// TODO Auto-generated method stub
+  protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+    init(
+      xml.getChild("name").getValue(),
+      Integer.parseInt(xml.getAttribute("id").getValue()),
+      DateTime.parse(xml.getChild("modification").getValue()),
+      Integer.parseInt(xml.getChild("permissions").getValue()),
+      owner,
+      parent
+      );
   }
 
 /**
@@ -37,8 +44,8 @@ public class File extends File_Base {
 
   protected void init(String name, Integer id, DateTime modification,
     Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
-	
-    
+
+
 	setName(name);
     setId(id);
     setModification(modification);
@@ -46,7 +53,7 @@ public class File extends File_Base {
     setOwner(owner);
 
     parent.addChildFile(this);
-    
+
   }
 
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
@@ -55,7 +62,7 @@ public class File extends File_Base {
 
   public String getPath() {
 	  String myName = getName();
-	  if (myName.equals("/")) 
+	  if (myName.equals("/"))
 		  return myName;
 	  else {
 	      Directory fatherDir = getDir();
@@ -63,7 +70,7 @@ public class File extends File_Base {
 	      return fatherDir.getPath() + "/" + myName;
 	  }
   }
-  
+
   public String getFatherPath() {
       Directory fatherDir = getDir();
       return fatherDir.getPath();
@@ -85,7 +92,7 @@ public class File extends File_Base {
     Element pathElement = new Element("path");
     pathElement.addContent(getFatherPath());
  	element.addContent(pathElement);
-    
+
     Element ownerElement = new Element("owner");
     ownerElement.addContent(getOwner().getUsername());
  	element.addContent(ownerElement);
@@ -93,15 +100,15 @@ public class File extends File_Base {
     Element nameElement = new Element("name");
     nameElement.addContent(getName());
  	element.addContent(nameElement);
- 	
+
  	Element modificationElement = new Element("modification");
  	modificationElement.addContent(getModification().toString());
  	element.addContent(modificationElement);
- 	
+
  	Element permissionsElement = new Element("permissions");
  	permissionsElement.addContent(Integer.toString(getPermissions()));
  	element.addContent(permissionsElement);
- 	
+
     array.add(element);
     return array;
   }

@@ -11,20 +11,20 @@ import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
-	
+
 	/**
-	 * This is the most used constructor is used to create directories 
+	 * This is the most used constructor is used to create directories
 	 */
 	public Directory(String name, Integer id, DateTime modification,
 	Integer permissions, User owner, Directory father)
-	throws FileAlreadyExistsException {		
+	throws FileAlreadyExistsException {
 	    init(name, id, modification, permissions, owner, father);
 	}
-	
+
 	/**
 	 * This construtor is used by createRootDir when called by Manager
 	 * to create the root directory
-	 * 
+	 *
 	 * @param String name
 	 * @param Integer id
 	 * @param Datetime modification date
@@ -39,7 +39,7 @@ public class Directory extends Directory_Base {
 	        setOwner(owner);
 	        setDir(this);
   }
-  
+
   public static Directory createRootDirectory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
 	  		return new Directory(name, id,modification, permissions, owner);
   }
@@ -48,11 +48,11 @@ public class Directory extends Directory_Base {
    *
    * @param XML Element Node
    * @param Directory parent
- * @throws FileAlreadyExistsException 
- * @throws NumberFormatException 
+   * @throws FileAlreadyExistsException
+   * @throws NumberFormatException
    */
-  /* TODO ANDRE this was here, probably remove 
-  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileAlreadyExistsException{
+  /* TODO ANDRE this was here, probably remove
+  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileAlreadyExistsException {
     this(
       e.getAttribute("name").getValue(),
       Integer.parseInt(e.getAttribute("id").getValue()),
@@ -61,13 +61,13 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
-  	public Directory(Element xml) {
-		this.xmlImport(xml);
+  public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+		this.xmlImport(xml, owner, parent);
 	}
-	
-	protected void xmlImport(Element xml) {
-		super.xmlImport(xml);
-	}	
+
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+		super.xmlImport(xml, owner, parent);
+	}
 
 	/**
 	* Throws exception when File cannot be a parent File

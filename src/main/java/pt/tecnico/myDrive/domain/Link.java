@@ -15,26 +15,26 @@ public class Link extends Link_Base {
    	 init(name, id, modification, permissions, owner,content, father);
    }
 
-    public Link(Element xml) {
-		this.xmlImport(xml);
+    public Link(Element xml, User owner, Directory parent)throws FileAlreadyExistsException {
+		this.xmlImport(xml, owner, parent);
 	}
-	
-	protected void xmlImport(Element xml) {
-		super.xmlImport(xml);
+
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException{
+		super.xmlImport(xml, owner, parent);
 	}
 
 	protected void importContent(Element xml) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
     public ArrayList<Element> xmlExport() {
         ArrayList<Element> array = super.xmlExport();
        	array.get(0).setName("link");
-       	
+
        	Element methotdElement = array.get(0).getChild("contents");
        	methotdElement.setName("value");
-       	
+
        	return array;
     }
     public void accept(Visitor visitor) throws UnsupportedOperationException {

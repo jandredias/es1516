@@ -31,8 +31,8 @@ public class MyDriveApplication {
 
   public static void main(String[] args) throws IOException {
     //TODO
-	
     try {
+      init();
       for (String s: args) xmlScan(new File(s));
 
       setup();
@@ -70,9 +70,9 @@ public class MyDriveApplication {
 		homeDir = new Directory("home", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		md.incrementFileId();
       } catch (FileAlreadyExistsException e) {
-			/* Impossible case */ 
+			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return; 
+			return;
       }
       return;
     };
@@ -83,7 +83,7 @@ public class MyDriveApplication {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();
 	}
-    
+
     //2
     Directory usr;
 	try {
@@ -93,11 +93,11 @@ public class MyDriveApplication {
 		try {
 			usr = rootDir.getDirectory("usr");
 		} catch (FileNotFoundException e) {
-			/* Impossible case */ 
+			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return; 
+			return;
 		}
-		
+
 	}
     Directory local;
 	try {
@@ -107,12 +107,12 @@ public class MyDriveApplication {
 		try {
 			local = rootDir.getDirectory("local");
 		} catch (FileNotFoundException e) {
-			/* Impossible case */ 
+			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-			return; 
+			return;
 		}
 	}
-	
+
     try {
 		new Directory("bin", md.getFileId(), new DateTime(), 11111010, rootUsr, local);
 	} catch (FileAlreadyExistsException e2) {
@@ -317,7 +317,7 @@ public class MyDriveApplication {
 		e.printStackTrace();
 	}
 	*/
-	
+
 	try {
 		String folder = "/";
 		System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -344,7 +344,7 @@ public class MyDriveApplication {
 	    System.out.println(e);
 	  }
 	}
-	
+
 	/**
 	* Reads a XML file and imports the content to the filesystem
 	*
@@ -353,7 +353,7 @@ public class MyDriveApplication {
 	@Atomic
 	public static void xmlScan(File file) {
 	  log.trace("xmlScan: " + FenixFramework.getDomainRoot());
-	
+
 	  MyDrive md = MyDrive.getInstance();
 	  SAXBuilder builder = new SAXBuilder();
 	  try {
@@ -363,17 +363,17 @@ public class MyDriveApplication {
 	  } catch(JDOMException | IOException e) {
 	    e.printStackTrace();
 	  } catch(InvalidUsernameException e){
-	    //TODO
+	    System.out.println("Invalid username on XML import file");
 	  } catch(FileNotFoundException e){
-	    //TODO
+	    System.out.println("File not found on XML import file");
 	  } catch(NotDirectoryException e) {
-	    //TODO
+	    System.out.println("Only directories can contain another files");
 	  } catch(NoSuchUserException e) {
-	    //TODO
+	    System.out.println("There is not such a user on XML import file");
 	  }catch(FileAlreadyExistsException e){
-	    //TODO
+	    System.out.println("Duplicated file on XML import file");
 	  }
-	
+
 	  log.trace("End of xmlScan");
 	}
 
@@ -382,14 +382,14 @@ public class MyDriveApplication {
 	  try {
 
 		  MyDrive md = MyDrive.getInstance();
-	
+
 		  User rootUsr = md.getRootUser();
 		  Directory rootDir = md.getRootDirectory();
 		  Directory testDir = new Directory("testDir", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		  new Directory("testDir2", md.getFileId(), new DateTime(), 11111010, rootUsr, testDir);
 		  new Directory("testDir3", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
 		  log.debug(md.listDir("/testDir"));
-	    
+
 	  } catch (FileAlreadyExistsException e) {
 	    e.printStackTrace();
 	  }
@@ -410,7 +410,7 @@ public class MyDriveApplication {
 		MyDrive md = MyDrive.getInstance();
 		Directory rootDir = md.getRootDirectory();
 		User rootUsr = md.getRootUser();
-		
+
 		Directory olaDir;
 		try {
 			olaDir = new Directory("ola12345678", md.getFileId(), new DateTime(), 11111010, rootUsr, rootDir);
@@ -420,12 +420,12 @@ public class MyDriveApplication {
 				olaDir = rootDir.getDirectory("ola12345678");
 				md.incrementFileId();
 			} catch (FileNotFoundException e) {
-				/* Impossible case */ 
+				/* Impossible case */
 				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-				return; 
+				return;
 			}
 		}
-		
+
 		PlainFile file = null;
 		try {
 			file = new PlainFile("README", md.getFileId(), new DateTime(), 11111011, rootUsr, "cenas", olaDir);
@@ -434,7 +434,7 @@ public class MyDriveApplication {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
+
 		try{
 			md.deleteFile("/");
 			}
@@ -447,7 +447,7 @@ public class MyDriveApplication {
 			catch (NotDirectoryException e) {
 				e.printStackTrace();
 			}
-		
+
 		try {
 			String folder = "/";
 			System.out.println("Directory Listing "+folder+" : " + md.listDir(folder));
@@ -473,7 +473,7 @@ public class MyDriveApplication {
 		catch (NotDirectoryException e) {
 			e.printStackTrace();
 		}
-		
+
 		try{
 			md.deleteFile("/ola12345678/README");
 			}
@@ -499,7 +499,7 @@ public class MyDriveApplication {
 			catch (FileAlreadyExistsException e){
 				log.debug("Trying to add file that already exists");
 			}
-		
+
 		try{
 			md.deleteFile("/ola12345678/ola12345678");
 			}
@@ -524,9 +524,9 @@ public class MyDriveApplication {
 			catch (NotDirectoryException e) {
 				e.printStackTrace();
 			}
-		
-		
-		
+
+
+
 		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 	  }
 	}

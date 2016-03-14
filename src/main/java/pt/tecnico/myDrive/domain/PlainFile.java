@@ -14,19 +14,19 @@ public class PlainFile extends PlainFile_Base {
 	public PlainFile(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException{
 		init(name, id, modification, permissions, owner, content, father);
     }
-	
-	public PlainFile(Element xml) {
-		this.xmlImport(xml);
+
+	public PlainFile(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+		this.xmlImport(xml, owner, parent);
 	}
-	
-	protected void xmlImport(Element xml) {
-		super.xmlImport(xml);
+
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+		super.xmlImport(xml, owner, parent);
 		this.importContent(xml); //TODO Template Method
 	}
 
 	protected void importContent(Element xml) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void init(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException {
@@ -37,11 +37,11 @@ public class PlainFile extends PlainFile_Base {
      public ArrayList<Element> xmlExport() {
        ArrayList<Element> array = super.xmlExport();
         array.get(0).setName("plain");
-        
+
         Element contentsElement = new Element("contents");
         contentsElement.addContent(getContent());
         array.get(0).addContent(contentsElement);
-     	
+
         return array;
      }
      public void accept(Visitor visitor) throws UnsupportedOperationException {
