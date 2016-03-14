@@ -55,5 +55,5 @@ public class User extends User_Base {
 
 	public void remove() {
     //TODO
-  }
+	}
 }

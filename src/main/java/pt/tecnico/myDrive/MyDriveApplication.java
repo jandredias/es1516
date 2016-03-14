@@ -281,6 +281,15 @@ public class MyDriveApplication {
 	} catch (UsernameAlreadyInUseException e) {
 		System.out.println("ERROR (EXPECTED & INTENDED): duplicate user miguel");
 	}
+    try {
+        System.out.println("Deleting /home/miguel");
+        md.deleteFile("/home/miguel");
+      } catch (DirectoryIsNotEmptyException e) {
+        System.out.println("ERROR: Directory not empty");
+      } catch (NotDirectoryException | FileNotFoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
 
 	try {
@@ -346,7 +355,7 @@ public class MyDriveApplication {
 	}
 
 	/**
-	* Reads a XML file and imports the content to the filesystem
+	* Reads a XML file and imports the content to the file system
 	*
 	* @param File
 	*/
@@ -376,7 +385,8 @@ public class MyDriveApplication {
 
 	  log.trace("End of xmlScan");
 	}
-
+	
+	@Atomic
 	public static void listDirectoryTest() {
 
 	  try {
@@ -405,6 +415,7 @@ public class MyDriveApplication {
 
 	}
 
+	@Atomic
 	public static void teste_tiago(){
 		log.debug("TIAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		MyDrive md = MyDrive.getInstance();

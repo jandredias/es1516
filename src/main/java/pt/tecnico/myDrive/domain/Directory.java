@@ -2,6 +2,8 @@ package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
 
+	static final Logger log = LogManager.getRootLogger();	
+	
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
@@ -102,8 +106,13 @@ public class Directory extends Directory_Base {
 	public void deleteFile() throws NotDirectoryException,
 	DirectoryIsNotEmptyException {
 		if(getFilesSet().isEmpty()){
-		  //TODO if has user cannot delete without deleting the user too
-		  super.deleteFile();
+			User user = getOwnerHome();
+			if( user != null) {
+				Directory newHome = this.getDir();
+				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
+				user.setUsersHome(newHome);
+			}
+			super.deleteFile();
 		}
 		else throw new DirectoryIsNotEmptyException();
 	}
