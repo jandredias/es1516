@@ -70,8 +70,8 @@ public class File extends File_Base {
     setModification(modification);
     setPermissions(permissions);
     setOwner(owner);
-    
-	
+
+
   }
 
   /**
@@ -86,11 +86,6 @@ public class File extends File_Base {
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
     throw new NotDirectoryException(fileName);
   }
-  
-  /*
-  public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
-	    throw new NotDirectoryException(fileName);
-  }*/
 
   public String getPath() {
 	  String myName = getName();
@@ -138,7 +133,7 @@ public class File extends File_Base {
  	element.addContent(modificationElement);
 
  	Element permissionsElement = new Element("permissions");
- 	permissionsElement.addContent(Integer.toString(getPermissions()));
+ 	permissionsElement.addContent(MyDrive.permissions(getPermissions()));
  	element.addContent(permissionsElement);
 
     array.add(element);

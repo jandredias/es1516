@@ -219,22 +219,21 @@ public class MyDrive extends MyDrive_Base {
       rootUser.setName(root.getChild("name").getValue());
       rootUser.setUsername(root.getAttribute("username").getValue());
       rootUser.setPassword(root.getChild("password").getValue());
-      rootUser.setPermissions(Integer.parseInt(root.getChild("mask").getValue()));
+      rootUser.setPermissions(MyDrive.permissions(root.getChild("mask").getValue()));
     }
     for(Element node : e.getChildren("user")){
       log.trace("Adding user to filesystem: " + node.getAttribute("username").getValue());
       try{
-        this.addUser(
-          node.getAttribute("username").getValue(),
-          node.getChild("password").getValue(),
-          node.getChild("name").getValue(),
-          Integer.parseInt(node.getChild("mask").getValue())
-        );
+        String username = node.getAttribute("username").getValue();
+        String password = (node.getChild("password") == null) ? username : node.getChild("password").getValue();
+        String name = (node.getChild("password") == null) ? username : node.getChild("name").getValue();
+        Integer permissions = (node.getChild("mask") == null) ? 11111010 : MyDrive.permissions(node.getChild("mask").getValue());
+        this.addUser(username, password,name,permissions);
       }catch(UsernameAlreadyInUseException ex){ //Update user
         User user = getUserByUsername(node.getAttribute("username").getValue());
-        user.setName(node.getChild("name").getValue());
-        user.setPassword(node.getChild("password").getValue());
-        user.setPermissions(Integer.parseInt(node.getChild("mask").getValue()));
+        user.setName((node.getChild("password") == null) ? user.getUsername() : node.getChild("name").getValue());
+        user.setPassword((node.getChild("password") == null) ? user.getUsername() : node.getChild("password").getValue());
+        user.setPermissions((node.getChild("mask") == null) ? 11111010 : MyDrive.permissions(node.getChild("mask").getValue()));
       }
     }
 
@@ -490,5 +489,14 @@ public class MyDrive extends MyDrive_Base {
       DirectoryIsNotEmptyException,
       FileNotFoundException{
     getFile(path).deleteFile();
+  }
+
+  public static String permissions(int p){
+    //TODO
+    return "rwxdr-x-";
+  }
+  public static int permissions(String p){
+    //TODO
+    return 11111010;
   }
 }
