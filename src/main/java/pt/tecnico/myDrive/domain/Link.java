@@ -12,7 +12,7 @@ public class Link extends Link_Base {
     public Link(){ super(); }
 
     public Link(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException{
-   	 init(name, id, modification, permissions, owner,content, father);
+   	 //init(name, id, modification, permissions, owner,content, father);
    }
     
     public ArrayList<Element> xmlExport() {

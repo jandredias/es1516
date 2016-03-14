@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PlainFile extends PlainFile_Base {
 
-    protected PlainFile() { /*for derived classes*/}
+    protected PlainFile() { /*for derived classes*/ }
 
 	public PlainFile(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileAlreadyExistsException{
 		init(name, id, modification, permissions, owner,content, father);
