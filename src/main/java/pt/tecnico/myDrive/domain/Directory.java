@@ -46,7 +46,7 @@ public class Directory extends Directory_Base {
 	        setDir(this);
   }
 
-  public static Directory createRootDirectory(String name, Integer id, DateTime modification, Integer permissions, User owner) {
+  public static Directory createRootDirectory(User owner) {
 	  		return new Directory(name, id,modification, permissions, owner);
   }
   /**
@@ -162,7 +162,7 @@ public class Directory extends Directory_Base {
    *
    * @param String
    * @throws FileNotFoundException
- * @throws DirectoryIsNotEmptyException 
+ * @throws DirectoryIsNotEmptyException
    */
   public void removeFile(String path) throws FileNotFoundException, DirectoryIsNotEmptyException{
   		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
@@ -176,7 +176,7 @@ public class Directory extends Directory_Base {
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
 			fileToBeDeleted.deleteFile();
-			
+
 		} else {
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
@@ -194,7 +194,7 @@ public class Directory extends Directory_Base {
    * Adds a file if it's a child or call a child element to do it for him
    *
    * @param String
-   * @param File 
+   * @param File
    * @throws FileExistsException
    * @throws FileNotFoundException
    */
