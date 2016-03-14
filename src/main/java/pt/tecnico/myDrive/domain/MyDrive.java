@@ -60,6 +60,7 @@ public class MyDrive extends MyDrive_Base {
     this.setRootDirectory(rootDirectory);
 
     Directory homeFolder;
+
 	try {
 		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
 		getNewFileId();
@@ -72,7 +73,7 @@ public class MyDrive extends MyDrive_Base {
 			return;
 		}
 	}
-	
+
     Directory home_root;
   	try {
   		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
@@ -91,26 +92,60 @@ public class MyDrive extends MyDrive_Base {
   }
 
   /**
-   * Add file to Directory
+   * Returns path without the leading /
    *
-   * @param String path
-   * @param File file to be added
+   * @param String
+   * @return String
    */
-  public void addFile(String path, File f) throws FileExistsException {
-	  //TODO
+  public static String getSubPath(String path){
+    ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+    if (pieces.size() > 0 && pieces.get(0).equals(""))
+      pieces.remove(0);
+
+    String newPath = "";
+    for(String s : pieces)
+      newPath += (s + "/");
+    return newPath;
   }
 
+  /**
+   * Add file to Directory
+   *
+   * @param String path that doesn't not include the filename
+   * @param File file to be added
+   */
+  public void addFile(String path, File f)
+  throws FileExistsException, FileNotFoundException {
+    getRootDirectory().addFile(this.getSubPath(path), f);
+  }
+
+  /**
+   * Removes a file from a Directory
+   *
+   * @param String path that includes the file to delete
+   */
+  public void removeFile(String path) throws FileNotFoundException{
+    getRootDirectory().removeFile(this.getSubPath(path));
+  }
 
   /**
    * Get a new file id
    *
    * @return int
+   *
    */
   public static int getNewFileId(){
-    Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId() + 1;
-    FenixFramework.getDomainRoot().getMyDrive().setFileId(id);
+    Integer id = FenixFramework.getDomainRoot().getMyDrive().getFileId();
+    FenixFramework.getDomainRoot().getMyDrive().setFileId(id + 1);
+    return id;
   }
 
+  /**
+   * Get File from a directory
+   */
+  public File getFile(String path) throws FileNotFoundException {
+    return getRootDirectory().getFile(this.getSubPath(path));
+  }
 
   public Directory getDirectoryFromPath(String path)
     throws FileNotFoundException{

@@ -67,8 +67,8 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
-  
-  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
+
+  public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
 		this.xmlImport(xml, owner, parent);
 	}
 
@@ -156,30 +156,50 @@ public class Directory extends Directory_Base {
 		  else
 			  addFiles(f);
 	}
-	
+
+
+  /**
+   * Remove a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @throws FileNotFoundException
+   */
+  public void removeFile(String path) throws FileNotFoundException{
+    throw new FileNotFoundException();
+    //TODO
+  }
+
+  /**
+   * Adds a file if it's a child or call a child element to do it for him
+   *
+   * @param String
+   * @param File 
+   * @throws FileExistsException
+   * @throws FileNotFoundException
+   */
 	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
-	    
+
 		if(path.equals("")){
 			this.addChildFile(file);
 			return;
 		}
 		else {
 			ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-			
+
 		    //Removing empty String due to / in first position
 			if (pieces.size() > 0 && pieces.get(0).equals(""))
 		    	pieces.remove(0);
-			
+
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
-			
+
 		    String newPath = "";
-		    
+
 		    for (String s : pieces)
 		    	newPath += (s + "/");
-	
+
 			nextDir.addFile(newPath, file);
 		}
 	}
-	
+
 }
