@@ -21,10 +21,10 @@ public class Directory extends Directory_Base {
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
-	public Directory(String name, Integer id, DateTime modification,
-	Integer permissions, User owner, Directory father)
-	throws FileExistsException {
-	    init(name, id, modification, permissions, owner, father);
+	public Directory(String name, DateTime modification,
+									Integer permissions, User owner, Directory father)
+									throws FileExistsException {
+	    init(name, modification, permissions, owner, father);
 	}
 
 	/**
@@ -112,8 +112,7 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void deleteFile() throws NotDirectoryException,
-	DirectoryIsNotEmptyException {
+	public void deleteFile() throws DirectoryIsNotEmptyException {
 		if(getFilesSet().isEmpty()){
 			for (User user : getOwnerHomeSet()) {
 				Directory newHome = this.getDir();
@@ -163,10 +162,32 @@ public class Directory extends Directory_Base {
    *
    * @param String
    * @throws FileNotFoundException
+ * @throws DirectoryIsNotEmptyException 
    */
-  public void removeFile(String path) throws FileNotFoundException{
-    throw new FileNotFoundException();
-    //TODO
+  public void removeFile(String path) throws FileNotFoundException, DirectoryIsNotEmptyException{
+  		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+
+	    //Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+	    	pieces.remove(0);
+
+		if (pieces.size() == 1) {
+			File fileToBeDeleted = this.getFile(pieces.get(0));
+			if (fileToBeDeleted == null)
+				throw new FileNotFoundException(pieces.get(0));
+			fileToBeDeleted.deleteFile();
+			
+		} else {
+			Directory nextDir = getDirectory(pieces.get(0));
+			pieces.remove(0);
+
+		    String newPath = "";
+
+		    for (String s : pieces)
+		    	newPath += (s + "/");
+
+			nextDir.removeFile(newPath);
+		}
   }
 
   /**

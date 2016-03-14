@@ -140,6 +140,7 @@ public class MyDrive extends MyDrive_Base {
    * Removes a file from a Directory
    *
    * @param String path that includes the file to delete
+ * @throws DirectoryIsNotEmptyException
    */
   public void removeFile(String path)
   throws FileNotFoundException, DirectoryIsNotEmptyException{
@@ -396,7 +397,8 @@ public class MyDrive extends MyDrive_Base {
       catch (FileNotFoundException e){
         try {
 			home = new Directory("home", new DateTime(), permissions , rootUser,rootDir);
-			this.getNewFileId();
+
+			MyDrive.getNewFileId();
 		} catch (FileExistsException e1) {
 			/* Impossible case */
 			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
@@ -409,7 +411,8 @@ public class MyDrive extends MyDrive_Base {
 
       try {
 		userHome = new Directory(username, new DateTime(),permissions, rootUser, home);
-		this.getNewFileId();
+
+		MyDrive.getNewFileId();
 
       } catch (FileExistsException e) {
     	try {

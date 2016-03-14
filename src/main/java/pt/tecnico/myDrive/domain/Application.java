@@ -15,8 +15,8 @@ public class Application extends Application_Base {
         super();
     }
 
-    public Application(String name, Integer id, DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException{
-      	 init(name, id, modification, permissions, owner,content, father);
+    public Application(String name,  DateTime modification, Integer permissions, User owner, String content, Directory father) throws FileExistsException{
+      	 init(name,  modification, permissions, owner,content, father);
     }
 
     public Application(Element xml, User owner, Directory parent) throws FileExistsException{
