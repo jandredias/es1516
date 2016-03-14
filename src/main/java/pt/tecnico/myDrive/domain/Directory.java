@@ -45,7 +45,7 @@ public class Directory extends Directory_Base {
 	        setOwner(owner);
 	        setDir(this);
 	  }
-	
+
 	  public static Directory createRootDirectory(User owner) {
 		  		return new Directory("/", new DateTime(),11111010, owner);
 	  }
@@ -194,8 +194,20 @@ public class Directory extends Directory_Base {
 			if (pieces.size() > 0 && pieces.get(0).equals(""))
 		    	pieces.remove(0);
 
-			Directory nextDir = getDirectory(pieces.get(0));
-			pieces.remove(0);
+      Directory nextDir = null;
+      try{
+			  nextDir = getDirectory(pieces.get(0));
+      }catch(FileNotFoundException e){
+        try{
+          nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getOwner(), this);
+          this.addChildFile(nextDir);
+
+        }catch(FileExistsException es){
+          //Won't happen
+        }
+      }
+
+      pieces.remove(0);
 
 		    String newPath = "";
 
