@@ -246,7 +246,7 @@ public class MyDrive extends MyDrive_Base {
 
       log.trace("Importing directory " + name + " on " + path);
 
-        Directory parent = this.getDirectory(path);
+        Directory parent = this.reallyGetFile(path);
         User owner = getUserByUsername(ownerUsername);
         try{
           parent.getFile(name);
@@ -265,7 +265,9 @@ public class MyDrive extends MyDrive_Base {
       String path = plain.getChild("path").getValue();
       String ownerUsername = plain.getChild("owner").getValue();
       log.trace("Importing plain-file " + name + " on " + path);
-      Directory parent = (Directory) this.getFile(path);
+
+      Directory parent = this.reallyGetFile(path);
+      
       User owner = getUserByUsername(ownerUsername);
       try{
         parent.getFile(name);
@@ -278,7 +280,7 @@ public class MyDrive extends MyDrive_Base {
       String path = link.getChild("path").getValue();
       String ownerUsername = link.getChild("owner").getValue();
       log.trace("Importing link " + name + " on " + path);
-      Directory parent = (Directory) this.getFile(path);
+      Directory parent = this.reallyGetFile(path);
       User owner = getUserByUsername(ownerUsername);
       try{
         parent.getFile(name);
@@ -291,7 +293,7 @@ public class MyDrive extends MyDrive_Base {
       String path = app.getChild("path").getValue();
       String ownerUsername = app.getChild("owner").getValue();
       log.trace("Importing app " + name + " on " + path);
-      Directory parent = (Directory) this.getFile(path);
+      Directory parent = this.reallyGetFile(path);
       User owner = getUserByUsername(ownerUsername);
       try{
         parent.getFile(name);
@@ -314,6 +316,25 @@ public class MyDrive extends MyDrive_Base {
     }*/
   }
 
+  public Directory reallyGetFile(String path) throws FileExistsException, InvalidFileNameException, NotDirectoryException{
+	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+
+    //Removing empty String due to / in first position
+	if (pieces.size() > 0 && pieces.get(0).equals(""))
+    	pieces.remove(0);
+
+	Directory nextDir = getRootDirectory();
+	while ( pieces.size() != 0 ) {
+			try {
+				nextDir = getDirectory(pieces.get(0));
+			} catch (FileNotFoundException e) {
+				nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getRootUser(),nextDir);
+			} 
+			pieces.remove(0);
+	}
+	return nextDir;
+ }
+  
   /**
    * Exports the file system to a XML Document
    *
@@ -380,7 +401,7 @@ public class MyDrive extends MyDrive_Base {
         }
         this.addUser(username, password, name, mask, usersHome);
     }catch(FileNotFoundException | FileExistsException e){
-      //won't happen
+    	//won't happen
     }
 
   }
