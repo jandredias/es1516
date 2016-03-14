@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
 
-	static final Logger log = LogManager.getRootLogger();	
-	
+	static final Logger log = LogManager.getRootLogger();
+
 	/**
 	 * This is the most used constructor is used to create directories
 	 */
