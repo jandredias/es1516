@@ -186,7 +186,32 @@ public class MyDrive extends MyDrive_Base {
         new PlainFile(plain, owner, parent);
       }
     }
-
+    for(Element link : e.getChildren("link")){
+      String name = link.getChild("name").getValue();
+      String path = link.getChild("path").getValue();
+      String ownerUsername = link.getChild("owner").getValue();
+      log.trace("Importing link " + name + " on " + path);
+      Directory parent = (Directory) this.getFileFromPath(path);
+      User owner = getUserByUsername(ownerUsername);
+      try{
+        parent.getFile(name);
+      }catch(FileNotFoundException es){
+        new Link(link, owner, parent);
+      }
+    }
+    for(Element app : e.getChildren("app")){
+      String name = app.getChild("name").getValue();
+      String path = app.getChild("path").getValue();
+      String ownerUsername = app.getChild("owner").getValue();
+      log.trace("Importing app " + name + " on " + path);
+      Directory parent = (Directory) this.getFileFromPath(path);
+      User owner = getUserByUsername(ownerUsername);
+      try{
+        parent.getFile(name);
+      }catch(FileNotFoundException es){
+        new Application(app, owner, parent);
+      }
+    }
     //Need to repeat this for setting users home correctly
     for(Element node : e.getChildren("root")){
       log.trace("Setting user " + node.getAttribute("username").getValue() +

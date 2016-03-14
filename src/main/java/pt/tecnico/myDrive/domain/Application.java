@@ -28,7 +28,7 @@ public class Application extends Application_Base {
 	}
 
 	protected void importContent(Element xml) {
-		// TODO Auto-generated method stub
+      setContent(xml.getChild("method").getValue());
 	}
 
 
