@@ -9,7 +9,9 @@ import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.FileExistsException;
+
 import java.util.ArrayList;
 
 public class Directory extends Directory_Base {
@@ -21,12 +23,12 @@ public class Directory extends Directory_Base {
 	 */
 	public Directory(String name, Integer id, DateTime modification,
 	Integer permissions, User owner, Directory father)
-	throws FileAlreadyExistsException {
+	throws FileExistsException {
 	    init(name, id, modification, permissions, owner, father);
 	}
 
 	/**
-	 * This construtor is used by createRootDir when called by Manager
+	 * This constructor is used by createRootDir when called by Manager
 	 * to create the root directory
 	 *
 	 * @param String name
@@ -52,11 +54,11 @@ public class Directory extends Directory_Base {
    *
    * @param XML Element Node
    * @param Directory parent
-   * @throws FileAlreadyExistsException
+   * @throws FileExistsException
    * @throws NumberFormatException
    */
   /* TODO ANDRE this was here, probably remove
-  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileAlreadyExistsException {
+  public Directory(Element e, Directory parent, User owner) throws NumberFormatException, FileExistsException {
     this(
       e.getAttribute("name").getValue(),
       Integer.parseInt(e.getAttribute("id").getValue()),
@@ -65,12 +67,17 @@ public class Directory extends Directory_Base {
       owner,
       parent);
   }*/
+<<<<<<< HEAD
 
   	public Directory(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+=======
+  
+  	public Directory(Element xml, User owner, Directory parent) throws FileExistsException {
+>>>>>>> 28c27f86a161a8d710451bb29e4757dd5f398561
 		this.xmlImport(xml, owner, parent);
 	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent) throws FileAlreadyExistsException {
+	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException {
 		super.xmlImport(xml, owner, parent);
 	}
 
@@ -91,6 +98,12 @@ public class Directory extends Directory_Base {
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName))
 				return file;
+		if (fileName.equals(".")) {
+			return this;
+		}
+		else if (fileName.equals("..")) {
+			return this.getDir();
+		}
 		throw new FileNotFoundException("File: " + fileName + " not Found");
 	}
 
@@ -140,12 +153,22 @@ public class Directory extends Directory_Base {
 	* Checks if file exists on Files set and Adds it
 	*
 	* @param File
-	* @throws FileAlreadyExistsException
+	* @throws FileExistsException
 	*/
-	public void addChildFile(File f) throws FileAlreadyExistsException {
+	public void addChildFile(File f) throws FileExistsException {
 		  if(hasFile(f.getName()))
-			  throw new FileAlreadyExistsException(f.getName());
+			  throw new  FileExistsException(f.getName());
 		  else
 			  addFiles(f);
 	}
+	
+	public void addFile(String path, File file) throws FileExistsException{
+		if(path.equals("")){
+			this.addChildFile(file);
+			return;
+		}
+		//TODO recursive shit
+		
+	}
+	
 }
