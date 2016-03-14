@@ -57,12 +57,12 @@ public class File extends File_Base {
     setPermissions(permissions);
     setOwner(owner);
     
-    try {
+	try {
 		parent.addFile("",this);
 	} catch (FileNotFoundException e) {
-		// IMPOSSIBLE CONDITION
+		// Impossible condition
 	}
-    
+	
   }
 
   /**

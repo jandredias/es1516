@@ -126,18 +126,6 @@ public class Directory extends Directory_Base {
 		return true;
 	}
 
-	/**
-	* Checks if file exists on Files set and Adds it
-	*
-	* @param File
-	* @throws FileExistsException
-	*/
-	public void addChildFile(File f) throws FileExistsException {
-		  if(hasFile(f.getName()))
-			  throw new  FileExistsException(f.getName());
-		  else
-			  addFiles(f);
-	}
 
 
   /**
@@ -184,7 +172,10 @@ public class Directory extends Directory_Base {
 	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
 
 		if(path.equals("")){
-			this.addChildFile(file);
+			if(hasFile(file.getName()))
+				  throw new  FileExistsException(file.getName());
+			  else
+				  addFiles(file);
 			return;
 		}
 		else {
