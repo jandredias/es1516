@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
-import pt.tecnico.myDrive.exception.FileExistsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
