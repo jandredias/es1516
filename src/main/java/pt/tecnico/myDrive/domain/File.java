@@ -4,6 +4,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -14,9 +15,8 @@ public class File extends File_Base {
 
   protected File() { /* for deriver classes */ }
 
-  public File(String name, Integer id, DateTime modification,
-    Integer permissions, pt.tecnico.myDrive.domain.User owner){
-    init(name, id, modification, permissions, owner);
+  public File(String name, Integer id, DateTime modification, Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
+    init(name, id, modification, permissions, owner, parent);
   }
 
   /**
@@ -29,12 +29,15 @@ public class File extends File_Base {
   }
 
   protected void init(String name, Integer id, DateTime modification,
-    Integer permissions, pt.tecnico.myDrive.domain.User owner){
+    Integer permissions, User owner, Directory parent) throws FileAlreadyExistsException{
     setName(name);
     setId(id);
     setModification(modification);
     setPermissions(permissions);
     setOwner(owner);
+
+    parent.addChildFile(this);
+    
   }
 
   public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {

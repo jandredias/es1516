@@ -18,6 +18,7 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
+import pt.tecnico.myDrive.exception.FileAlreadyExistsException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -26,31 +27,55 @@ public class MyDrive extends MyDrive_Base {
   public static MyDrive getInstance() {
     MyDrive md = FenixFramework.getDomainRoot().getMyDrive();
     if (md != null) return md;
-
+    md = new MyDrive();;
     log.trace("new MyDrive");
-    return new MyDrive();
+
+    return md;
   }
 
   private MyDrive() {
     setRoot(FenixFramework.getDomainRoot());
+    log.trace("FenixRoot");
 
     this.setFileId(0);
-
     Root root = new Root();
     this.addUsers(root);
+    log.trace("Root");
 
-    Directory rootDirectory = new Directory("/", getFileId(), new DateTime(), 11111010 , root, null);
-    rootDirectory.setDir(rootDirectory);
+    Directory rootDirectory;
+	rootDirectory = Directory.createRootDirectory("/", getFileId(), new DateTime(), 11111010 , root);
+	incrementFileId();
     this.setRootDirectory(rootDirectory);
 
-    incrementFileId();
-    Directory homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+    Directory homeFolder;
+	try {
+		homeFolder = new Directory("home",getFileId(), new DateTime(), 11111010 , root, rootDirectory);
+		incrementFileId();
+	} catch (FileAlreadyExistsException e) {
+		try {
+			homeFolder = rootDirectory.getDirectory("home");
+		} catch (FileNotFoundException e1) { 
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+	}
 
-    incrementFileId();
-    Directory home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+    Directory home_root;
+	try {
+		home_root = new Directory("root",getFileId(), new DateTime(), 11111010 , root, homeFolder);
+		incrementFileId();
+	} catch (FileAlreadyExistsException e) {
+		try {
+			home_root = rootDirectory.getDirectory("root");
+		} catch (FileNotFoundException e1) { 
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
+	}
 
     root.setUsersHome(home_root);
-
   }
 
   public Directory getDirectoryFromPath(String path)
@@ -66,6 +91,8 @@ public class MyDrive extends MyDrive_Base {
   }
 
   public File getFileFromPath(String path) throws FileNotFoundException, NotDirectoryException {
+	if(!(path.charAt(0) == '/'))
+		throw new FileNotFoundException();
     ArrayList<String> pieces = splitString(path);
     File currentFile = getRootDirectory();
     for(String currentPiece: pieces){
@@ -92,7 +119,9 @@ public class MyDrive extends MyDrive_Base {
    * Clean database
    */
   public void cleanup(){
-    //TODO
+	  for (User user : getUsersSet()) {
+		  user.remove();
+	  }
   }
 
   /**
@@ -102,7 +131,7 @@ public class MyDrive extends MyDrive_Base {
    */
   public void xmlImport(Element e)
     throws InvalidUsernameException, FileNotFoundException,
-    NotDirectoryException, NoSuchUserException {
+    NotDirectoryException, NoSuchUserException, FileAlreadyExistsException {
     Element root = e.getChild("root");
     if(root != null){
       log.trace("Adding root to filesystem");
@@ -145,7 +174,7 @@ public class MyDrive extends MyDrive_Base {
           parent.getFile(dir.getAttribute("name").getValue());
 
         }catch(FileNotFoundException es){
-          parent.addFiles(new Directory(dir, parent, owner));
+          parent.addChildFile(new Directory(dir, parent, owner));
         }
     }
   }
@@ -179,7 +208,7 @@ public class MyDrive extends MyDrive_Base {
   public void addUser(String username) throws InvalidUsernameException, UsernameAlreadyInUseException{
 	  addUser(username, username, username, 11110000);
   }
-  
+
   private void addUser(String username, String pwd, String name, Integer permissions)
     throws InvalidUsernameException, UsernameAlreadyInUseException {
     if(username != null && username != "" && StringUtils.isAlphanumeric(username)){
@@ -194,18 +223,40 @@ public class MyDrive extends MyDrive_Base {
         home = rootDir.getDirectory("home");
       }
       catch (FileNotFoundException e){
-        this.incrementFileId();
-        home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
+        try {
+			home = new Directory("home",getFileId(), new DateTime(), permissions , rootUser,rootDir);
+			this.incrementFileId();
+		} catch (FileAlreadyExistsException e1) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return; 
+		}
       }
-      this.incrementFileId();
-      Directory userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
+      
+      Directory userHome = null;
       User newUser;
-      if(pwd == null || name == null || permissions == null){
-        newUser = new User(username, userHome);
+
+      try {
+		userHome = new Directory(username, getFileId(), new DateTime(),permissions, rootUser, home);
+		this.incrementFileId();
+		
+      } catch (FileAlreadyExistsException e) {
+    	try {
+			userHome = home.getDirectory(username);
+		} catch (FileNotFoundException e1) {
+			/* Impossible case */ 
+			log.error("IMPOSSIBLE CASE ABORTING OPERATION");
+			return;
+		}
+      } finally {
+	    if(pwd == null || name == null || permissions == null){
+	      newUser = new User(username, userHome);
+	    }
+	    else{
+	       newUser = new User(username, pwd, name, permissions, userHome);
+	    }
       }
-      else{
-        newUser = new User(username, pwd, name, permissions, userHome);
-      }
+      
       userHome.setOwner(newUser);
       userHome.setOwnerHome(newUser);
       this.addUsers(newUser);
@@ -230,7 +281,7 @@ public class MyDrive extends MyDrive_Base {
     return visitor.getFileNames();
   }
 
-  public String getFileContents(File file) throws UnsupportedOperationException{
+  private String getFileContents(File file) throws UnsupportedOperationException{
 		FileContentsVisitor visitor = new FileContentsVisitor();
 		file.accept(visitor);
 		return visitor.getFileContents();
