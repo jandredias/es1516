@@ -320,7 +320,8 @@ public class MyDrive extends MyDrive_Base {
     }
   }
 
-  public Directory reallyGetFile(String path) throws FileExistsException, InvalidFileNameException, NotDirectoryException{
+  public Directory reallyGetFile(String path)
+		  throws FileExistsException, InvalidFileNameException, NotDirectoryException{
 	ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
 
     //Removing empty String due to / in first position
@@ -524,4 +525,23 @@ public class MyDrive extends MyDrive_Base {
     //TODO
     return 11111010;
   }
+
+  /* **************************************************************************/
+  /* ************************* Add Files Methods ******************************/
+  /* **************************************************************************/
+  
+  /**
+   * 
+   */
+  public void AddDirectory(String path, String name, User owner ) {
+	  /* Not Sure About permissions */
+	  /* Not Sure whether owner comes as Object or Username */
+	  /* TODO try & Catch*/
+	  Directory file = new Directory(String name, User owner  /*, maybe permissions */);
+	  getRootDirectory().addFile(path, file);
+	  
+  }
+  /* **************************************************************************/
+  /* ************************* Add Files Methods ENDS**************************/
+  /* **************************************************************************/
 }
