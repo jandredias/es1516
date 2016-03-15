@@ -3,3 +3,4 @@
 .project
 /.settings/
 /bin/
+src/main/resources/fenix-framework-jvstm-ojb.properties
