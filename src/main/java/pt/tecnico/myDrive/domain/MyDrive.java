@@ -136,11 +136,12 @@ public class MyDrive extends MyDrive_Base {
    * @param String path that doesn't not include the filename
    * @param File file to be added
    */
+  /*
   public void addFile(String path, File f)
   throws FileExistsException, FileNotFoundException {
     getRootDirectory().addFile(MyDrive.getSubPath(path), f);
   }
-
+*/
   /**
    * Removes a file from a Directory
    *
@@ -526,22 +527,51 @@ public class MyDrive extends MyDrive_Base {
     return 11111010;
   }
 
-  /* **************************************************************************/
-  /* ************************* Add Files Methods ******************************/
-  /* **************************************************************************/
   
-  /**
-   * 
-   */
-  public void AddDirectory(String path, String name, User owner ) {
-	  /* Not Sure About permissions */
-	  /* Not Sure whether owner comes as Object or Username */
-	  /* TODO try & Catch*/
-	  Directory file = new Directory(String name, User owner  /*, maybe permissions */);
-	  getRootDirectory().addFile(path, file);
-	  
-  }
-  /* **************************************************************************/
-  /* ************************* Add Files Methods ENDS**************************/
-  /* **************************************************************************/
+  
+  
+  
+  
+  
+
+
+  
+	/* ************************************************************************ */
+	/* ************************************************************************ */
+	/* ************************* Add Files Methods **************************** */
+	private void addFile(String path, File file){
+
+		char c = path.charAt(0);
+		if(c == '/'){
+			getRootDirectory().addFile(path, file);
+		} else {
+			//FIXME getCurrentDirectory().addFile(path, file);
+		}
+	}
+	/**
+	 * 
+	 */
+	public void AddDirectory(String path, String name, User owner) {
+		/* Not Sure About permissions */
+		/* Not Sure whether owner comes as Object or Username */
+		/* TODO try & Catch*/
+		Directory file = new Directory(name, owner);
+		this.addFile(path, file);
+		
+	}
+	
+	public void AddUser() {
+		
+	}
+  /* ************************* Add Files Methods ENDS *********************** */
+  /* ************************************************************************ */
+  /* ************************************************************************ */
+  /* ------------------------------------------------------------------------ */
+  /* ************************************************************************ */
+  /* ************************************************************************ */
+  /* ****************************** XML Related ***************************** */
+
+  /* ****************************** XML Related ***************************** */
+  /* ************************************************************************ */
+  /* ************************************************************************ */
 }

@@ -15,7 +15,7 @@ public class File extends File_Base {
 
 
   protected File() { /* for deriver classes */ }
-
+  
   public File(String name, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
     init(name, modification, permissions, owner, parent);
   }
@@ -44,8 +44,9 @@ public class File extends File_Base {
 	  init(name, MyDrive.getNewFileId() ,modification,permissions, owner, parent);
   }
 
-  protected void init(String name, Integer id , DateTime modification,
-    Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
+
+	protected void init(String name, Integer id , DateTime modification,
+		  Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
 	if(name.contains("/") || name.contains("\0")){
 		throw new InvalidFileNameException(name);
 	}
