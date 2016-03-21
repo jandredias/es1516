@@ -503,7 +503,7 @@ public class MyDrive extends MyDrive_Base {
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException {
 		for(Element node : e.getChildren()){
-			if(node.getName().equals("user"){
+			if(node.getName().equals("user")){
 				User user = new User(node);
 				try{
 					addUser(user);
@@ -522,13 +522,13 @@ public class MyDrive extends MyDrive_Base {
 										MyDrive.permissions(node.getChild("mask").getValue()));
 
 				}
-			}else if(node.getName().equals("dir"){
+			}else if(node.getName().equals("dir")){
 				File f = new Dir(node);
-			}else if(node.getName().equals("plain-file"){
+			}else if(node.getName().equals("plain-file")){
 				File f = new PlainFile(node);
-			}else if(node.getName().equals("app"){
+			}else if(node.getName().equals("app")){
 				File f = new Application(node);
-			}else if(node.getName().equals("link"){
+			}else if(node.getName().equals("link")){
 				File f = new Link(node);
 			}
 			
