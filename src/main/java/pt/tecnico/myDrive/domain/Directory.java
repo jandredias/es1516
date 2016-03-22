@@ -72,6 +72,7 @@ public class Directory extends Directory_Base {
 	 *
 	 * @throws NotDirectoryException
 	 */
+	/* FIXME Really Needed? Don't Forget File Class */
 	public void isParentable() throws NotDirectoryException{}
 
 	public void accept(Visitor visitor)
@@ -208,7 +209,8 @@ public class Directory extends Directory_Base {
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
 	 */
-	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
+	public void addFile(String path, File file) throws FileExistsException, 
+			FileNotFoundException{
 
 		if(path.equals("") || path.equals("/")){
 			if(hasFile(file.getName()))
@@ -237,5 +239,4 @@ public class Directory extends Directory_Base {
 			nextDir.addFile(newPath, file);
 		}
 	}
-
 }

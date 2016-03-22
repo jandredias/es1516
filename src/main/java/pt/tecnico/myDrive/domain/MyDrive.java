@@ -19,6 +19,7 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileExistsException;
@@ -63,38 +64,45 @@ public class MyDrive extends MyDrive_Base {
 		this.setRootDirectory(rootDirectory);
 
 		Directory homeFolder = null;
-
 		try {
-			homeFolder = new Directory("home", new DateTime(), 11111010 , root, rootDirectory);
-			getNewFileId();
+			homeFolder = new Directory("home",root);
+			rootDirectory.addFile("", homeFolder);
 		} catch (FileExistsException e) {
 			try {
 				homeFolder = rootDirectory.getDirectory("home");
-			} catch (FileNotFoundException e1) {
-				/* Impossible case */
-				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-				return;
+			} catch (FileNotFoundException exc) {
+				//Should Never Happen
+				log.error("CRIT ERROR: root dir should exist");
+				log.error("Message: " + exc.getMessage());
+				assert false;
 			}
-		} catch (InvalidFileNameException e) {
-			// Will never happen
+		} catch (InvalidFileNameException | FileNotFoundException exc) {
+			//Should Never Happen ; 
+			log.error("CRIT ERROR: root dir should exist");
+			log.error("Message: " + exc.getMessage());
+			assert false;		
 		}
+
 
 		Directory home_root = null;
 		try {
-			home_root = new Directory("root", new DateTime(), 11111010 , root, homeFolder);
-			getNewFileId();
+			home_root = new Directory("root", root);
+			homeFolder.addFile("", home_root );
 		} catch (FileExistsException e) {
 			try {
 				home_root = rootDirectory.getDirectory("root");
-			} catch (FileNotFoundException e1) {
-				/* Impossible case */
-				log.error("IMPOSSIBLE CASE ABORTING OPERATION");
-				return;
+			} catch (FileNotFoundException exc) {
+				//Should Never Happen
+				log.error("CRIT ERROR: root dir should exist");
+				log.error("Message: " + exc.getMessage());
+				assert false;
 			}
-		} catch (InvalidFileNameException e) {
-			// Will never happen
+		} catch (InvalidFileNameException | FileNotFoundException exc) {
+			//Should Never Happen ; 
+			log.error("CRIT ERROR: root dir should exist");
+			log.error("Message: " + exc.getMessage());
+			assert false;		
 		}
-
 		root.setUsersHome(home_root);
 	}
 
@@ -132,18 +140,7 @@ public class MyDrive extends MyDrive_Base {
 		return newPath;
 	}
 
-	/**
-	 * Add file to Directory
-	 *
-	 * @param String path that doesn't not include the filename
-	 * @param File file to be added
-	 */
-	/*
-	   public void addFile(String path, File f)
-	   throws FileExistsException, FileNotFoundException {
-	   getRootDirectory().addFile(MyDrive.getSubPath(path), f);
-	   }
-	 */
+
 	/**
 	 * Removes a file from a Directory
 	 *
@@ -173,6 +170,7 @@ public class MyDrive extends MyDrive_Base {
 	public File getFile(String path) throws FileNotFoundException {
 		if (path.equals("/"))
 			return getRootDirectory();
+		
 		return getRootDirectory().getFile(MyDrive.getSubPath(path));
 	}
 
@@ -186,10 +184,10 @@ public class MyDrive extends MyDrive_Base {
 			File f = getFile(path);
 			f.isParentable();
 			return (Directory) f;
-		}
+	}
 
 	/**
-	 * Searchs the root user and returns it
+	 * Search the root user and returns it
 	 *
 	 * @return Root
 	 */
@@ -198,34 +196,40 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	/**
-	 * Clean database
+	 * Returns File on Path, if some Directory does not exists it is created
+	 * @param path
+	 * @return
+	 * @throws FileExistsException
+	 * @throws InvalidFileNameException
+	 * @throws NotDirectoryException
 	 */
-	public void cleanup(){
-		//TODO
-		//Remove users
-		//Remove directories
-	}
+	private Directory reallyGetFile(String path)throws FileExistsException, 
+			InvalidFileNameException, NotDirectoryException{
 
+		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
+		
+		//Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+			pieces.remove(0);
 
-	public Directory reallyGetFile(String path)
-		throws FileExistsException, InvalidFileNameException, NotDirectoryException{
-			ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-
-			//Removing empty String due to / in first position
-			if (pieces.size() > 0 && pieces.get(0).equals(""))
-				pieces.remove(0);
-
-			Directory nextDir = getRootDirectory();
-			while ( pieces.size() != 0 ) {
+		Directory nextDir = getRootDirectory();
+		while ( pieces.size() != 0 ) {
+			try {
+				nextDir = getDirectory(pieces.get(0));
+			} catch (FileNotFoundException e) {
+				User root = this.getRootUser();
+				Directory newDirectory = new Directory(pieces.get(0), root);
 				try {
-					nextDir = getDirectory(pieces.get(0));
-				} catch (FileNotFoundException e) {
-					nextDir = new Directory(pieces.get(0), new DateTime(), 11111010, this.getRootUser(),nextDir);
-				} 
-				pieces.remove(0);
-			}
-			return nextDir;
+					nextDir.addFile("", newDirectory);
+				} catch (FileNotFoundException e1) {
+					//Will Never Happen
+				}
+				nextDir = newDirectory;
+			} 
+			pieces.remove(0);
 		}
+		return nextDir;
+	}
 
 
 	/**
@@ -253,33 +257,33 @@ public class MyDrive extends MyDrive_Base {
 	 * @return User
 	 */
 	public void addUser(String username, String password, String name,
-			Integer mask, String home) throws NotDirectoryException, InvalidUsernameException,
-	       UsernameAlreadyInUseException{
+			Integer mask, String home) throws NotDirectoryException, 
+			InvalidUsernameException, UsernameAlreadyInUseException{
 
-		       ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(home.split("/")));
-		       String userHomeName = pieces.get(pieces.size()-1);
+		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(home.split("/")));
+		String userHomeName = pieces.get(pieces.size()-1);
 
-		       Directory rootHome;
-		       Directory usersHome;
-		       try{
-			       rootHome = getDirectory(MyDrive.getPathWithoutFile(home));
-			       try{
-				       usersHome = getDirectory(home);
-			       }catch(FileNotFoundException e){
-				       try {
-					       addFile(MyDrive.getPathWithoutFile(home),
-							       new Directory(userHomeName, new DateTime(), 11111010, getRootUser(), rootHome));
-				       } catch (InvalidFileNameException e1) {
-					       throw new InvalidUsernameException();
-				       }
-				       usersHome = getDirectory(home);
-			       }
-			       this.addUser(username, password, name, mask, usersHome);
-		       }catch(FileNotFoundException | FileExistsException e){
-			       //won't happen
-		       }
+		Directory rootHome;
+		Directory usersHome;
+		try{
+			rootHome = getDirectory(MyDrive.getPathWithoutFile(home));
+			try{
+				usersHome = getDirectory(home);
+			}catch(FileNotFoundException e){
+				try {
+					Directory d = new Directory(userHomeName, getRootUser());
+					rootHome.addFile("", d);
+				} catch (InvalidFileNameException e1) {
+					throw new InvalidUsernameException();
+				}
+				usersHome = getDirectory(home);
+			}
+			this.addUser(username, password, name, mask, usersHome);
+		}catch(FileNotFoundException | FileExistsException e){
+			//won't happen
+		}
 
-	       }
+	}
 
 	public void addUser(String username, String password, String name, Integer mask,
 			Directory home) throws InvalidUsernameException, UsernameAlreadyInUseException {
@@ -297,13 +301,22 @@ public class MyDrive extends MyDrive_Base {
 		this.addUsers(user);
 	}
 
-	public void addUser(String username)
-		throws InvalidUsernameException, UsernameAlreadyInUseException,
-		       NotDirectoryException{
-			       addUser(username, username, username, 11110000, "/home/" + username);
-		       }
+	public void addUser(String username) throws InvalidUsernameException, 
+			UsernameAlreadyInUseException, NotDirectoryException{
+
+		addUser(username, username, username, 11110000, "/home/" + username);
+	}
 
 
+	public void addUser(User user) throws UsernameAlreadyInUseException {
+		User newUser = getUserByUsername(user.getUsername());
+		if( newUser == null ) {
+			addUsers(user);
+		} else {
+			throw new UsernameAlreadyInUseException(user.getUsername());
+		}
+	}
+	
 	private void addUser(String username, String pwd, String name, Integer permissions)
 		throws InvalidUsernameException, UsernameAlreadyInUseException {
 
@@ -315,9 +328,11 @@ public class MyDrive extends MyDrive_Base {
 			}
 			catch (FileNotFoundException e){
 				try {
-					home = new Directory("home", new DateTime(), permissions , rootUser,rootDir);
-
-				} catch (FileExistsException | InvalidFileNameException e1) {
+					home = new Directory("home", rootUser);
+					rootDir.addFile("", home);
+				} catch (FileNotFoundException | FileExistsException |
+						InvalidFileNameException e1) {
+					
 					/* Impossible case */
 					log.error("IMPOSSIBLE CASE ABORTING OPERATION");
 					return;
@@ -328,8 +343,8 @@ public class MyDrive extends MyDrive_Base {
 			User newUser;
 
 			try {
-				userHome = new Directory(username, new DateTime(),permissions, rootUser, home);
-
+				userHome = new Directory(username, rootUser);
+				home.addFile("", userHome);
 
 			} catch (FileExistsException e) {
 				try {
@@ -341,6 +356,8 @@ public class MyDrive extends MyDrive_Base {
 				}
 			} catch (InvalidFileNameException e) {
 				throw new InvalidUsernameException(username);
+			} catch (FileNotFoundException e) {
+				//Wont Happen
 			} finally {
 				if(pwd == null || name == null || permissions == null){
 					newUser = new User(username, userHome);
@@ -353,39 +370,38 @@ public class MyDrive extends MyDrive_Base {
 			userHome.setOwner(newUser);
 			userHome.addOwnerHome(newUser);
 			this.addUsers(newUser);
-
-		}
+	}
 
 
 
 	public ArrayList<String> listDir(String path)
-		throws UnsupportedOperationException,
-		       FileNotFoundException,
-		       NotDirectoryException {
-			       File file = getFile(path);
-			       ListDirVisitor visitor = new ListDirVisitor();
-			       file.accept(visitor);
-			       return visitor.getFileNames();
-		       }
+			throws UnsupportedOperationException, FileNotFoundException,
+			NotDirectoryException {
+
+		File file = getFile(path);
+		ListDirVisitor visitor = new ListDirVisitor();
+		file.accept(visitor);
+		return visitor.getFileNames();
+	}
 
 	private String getFileContents(File file) throws UnsupportedOperationException{
 		FileContentsVisitor visitor = new FileContentsVisitor();
 		file.accept(visitor);
 		return visitor.getFileContents();
 	}
-	public String getFileContents(String filePath)
-		throws FileNotFoundException,
-		       NotDirectoryException, UnsupportedOperationException {
-			       File file = getFile(filePath);
-			       return getFileContents(file);
-		       }
+	
+	public String getFileContents(String path)
+			throws FileNotFoundException,
+			NotDirectoryException, UnsupportedOperationException {
+		File file = getFile(path);
+		return getFileContents(file);
+	}
 
-	public void deleteFile (String path)
-		throws NotDirectoryException,
-		       DirectoryIsNotEmptyException,
-		       FileNotFoundException{
-			       getFile(path).deleteFile();
-		       }
+	public void deleteFile (String path) throws FileNotFoundException, 
+			DirectoryIsNotEmptyException {
+
+		this.getRootDirectory().removeFile(path);
+	}
 
 	public static String permissions(int p){
 		//TODO
@@ -396,49 +412,70 @@ public class MyDrive extends MyDrive_Base {
 		return 11111010;
 	}
 
+	/* ********************************************************************** */
+	/* ********************************************************************** */
+	/* ************************* Add Files Methods ************************** */
+	private void addFile(String path, File file) throws FileExistsException ,
+			FileNotFoundException {
 
-
-
-
-
-
-
-
-
-	/* ************************************************************************ */
-	/* ************************************************************************ */
-	/* ************************* Add Files Methods **************************** */
-	private void addFile(String path, File file){
-		/*
-		char c = path.charAt(0);
-		if(c == '/'){
+		log.trace("Creating new File: " + file.getName() + " on " + path);
+		try {
 			getRootDirectory().addFile(path, file);
-		} else {
-			//FIXME getCurrentDirectory().addFile(path, file);
-		}*/
+		} catch (FileExistsException | FileNotFoundException exception) {
+			try {
+				log.trace("Problems Creating File: " + file.getName());
+				file.delete();
+			} catch (DirectoryIsNotEmptyException exc) {
+				//Should Never Happen ; File had just been Created;
+				log.error("CRIT ERROR: Just Created File, NotEmptyException");
+				String message = exc.getMessage();
+				log.error("Message: " + message);
+				assert false;
+			} 
+			throw exception;
+		}
+		log.trace("File: " + file.getName() + " created with success");
 	}
-	/**
-	 * 
-	 */
-	public void AddDirectory(String path, String name, User owner) {
-		/* Not Sure About permissions */
-		/* Not Sure whether owner comes as Object or Username */
-		/* TODO try & Catch*/
-		//Directory file = new Directory(name, owner);
-		//this.addFile(path, file);
+	
+	public void addApplication(String path, String name, User owner, 
+			String content)throws FileExistsException, InvalidFileNameException, 
+			FileNotFoundException {
 
+		Application file = new Application(name, owner, content);
+		this.addFile(path, file);
+	}
+	
+	public void addDirectory(String path, String name, User owner) 
+			throws FileExistsException, InvalidFileNameException, 
+			FileNotFoundException {
+
+		Directory file = new Directory(name, owner);
+		this.addFile(path, file);
+	}
+	
+	public void addLink(String path, String name, User owner, 
+			String content)throws FileExistsException, InvalidFileNameException, 
+	FileNotFoundException {
+		
+		Link file = new Link(name, owner, content);
+		this.addFile(path, file);
+	}
+	
+	public void addPlainFile(String path, String name, User owner, 
+			String content)throws FileExistsException, InvalidFileNameException, 
+	FileNotFoundException {
+		
+		PlainFile file = new PlainFile(name, owner, content);
+		this.addFile(path, file);
 	}
 
-	public void AddUser() {
-
-	}
-	/* ************************* Add Files Methods ENDS *********************** */
-	/* ************************************************************************ */
-	/* ************************************************************************ */
-	/* ------------------------------------------------------------------------ */
-	/* ************************************************************************ */
-	/* ************************************************************************ */
-	/* ****************************** XML Related ***************************** */
+	/* ************************* Add Files Methods ENDS ********************* */
+	/* ********************************************************************** */
+	/* ********************************************************************** */
+	/* ---------------------------------------------------------------------- */
+	/* ********************************************************************** */
+	/* ********************************************************************** */
+	/* ****************************** XML Related *************************** */
 
 	/**
 	 * Exports the file system to a XML Document
@@ -496,49 +533,39 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws InvalidFileNameException
 	 */
 	public void xmlImport(Element e)
-		throws InvalidUsernameException, FileNotFoundException,
-		       NotDirectoryException, NoSuchUserException,
+			throws InvalidUsernameException, FileNotFoundException,
+			NotDirectoryException, NoSuchUserException,
 			FileExistsException, InvalidFileNameException,
 			ClassNotFoundException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException {
+		
 		for(Element node : e.getChildren()){
+			File file = null ;
 			if(node.getName().equals("user")){
 				User user = new User(node);
 				try{
 					addUser(user);
-				}catch(UsernameAlreadyInUseException u){
-					User user = getUserByUsername(node.getAttribute("username").getValue());
-        			user.setName((node.getChild("password") == null) ?
-										user.getUsername() :
-										node.getChild("name").getValue());
-
-        			user.setPassword((node.getChild("password") == null) ?
-										user.getUsername() :
-										node.getChild("password").getValue());
-
-        			user.setPermissions((node.getChild("mask") == null) ?
-										11111010 :
-										MyDrive.permissions(node.getChild("mask").getValue()));
-
+				} catch(UsernameAlreadyInUseException u) {
+					user = getUserByUsername(node.getAttribute("username").getValue());
+					user.xmlImport(node); //Update information
 				}
-			}else if(node.getName().equals("dir")){
-				File f = new Dir(node);
-			}else if(node.getName().equals("plain-file")){
-				File f = new PlainFile(node);
-			}else if(node.getName().equals("app")){
-				File f = new Application(node);
-			}else if(node.getName().equals("link")){
-				File f = new Link(node);
+			} else if(node.getName().equals("dir")) {
+				file = new Directory(node);
+			} else if(node.getName().equals("plain-file")) {
+				file = new PlainFile(node);
+			} else if(node.getName().equals("app")) {
+				file = new Application(node);
+			} else if(node.getName().equals("link")) {
+				file = new Link(node);
 			}
 			
-			if(!node.getName().equals("user")){
-				reallyGetFile(node.getChild("path").getValue()).addFile(f);
+			if(! node.getName().equals("user")) {
+				reallyGetFile(node.getChild("path").getValue()).addFile("",file);
 			}
-
 		}
 	}
-	/* ****************************** XML Related ***************************** */
-	/* ************************************************************************ */
-	/* ************************************************************************ */
+	/* ****************************** XML Related *************************** */
+	/* ********************************************************************** */
+	/* ********************************************************************** */
 }
