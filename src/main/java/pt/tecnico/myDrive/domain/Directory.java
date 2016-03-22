@@ -78,28 +78,6 @@ public class Directory extends Directory_Base {
 		visitor.visitDirectory(this);
 	}
 
-	public File getFile(String fileName) throws FileNotFoundException {
-
-		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
-		//Removing empty String due to / in first position
-		if (pieces.size() > 0 && pieces.get(0).equals(""))
-			pieces.remove(0);
-
-		if (pieces.size() == 1) {
-			return getInnerFile(pieces.get(0));
-		}
-
-		Directory nextDir = getDirectory(pieces.get(0));
-		pieces.remove(0);
-
-		String newPath = "";
-
-		for (String s : pieces)
-			newPath += (s + "/");
-
-		return nextDir.getFile(newPath);
-	}
-
 	public File getInnerFile(String fileName)	throws FileNotFoundException {
 		
 		for(File file: getFilesSet())
@@ -163,7 +141,28 @@ public class Directory extends Directory_Base {
 		}
 		return true;
 	}
+	
+	public File getFile(String fileName) throws FileNotFoundException {
 
+		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
+		//Removing empty String due to / in first position
+		if (pieces.size() > 0 && pieces.get(0).equals(""))
+			pieces.remove(0);
+
+		if (pieces.size() == 1) {
+			return getInnerFile(pieces.get(0));
+		}
+
+		Directory nextDir = getDirectory(pieces.get(0));
+		pieces.remove(0);
+
+		String newPath = "";
+
+		for (String s : pieces)
+			newPath += (s + "/");
+
+		return nextDir.getFile(newPath);
+	}
 	/**
 	 * Remove a file if it's a child or call a child element to do it for him
 	 *
