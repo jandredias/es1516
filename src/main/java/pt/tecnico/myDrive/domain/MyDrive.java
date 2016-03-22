@@ -142,7 +142,7 @@ public class MyDrive extends MyDrive_Base {
 
 
 	/**
-	 * Removes a file from a Directory
+	 * Removes a last file in path (absolute Only)
 	 *
 	 * @param String path that includes the file to delete
 	 * @throws DirectoryIsNotEmptyException
@@ -231,7 +231,6 @@ public class MyDrive extends MyDrive_Base {
 		return nextDir;
 	}
 
-
 	/**
 	 * gets a user by username
 	 *
@@ -307,7 +306,6 @@ public class MyDrive extends MyDrive_Base {
 		addUser(username, username, username, 11110000, "/home/" + username);
 	}
 
-
 	public void addUser(User user) throws UsernameAlreadyInUseException {
 		User newUser = getUserByUsername(user.getUsername());
 		if( newUser == null ) {
@@ -371,8 +369,6 @@ public class MyDrive extends MyDrive_Base {
 			userHome.addOwnerHome(newUser);
 			this.addUsers(newUser);
 	}
-
-
 
 	public ArrayList<String> listDir(String path)
 			throws UnsupportedOperationException, FileNotFoundException,
