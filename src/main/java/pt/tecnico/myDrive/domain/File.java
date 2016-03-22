@@ -97,7 +97,7 @@ public class File extends File_Base {
 	 * 
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void deleteFile() throws DirectoryIsNotEmptyException {
+	public void delete() throws DirectoryIsNotEmptyException {
 		
 		this.setDir(null);
 		this.setOwner(null);
