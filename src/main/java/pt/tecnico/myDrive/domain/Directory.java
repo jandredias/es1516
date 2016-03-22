@@ -13,7 +13,6 @@ import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Directory extends Directory_Base {
 
@@ -78,29 +77,6 @@ public class Directory extends Directory_Base {
 		visitor.visitDirectory(this);
 	}
 
-	public File getInnerFile(String fileName)	throws FileNotFoundException {
-		
-		for(File file: getFilesSet())
-			if(file.getName().equals(fileName))
-				return file;
-		if (fileName.equals(".")) {
-			return this;
-		}
-		else if (fileName.equals("..")) {
-			return this.getDir();
-		}
-		throw new FileNotFoundException("File: " + fileName + " not Found");
-	}
-
-	public Directory getDirectory(String fileName)throws FileNotFoundException {
-		
-		File directory = getInnerFile(fileName);
-		if (directory.getClass() == Directory.class)
-			return (Directory) directory;
-		else
-			throw new FileNotFoundException("Directory: " + fileName + " not Found");
-	}
-
 	@Override
 	public void delete() throws DirectoryIsNotEmptyException {
 		
@@ -142,12 +118,38 @@ public class Directory extends Directory_Base {
 		return true;
 	}
 	
-	public File getFile(String fileName) throws FileNotFoundException {
+public File getInnerFile(String fileName)	throws FileNotFoundException {
+	
+		for(File file: getFilesSet())
+			if(file.getName().equals(fileName))
+				return file;
+		if (fileName.equals(".")) {
+			return this;
+		}
+		else if (fileName.equals("..")) {
+			return this.getDir();
+		}
+		throw new FileNotFoundException("File: " + fileName + " not Found");
+	}
+	
 
-		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(fileName.split("/")));
-		//Removing empty String due to / in first position
-		if (pieces.size() > 0 && pieces.get(0).equals(""))
-			pieces.remove(0);
+	public Directory getDirectory(String path)throws FileNotFoundException {
+		
+		File directory = getFile(path);
+		if (directory.getClass() == Directory.class)
+			return (Directory) directory;
+		else
+			throw new FileNotFoundException("Directory: " + path + " not Found");
+	}
+	
+
+	
+	public File getFile(String path) throws FileNotFoundException {
+
+		if( path.equals("") )
+			return this;
+		
+		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {
 			return getInnerFile(pieces.get(0));
@@ -156,11 +158,7 @@ public class Directory extends Directory_Base {
 		Directory nextDir = getDirectory(pieces.get(0));
 		pieces.remove(0);
 
-		String newPath = "";
-
-		for (String s : pieces)
-			newPath += (s + "/");
-
+		String newPath = MyDrive.arrayToString(pieces);
 		return nextDir.getFile(newPath);
 	}
 	/**
@@ -173,12 +171,8 @@ public class Directory extends Directory_Base {
 	public void removeFile(String path) throws FileNotFoundException,
 			DirectoryIsNotEmptyException{
 		
-		ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-
-		//Removing empty String due to / in first position
-		if (pieces.size() > 0 && pieces.get(0).equals(""))
-			pieces.remove(0);
-
+		ArrayList<String> pieces = MyDrive.pathToArray(path);
+		
 		if (pieces.size() == 1) {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
@@ -189,11 +183,7 @@ public class Directory extends Directory_Base {
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
 
-			String newPath = "";
-
-			for (String s : pieces)
-				newPath += (s + "/");
-
+			String newPath = MyDrive.arrayToString(pieces);
 			nextDir.removeFile(newPath);
 		}
 	}
@@ -206,8 +196,8 @@ public class Directory extends Directory_Base {
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
 	 */
-	public void addFile(String path, File file) throws FileExistsException, 
-			FileNotFoundException{
+	public void addFile(String path, File file) throws FileNotFoundException, 
+				FileExistsException {
 
 		if(path.equals("") || path.equals("/")){
 			if(hasFile(file.getName()))
@@ -215,25 +205,10 @@ public class Directory extends Directory_Base {
 			else
 				addFiles(file);
 			return;
-		}
-		else {
-			ArrayList<String> pieces = new ArrayList<String>(Arrays.asList(path.split("/")));
-
-			//Removing empty String due to / in first position
-			if (pieces.size() > 0 && pieces.get(0).equals(""))
-				pieces.remove(0);
-
+		} else {
 			Directory nextDir = null;
-			nextDir = getDirectory(pieces.get(0));
-
-			pieces.remove(0);
-
-			String newPath = "";
-
-			for (String s : pieces)
-				newPath += (s + "/");
-
-			nextDir.addFile(newPath, file);
+			nextDir = getDirectory(path); 
+			nextDir.addFile("", file);
 		}
 	}
 }

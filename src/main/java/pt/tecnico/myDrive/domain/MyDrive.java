@@ -5,12 +5,10 @@ import java.util.Arrays;
 
 import java.lang.reflect.*;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.joda.time.DateTime;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
@@ -19,7 +17,6 @@ import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileExistsException;
@@ -171,13 +168,13 @@ public class MyDrive extends MyDrive_Base {
 	}
 	
 	public static String permissions(int p){
-		//TODO
+		//TODO DELETE upon pbucho changes
 		return "rwxdr-x-";
 	}
 	
 	
 	public static int permissions(String p){
-		//TODO
+		//TODO DELETE upon pbucho changes
 		return 11111010;
 	}
 
@@ -193,7 +190,7 @@ public class MyDrive extends MyDrive_Base {
 	 */
 	public void removeFile(String path)
 		throws FileNotFoundException, DirectoryIsNotEmptyException{
-			getRootDirectory().removeFile(MyDrive.getSubPath(path));
+			getRootDirectory().removeFile(path);
 		}
 
 	/**
@@ -203,7 +200,7 @@ public class MyDrive extends MyDrive_Base {
 		if (path.equals("/"))
 			return getRootDirectory();
 		
-		return getRootDirectory().getFile(MyDrive.getSubPath(path));
+		return getRootDirectory().getFile(path);
 	}
 
 	/**

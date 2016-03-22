@@ -78,7 +78,8 @@ public class MyDriveApplication {
 			md.addPlainFile("/home","README",rootUsr ,"Lista De Utilizadores");
 
 		}catch(FileNotFoundException | FileExistsException | InvalidFileNameException e){
-			//Do nothing
+			System.out.println("creating readme.. ");
+			e.printStackTrace();
 		}
 	}
 	public static void step2(MyDrive md){
