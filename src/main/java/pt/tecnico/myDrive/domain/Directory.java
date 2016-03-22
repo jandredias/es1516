@@ -52,8 +52,6 @@ public class Directory extends Directory_Base {
 	}
 
 	public static Directory createRootDirectory(User owner) {
-		
-		//FIXME looks disgusting..
 		return new Directory("/", new DateTime(),11111010, owner);
 	}
 

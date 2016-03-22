@@ -1,27 +1,47 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
 
 public class User extends User_Base {
 
 	protected User() {/*for subclasses to use*/}
 
-	public User(String username, String pwd, String name, Integer permissions, Directory home) {
-		init(username, pwd, name, permissions, home);
-	}
-	public User(String username, Directory home){
-		init(username, username, username, 11110000, home);
+	protected User(String username, String pwd, String name, Integer permissions) throws InvalidUsernameException {
+		init(username, pwd, name, permissions);
 	}
 
-	protected void init(String username, String pwd, String name, Integer permissions, Directory home) {
+	protected User(String username) throws InvalidUsernameException{
+		init(username, username, username, 11110000);
+	}
+	
+	protected void init(String username, String pwd, String name, 
+			Integer permissions) throws InvalidUsernameException{
+
+		if(username == null || username == "" || !StringUtils.isAlphanumeric(username)){
+			this.deleteDomainObject();
+			throw new InvalidUsernameException(
+					"Username must be not empty and can only have numbers and letters");
+		}
+		
+		if(pwd == null)
+			pwd = username;
+		
+		if(name == null)
+			name = username;
+		
+		if(permissions == null)
+			permissions = 11110000;
+		
 		setUsername(username);
 		setPassword(pwd);
 		setName(name);
 		setPermissions(permissions);
-		setUsersHome(home);
 	}
+	
+	
 	public User(Element xml) {
 		this.xmlImport(xml);
 	}
@@ -68,5 +88,17 @@ public class User extends User_Base {
 
 
 		return element;
+	}
+	
+	public void delete(){
+		setUsersHome(null);
+		//*********************************
+		//*********************************
+		//FIXME inner files
+		this.set$ownedFiles(null);
+		//FIXME inner files
+		//*********************************
+		//*********************************
+		this.deleteDomainObject();
 	}
 }
