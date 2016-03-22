@@ -125,7 +125,7 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void deleteFile() throws DirectoryIsNotEmptyException {
+	public void delete() throws DirectoryIsNotEmptyException {
 		
 		if(getFilesSet().isEmpty()){
 			for (User user : getOwnerHomeSet()) {
@@ -133,7 +133,7 @@ public class Directory extends Directory_Base {
 				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
 				user.setUsersHome(newHome);
 			}
-			super.deleteFile();
+			super.delete();
 		}
 		else throw new DirectoryIsNotEmptyException();
 	}
@@ -185,7 +185,7 @@ public class Directory extends Directory_Base {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
-			fileToBeDeleted.deleteFile();
+			fileToBeDeleted.delete();
 
 		} else {
 			Directory nextDir = getDirectory(pieces.get(0));
@@ -210,7 +210,7 @@ public class Directory extends Directory_Base {
 	 */
 	public void addFile(String path, File file) throws FileExistsException, FileNotFoundException{
 
-		if(path.equals("")){
+		if(path.equals("") || path.equals("/")){
 			if(hasFile(file.getName()))
 				throw new  FileExistsException(file.getName());
 			else
