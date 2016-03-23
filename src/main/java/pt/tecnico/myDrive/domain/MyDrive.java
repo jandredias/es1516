@@ -167,17 +167,6 @@ public class MyDrive extends MyDrive_Base {
 		return id;
 	}
 	
-	public static String permissions(int p){
-		//TODO DELETE upon pbucho changes
-		return "rwxdr-x-";
-	}
-	
-	
-	public static int permissions(String p){
-		//TODO DELETE upon pbucho changes
-		return 11111010;
-	}
-
 	/* *************************** Static Methods *************************** */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
@@ -284,7 +273,7 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws InvalidUsernameException 
 	 * @throws UsernameAlreadyInUseException 
 	 */
-	public void addUser(String username, String password, String name,Integer mask) 
+	public void addUser(String username, String password, String name, String mask) 
 			throws InvalidUsernameException, UsernameAlreadyInUseException {
 
 		User newUser = new User(username, password, name, mask);

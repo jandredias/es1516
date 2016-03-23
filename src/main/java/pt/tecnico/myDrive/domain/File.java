@@ -15,20 +15,11 @@ public class File extends File_Base {
 
 	protected File() { /* for deriver classes */ }
 	
-/*
-	public File(String name, User owner) throws FileExistsException,
-			InvalidFileNameException {
-		
-		int permissions = owner.getPermissions();
-		init(name, MyDrive.getNewFileId(), new DateTime(), permissions,owner);
-	}
-*/
-	
 	protected void init (String name, User owner) throws FileExistsException,
 			InvalidFileNameException {
 
-		int permissions = owner.getPermissions();
-		init(name, MyDrive.getNewFileId(), new DateTime(), permissions,owner);
+		String permissions = owner.getPermissions();
+		init(name, MyDrive.getNewFileId(), new DateTime(), permissions, owner);
 	}
 	
 	/**
@@ -74,7 +65,7 @@ public class File extends File_Base {
 	 * @throws InvalidFileNameException
 	 */
 	protected void init(String name, Integer id , DateTime modification, 
-			Integer permissions, User owner) throws FileExistsException, 
+			String permissions, User owner) throws FileExistsException, 
 				InvalidFileNameException{
 		
 		if( name.contains("/") || name.contains("\0")){
@@ -165,7 +156,7 @@ public class File extends File_Base {
 		element.addContent(modificationElement);
 
 		Element permissionsElement = new Element("permissions");
-		permissionsElement.addContent(MyDrive.permissions(getPermissions()));
+		permissionsElement.addContent(getPermissions());
 		element.addContent(permissionsElement);
 
 		array.add(element);

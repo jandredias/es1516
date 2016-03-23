@@ -8,7 +8,7 @@ public class Root extends Root_Base {
 
 	public Root() {
 		try {
-			init("root", "***", "Super User", 11111010);
+			init("root", "***", "Super User", "rwxd----");
 		} catch (InvalidUsernameException e) {
 			//"root" is always a valid username	}
 		}

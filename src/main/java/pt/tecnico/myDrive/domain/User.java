@@ -7,18 +7,20 @@ import org.jdom2.Element;
 
 public class User extends User_Base {
 
+	private static final String DEFAULT_PERMISSION = "rwxd----"; // 11110000 == rwxd----
+	
 	protected User() {/*for subclasses to use*/}
 
-	protected User(String username, String pwd, String name, Integer permissions) throws InvalidUsernameException {
+	protected User(String username, String pwd, String name, String permissions) throws InvalidUsernameException {
 		init(username, pwd, name, permissions);
 	}
 
 	protected User(String username) throws InvalidUsernameException{
-		init(username, username, username, 11110000);
+		init(username, username, username, DEFAULT_PERMISSION);
 	}
 	
 	protected void init(String username, String pwd, String name, 
-			Integer permissions) throws InvalidUsernameException{
+			String permissions) throws InvalidUsernameException{
 
 		if(username == null || username == "" || !StringUtils.isAlphanumeric(username)){
 			this.deleteDomainObject();
@@ -33,12 +35,12 @@ public class User extends User_Base {
 			name = username;
 		
 		if(permissions == null)
-			permissions = 11110000;
+			permissions = DEFAULT_PERMISSION;
 		
 		setUsername(username);
 		setPassword(pwd);
 		setName(name);
-		setPermissions(permissions);
+		setPermissions(DEFAULT_PERMISSION);
 	}
 	
 	
@@ -60,9 +62,8 @@ public class User extends User_Base {
 
 		// FIXME check enunciado default mask
 		// FIXME mydrive permissions method probably not needed
-		setPermissions((xml.getChild("mask") == null) ?
-				11111010 :
-					MyDrive.permissions(xml.getChild("mask").getValue()));	
+		setPermissions(
+				(xml.getChild("mask") == null) ? "rwxdr-x-" : xml.getChild("mask").getValue());
 	}
 
 	public Element xmlExport() {
@@ -76,7 +77,7 @@ public class User extends User_Base {
 		nameElement.addContent(getName());
 
 		Element permissionsElement = new Element("mask");
-		permissionsElement.addContent(MyDrive.permissions(getPermissions()));
+		permissionsElement.addContent(getPermissions());
 
 		Element homeElement = new Element("home");
 		homeElement.addContent(getUsersHome().getPath());
