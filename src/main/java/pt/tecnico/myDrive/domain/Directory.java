@@ -94,11 +94,13 @@ public class Directory extends Directory_Base {
 
 		ArrayList<Element> array = super.xmlExport();
 		array.get(0).setName("dir");
+
 		for(File file : getFilesSet())
 			if(!file.getName().equals("/"))
 				for(Element el : file.xmlExport())
 					array.add(el);
 		return array;
+
 	}
 
 	/**

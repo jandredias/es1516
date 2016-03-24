@@ -156,7 +156,6 @@ public class File extends File_Base {
 		Element permissionsElement = new Element("permissions");
 		permissionsElement.addContent(getPermissions());
 		element.addContent(permissionsElement);
-
 		array.add(element);
 		return array;
 	}
@@ -165,4 +164,5 @@ public class File extends File_Base {
 	public void accept(Visitor visitor) throws UnsupportedOperationException {
 		visitor.visitFile(this);
 	}
+
 }

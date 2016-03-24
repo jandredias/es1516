@@ -1,9 +1,13 @@
 package pt.tecnico.myDrive.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
+import java.util.TreeSet;
+import java.util.Comparator;
 
 import java.lang.reflect.*;
+import java.util.Collections;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -413,10 +417,19 @@ public class MyDrive extends MyDrive_Base {
 		Element element = new Element("mydrive");
 		Document doc = new Document(element);
 
-		for(User user: getUsersSet())
+		List<User> usersSorted = new ArrayList<User>(getUsersSet());
+		Collections.sort(usersSorted);
+
+		for(User user: usersSorted)
 			element.addContent(user.xmlExport());
 
-		for(Element el : getRootDirectory().xmlExport())
+		List<Element> filesSorted = new ArrayList<Element>(getRootDirectory().xmlExport());
+		Collections.sort(filesSorted, new Comparator<Element>(){
+			public int compare(Element e1, Element e2){
+				return Integer.parseInt(e1.getAttribute("id").getValue()) - Integer.parseInt(e2.getAttribute("id").getValue());
+			}
+		});
+		for(Element el : filesSorted)
 			element.addContent(el);
 
 		return doc;

@@ -5,7 +5,7 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
 
-public class User extends User_Base {
+public class User extends User_Base implements Comparable<User> {
 
 	private static final String DEFAULT_PERMISSION = "rwxd----"; // 11110000 == rwxd----
 
@@ -100,5 +100,9 @@ public class User extends User_Base {
 		//*********************************
 		//*********************************
 		this.deleteDomainObject();
+	}
+
+	public int compareTo(User u){
+		return this.getUsername().compareTo(u.getUsername());
 	}
 }
