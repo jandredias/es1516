@@ -60,8 +60,9 @@ public class User extends User_Base {
 				this.getUsername() :
 					xml.getChild("password").getValue());
 
-		setPermissions(
-				(xml.getChild("mask") == null) ? "rwxd----" : xml.getChild("mask").getValue());
+		setPermissions((xml.getChild("mask") == null) ?
+			"rwxd----" :
+			xml.getChild("mask").getValue());
 	}
 
 	public Element xmlExport() {
