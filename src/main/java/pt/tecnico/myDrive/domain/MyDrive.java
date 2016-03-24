@@ -430,7 +430,8 @@ public class MyDrive extends MyDrive_Base {
 			}
 		});
 		for(Element el : filesSorted)
-			element.addContent(el);
+			if(!el.getChild("name").getValue().equals("/"))
+				element.addContent(el);
 
 		return doc;
 	}
