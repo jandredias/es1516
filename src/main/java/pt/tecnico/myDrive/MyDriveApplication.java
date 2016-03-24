@@ -23,7 +23,7 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.NoSuchUserException;
-
+import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import java.lang.reflect.InvocationTargetException;
 
 public class MyDriveApplication {
@@ -60,7 +60,7 @@ public class MyDriveApplication {
 		MyDrive md = MyDrive.getInstance();
 		log.trace("Setup: Create MyDrive");
 
-		step1(md);
+		/*step1(md);
 		step2(md);
 		step3(md);
 		step4(md);
@@ -69,7 +69,7 @@ public class MyDriveApplication {
 		step7(md);
 		step8(md);
 		step9(md);
-		step10(md);
+		step10(md);*/
 	}
 
 	public static void step1(MyDrive md){
@@ -207,6 +207,8 @@ public class MyDriveApplication {
 			System.out.println("Duplicated file on XML import file");
 		} catch (InvalidFileNameException e) {
 			System.out.println("Invalid charater somewhere");
+		} catch (UsernameAlreadyInUseException e) {
+			System.out.println("Username cannot be used more than once");
 		} catch (NoSuchMethodException e){
 			e.printStackTrace();
 		} catch (InstantiationException | IllegalAccessException e){

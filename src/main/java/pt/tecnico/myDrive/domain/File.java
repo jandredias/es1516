@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class File extends File_Base {
 
 	protected File() { /* for deriver classes */ }
-	
+
 	protected void init (String name, User owner) throws FileExistsException,
 			InvalidFileNameException {
 
 		String permissions = owner.getPermissions();
 		init(name, MyDrive.getNewFileId(), new DateTime(), permissions, owner);
 	}
-	
+
 	/**
 	 * Constructor XML
 	 * @param xml
@@ -30,32 +30,30 @@ public class File extends File_Base {
 	 * @throws InvalidFileNameException
 	 */
 	public File(Element xml) {
-		
 		this.xmlImport(xml);
 	}
 
 	protected void xmlImport(Element xml) {
-		
-		/* TODO:FIXME:XXX ANDRE U HAD 1 JOB
-			Integer id = Integer.parseInt(xml.getAttribute("id").getValue());
-			DateTime modification = new DateTime();
-			Integer permissions = 1;
-	
-			if(xml.getChild("modification") != null)
-				modification = DateTime.parse(xml.getChild("modification").getValue());
-	
-			if(xml.getChild("permissions") != null)
-				permissions = Integer.parseInt(xml.getChild("permissions").getValue());
-			init(xml.getChild("name").getValue(),
-					id, modification, permissions, owner, parent);
-		 */
+		DateTime modification = new DateTime();
+		if(xml.getChild("modification") != null)
+			modification = DateTime.parse(xml.getChild("modification").getValue());
+
+		String permissions = "rwxd----";
+		if(xml.getChild("permissions") != null)
+			permissions = xml.getChild("permissions").getValue();
+		try{
+		 init(xml.getChild("name").getValue(), MyDrive.getNewFileId(), modification,
+	 			permissions, null);
+		}catch(FileExistsException | InvalidFileNameException e){
+			System.out.println("This won't happen");
+		}
 	}
-	
+
 	/**
 	 * Real Constructor of File that is used by every other constructor
 	 * Note that the parent directory is not set, the parent directory is the
 	 *  one that needs to add its child
-	 * 
+	 *
 	 * @param name
 	 * @param id
 	 * @param modification
@@ -64,10 +62,10 @@ public class File extends File_Base {
 	 * @throws FileExistsException
 	 * @throws InvalidFileNameException
 	 */
-	protected void init(String name, Integer id , DateTime modification, 
-			String permissions, User owner) throws FileExistsException, 
+	protected void init(String name, Integer id , DateTime modification,
+			String permissions, User owner) throws FileExistsException,
 				InvalidFileNameException{
-		
+
 		if( name.contains("/") || name.contains("\0")){
 			this.deleteDomainObject();
 			throw new InvalidFileNameException(name);
@@ -76,23 +74,23 @@ public class File extends File_Base {
 			this.deleteDomainObject();
 			throw new FileExistsException(name);
 		}
-		setName(name);		
+		setName(name);
 		setId(id);
 		setModification(modification);
 		setPermissions(permissions);
 		setOwner(owner);
 	}
-	
+
 	/**
 	 * Removes file from FenixFramework Database
-	 * 
+	 *
 	 * @throws DirectoryIsNotEmptyException
 	 */
 	public void delete() throws DirectoryIsNotEmptyException {
-		
+
 		this.setDir(null);
 		this.setOwner(null);
-		
+
 		deleteDomainObject();
 	}
 
@@ -119,7 +117,7 @@ public class File extends File_Base {
 			return myName;
 		else {
 			Directory fatherDir = getDir();
-			if(fatherDir.getPath().equals("/")) 
+			if(fatherDir.getPath().equals("/"))
 				return fatherDir.getPath() + myName;
 			return fatherDir.getPath() + "/" + myName;
 		}

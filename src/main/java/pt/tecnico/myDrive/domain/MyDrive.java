@@ -74,10 +74,10 @@ public class MyDrive extends MyDrive_Base {
 				assert false;
 			}
 		} catch (InvalidFileNameException | FileNotFoundException exc) {
-			//Should Never Happen ; 
+			//Should Never Happen ;
 			log.error("CRIT ERROR: root dir should exist");
 			log.error("Message: " + exc.getMessage());
-			assert false;		
+			assert false;
 		}
 
 
@@ -95,10 +95,10 @@ public class MyDrive extends MyDrive_Base {
 				assert false;
 			}
 		} catch (InvalidFileNameException | FileNotFoundException exc) {
-			//Should Never Happen ; 
+			//Should Never Happen ;
 			log.error("CRIT ERROR: root dir should exist");
 			log.error("Message: " + exc.getMessage());
-			assert false;		
+			assert false;
 		}
 		root.setUsersHome(home_root);
 	}
@@ -106,21 +106,21 @@ public class MyDrive extends MyDrive_Base {
 	/* ********************************************************************** */
 	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
-	
+
 	/**
 	 * Converts a path(string) into an Array
 	 */
 	public static ArrayList<String> pathToArray(String path){
-		
-		ArrayList<String> pieces = 
+
+		ArrayList<String> pieces =
 				new ArrayList<String>(Arrays.asList(path.split("/")));
-		
+
 		//Removing empty String due to / in first position
 		if (pieces.size() > 0 && pieces.get(0).equals(""))
 			pieces.remove(0);
 		return pieces;
 	}
-	
+
 	/**
 	 * converts an arraylist to a path (string)
 	 */
@@ -128,7 +128,7 @@ public class MyDrive extends MyDrive_Base {
 		String newPath = "";
 		for(String s : pieces)
 			newPath += (s + "/");
-		return newPath;		
+		return newPath;
 	}
 	/**
 	 * Returns path without the leading directory
@@ -148,7 +148,7 @@ public class MyDrive extends MyDrive_Base {
 	 * @return String
 	 */
 	public static String getPathWithoutFile(String path){
-		
+
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 		if (pieces.size() > 0 && pieces.get(0).equals(""))
 			pieces.remove(pieces.size() - 1);
@@ -166,7 +166,7 @@ public class MyDrive extends MyDrive_Base {
 		FenixFramework.getDomainRoot().getMyDrive().setFileId(id + 1);
 		return id;
 	}
-	
+
 	/* *************************** Static Methods *************************** */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
@@ -188,7 +188,7 @@ public class MyDrive extends MyDrive_Base {
 	public File getFile(String path) throws FileNotFoundException {
 		if (path.equals("/"))
 			return getRootDirectory();
-		
+
 		return getRootDirectory().getFile(path);
 	}
 
@@ -216,11 +216,11 @@ public class MyDrive extends MyDrive_Base {
 	/**
 	 * Returns Directory on Path, if some Directory does not exists in path..
 	 * it is created with owner as @param user
-	 * 
+	 *
 	 * @param path
 	 * @param user
 	 * @return
-	 * @throws FileExistsException 
+	 * @throws FileExistsException
 	 * @throws InvalidFileNameException
 	 * @throws NotDirectoryException
 	 */
@@ -241,7 +241,7 @@ public class MyDrive extends MyDrive_Base {
 					//Will Never Happen
 				}
 				nextDir = newDirectory;
-			} 
+			}
 			pieces.remove(0);
 		}
 		return nextDir;
@@ -270,10 +270,10 @@ public class MyDrive extends MyDrive_Base {
 	 * @param String home
 	 *
 	 * @return User
-	 * @throws InvalidUsernameException 
-	 * @throws UsernameAlreadyInUseException 
+	 * @throws InvalidUsernameException
+	 * @throws UsernameAlreadyInUseException
 	 */
-	public void addUser(String username, String password, String name, String mask) 
+	public void addUser(String username, String password, String name, String mask)
 			throws InvalidUsernameException, UsernameAlreadyInUseException {
 
 		User newUser = new User(username, password, name, mask);
@@ -312,23 +312,23 @@ public class MyDrive extends MyDrive_Base {
 		return visitor.getFileNames();
 	}
 
-	
+
 	private String getFileContents(File file) throws UnsupportedOperationException{
-		
+
 		FileContentsVisitor visitor = new FileContentsVisitor();
 		file.accept(visitor);
 		return visitor.getFileContents();
 	}
-	
+
 	public String getFileContents(String path)	throws FileNotFoundException,
 			NotDirectoryException, UnsupportedOperationException {
-		
+
 		File file = getFile(path);
 		return getFileContents(file);
 	}
 
-	
-	public void deleteFile (String path) throws FileNotFoundException, 
+
+	public void deleteFile (String path) throws FileNotFoundException,
 			DirectoryIsNotEmptyException {
 
 		this.getRootDirectory().removeFile(path);
@@ -355,47 +355,47 @@ public class MyDrive extends MyDrive_Base {
 				String message = exc.getMessage();
 				log.error("Message: " + message);
 				assert false;
-			} 
+			}
 			throw exception;
 		}
 		log.trace("File: " + file.getName() + " created with success");
 	}
-	
-	public void addApplication(String path, String name, User owner, 
-			String content)throws FileExistsException, InvalidFileNameException, 
+
+	public void addApplication(String path, String name, User owner,
+			String content)throws FileExistsException, InvalidFileNameException,
 			FileNotFoundException {
 
 		Application file = new Application(name, owner, content);
 		this.addFile(path, file);
 	}
-	
-	public void addDirectory(String path, String name, User owner) 
-			throws FileExistsException, InvalidFileNameException, 
+
+	public void addDirectory(String path, String name, User owner)
+			throws FileExistsException, InvalidFileNameException,
 			FileNotFoundException {
 
 		Directory file = new Directory(name, owner);
 		this.addFile(path, file);
 	}
-	
-	
-	public void addLink(String path, String name, User owner, 
-			String content)throws FileExistsException, InvalidFileNameException, 
+
+
+	public void addLink(String path, String name, User owner,
+			String content)throws FileExistsException, InvalidFileNameException,
 			FileNotFoundException {
-		
+
 		Link file = new Link(name, owner, content);
 		this.addFile(path, file);
 	}
-	
-	
-	public void addPlainFile(String path, String name, User owner, 
-			String content)throws FileExistsException, InvalidFileNameException, 
+
+
+	public void addPlainFile(String path, String name, User owner,
+			String content)throws FileExistsException, InvalidFileNameException,
 	FileNotFoundException {
-		
+
 		PlainFile file = new PlainFile(name, owner, content);
 		this.addFile(path, file);
 	}
 
-	
+
 	/* ************************* Add Files Methods ENDS ********************* */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
@@ -421,11 +421,11 @@ public class MyDrive extends MyDrive_Base {
 
 		return doc;
 	}
-	
+
 	/**
 	 *  FIXME
 	 *
-	 * @param Object 
+	 * @param Object
 	 */
 	private void importElement(Element e, Object j){
 		System.out.println("This should happen");
@@ -450,7 +450,7 @@ public class MyDrive extends MyDrive_Base {
 	private void importElement(Element e, User u){
 		//TODO
 		System.out.println("User HERE");
-		
+
 	}
 
 	/**
@@ -465,31 +465,48 @@ public class MyDrive extends MyDrive_Base {
 			FileExistsException, InvalidFileNameException,
 			ClassNotFoundException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException,
-			InvocationTargetException {
-		
+			InvocationTargetException, UsernameAlreadyInUseException {
+
 		for(Element node : e.getChildren()){
-			File file = null ;
+
+			File file = null;
+
 			if(node.getName().equals("user")){
-				User user = new User(node);
-				try{
+				User user;
+				//If it's the root user it should not be created
+				//but updated Otherwise create the user and set him up
+				if(!node.getAttribute("username").getValue().equals("root")){
+					user = new User(node);
 					addUser(user);
-				} catch(UsernameAlreadyInUseException u) {
-					user = getUserByUsername(node.getAttribute("username").getValue());
-					user.xmlImport(node); //Update information
+				}else{
+					user = this.getRootUser();
+					user.xmlImport(node);
 				}
-			} else if(node.getName().equals("dir")) {
-				file = new Directory(node);
-			} else if(node.getName().equals("plain-file")) {
-				file = new PlainFile(node);
-			} else if(node.getName().equals("app")) {
-				file = new Application(node);
-			} else if(node.getName().equals("link")) {
-				file = new Link(node);
-			}
-			
-			if(! node.getName().equals("user")) {
+				//Update users home
+				String home = "/home/" + node.getAttribute("username").getValue();
+				if(node.getChild("home") != null) home = node.getChild("home").getValue();
+				user.setUsersHome(reallyGetDirectory(home, getRootUser()));
+
+
+			}else{
+				if(node.getName().equals("dir")) {
+					file = new Directory(node);
+				} else if(node.getName().equals("plain")) {
+					file = new PlainFile(node);
+				} else if(node.getName().equals("app")) {
+					file = new Application(node);
+				} else if(node.getName().equals("link")) {
+					file = new Link(node);
+				}
+
+				//Set files owner
+				User owner = getUserByUsername(node.getChild("owner").getValue());
+				file.setOwner(owner);
+
+				//Set file's parent
 				Directory dir = reallyGetDirectory(node.getChild("path").getValue(),this.getRootUser());
-				dir.addFile("",file);
+				dir.addFiles(file);
+
 			}
 		}
 	}

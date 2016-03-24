@@ -21,7 +21,7 @@ public class Directory extends Directory_Base {
 
 	/**
 	 * This is the most used constructor is used to create directories
-	 * @throws InvalidFileNameException 
+	 * @throws InvalidFileNameException
 	 */
 	public Directory(String name, User owner)
 			throws FileExistsException, InvalidFileNameException {
@@ -39,9 +39,9 @@ public class Directory extends Directory_Base {
 	 * @param Integer permissions
 	 * @param User owner
 	 */
-	private Directory(String name, DateTime modification, String permissions, 
+	private Directory(String name, DateTime modification, String permissions,
 			User owner) {
-		
+
 		//FIXME looks disgusting..
 		setName(name);
 		setId(MyDrive.getNewFileId());
@@ -56,12 +56,10 @@ public class Directory extends Directory_Base {
 	}
 
 	public Directory(Element xml) {
-		
 		this.xmlImport(xml);
 	}
 
 	protected void xmlImport(Element xml) {
-		
 		super.xmlImport(xml);
 	}
 
@@ -80,7 +78,7 @@ public class Directory extends Directory_Base {
 
 	@Override
 	public void delete() throws DirectoryIsNotEmptyException {
-		
+
 		if(getFilesSet().isEmpty()){
 			for (User user : getOwnerHomeSet()) {
 				Directory newHome = this.getDir();
@@ -93,7 +91,7 @@ public class Directory extends Directory_Base {
 	}
 
 	public ArrayList<Element> xmlExport() {
-		
+
 		ArrayList<Element> array = super.xmlExport();
 		array.get(0).setName("dir");
 		for(File file : getFilesSet())
@@ -105,12 +103,12 @@ public class Directory extends Directory_Base {
 
 	/**
 	 * Method that returns true if a directory as a file with the name: fileName
-	 * 
+	 *
 	 * @param fileName
 	 * @return
 	 */
 	public boolean hasFile(String fileName)  {
-		
+
 		try {
 			getInnerFile(fileName);
 		} catch (FileNotFoundException e) {
@@ -118,9 +116,9 @@ public class Directory extends Directory_Base {
 		}
 		return true;
 	}
-	
+
 public File getInnerFile(String fileName)	throws FileNotFoundException {
-	
+
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName))
 				return file;
@@ -132,24 +130,24 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 		}
 		throw new FileNotFoundException("File: " + fileName + " not Found");
 	}
-	
+
 
 	public Directory getDirectory(String path)throws FileNotFoundException {
-		
+
 		File directory = getFile(path);
 		if (directory.getClass() == Directory.class)
 			return (Directory) directory;
 		else
 			throw new FileNotFoundException("Directory: " + path + " not Found");
 	}
-	
 
-	
+
+
 	public File getFile(String path) throws FileNotFoundException {
 
 		if( path.equals("") )
 			return this;
-		
+
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {
@@ -171,9 +169,9 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 	 */
 	public void removeFile(String path) throws FileNotFoundException,
 			DirectoryIsNotEmptyException{
-		
+
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
-		
+
 		if (pieces.size() == 1) {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
@@ -197,7 +195,7 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
 	 */
-	public void addFile(String path, File file) throws FileNotFoundException, 
+	public void addFile(String path, File file) throws FileNotFoundException,
 				FileExistsException {
 
 		if(path.equals("") || path.equals("/")){
@@ -208,7 +206,7 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 			return;
 		} else {
 			Directory nextDir = null;
-			nextDir = getDirectory(path); 
+			nextDir = getDirectory(path);
 			nextDir.addFile("", file);
 		}
 	}

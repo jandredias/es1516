@@ -13,19 +13,19 @@ public class Root extends Root_Base {
 			//"root" is always a valid username	}
 		}
 	}
-	
+
 	public Root(Element xml) {
 		this.xmlImport(xml);
 	}
 
 	protected void xmlImport(Element xml) {
 		super.xmlImport(xml);
-	}	
+	}
 
 	public Element xmlExport() {
 		Element element = super.xmlExport();
 
-		element.setName("root");
+		element.setName("user");
 
 		return element;
 	}
