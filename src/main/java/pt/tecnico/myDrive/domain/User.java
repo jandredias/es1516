@@ -8,7 +8,7 @@ import org.jdom2.Element;
 public class User extends User_Base {
 
 	private static final String DEFAULT_PERMISSION = "rwxd----"; // 11110000 == rwxd----
-	
+
 	protected User() {/*for subclasses to use*/}
 
 	protected User(String username, String pwd, String name, String permissions) throws InvalidUsernameException {
@@ -18,8 +18,8 @@ public class User extends User_Base {
 	protected User(String username) throws InvalidUsernameException{
 		init(username, username, username, DEFAULT_PERMISSION);
 	}
-	
-	protected void init(String username, String pwd, String name, 
+
+	protected void init(String username, String pwd, String name,
 			String permissions) throws InvalidUsernameException{
 
 		if(username == null || username == "" || !StringUtils.isAlphanumeric(username)){
@@ -27,23 +27,23 @@ public class User extends User_Base {
 			throw new InvalidUsernameException(
 					"Username must be not empty and can only have numbers and letters");
 		}
-		
+
 		if(pwd == null)
 			pwd = username;
-		
+
 		if(name == null)
 			name = username;
-		
+
 		if(permissions == null)
 			permissions = DEFAULT_PERMISSION;
-		
+
 		setUsername(username);
 		setPassword(pwd);
 		setName(name);
 		setPermissions(DEFAULT_PERMISSION);
 	}
-	
-	
+
+
 	public User(Element xml) {
 		this.xmlImport(xml);
 	}
@@ -60,10 +60,8 @@ public class User extends User_Base {
 				this.getUsername() :
 					xml.getChild("password").getValue());
 
-		// FIXME check enunciado default mask
-		// FIXME mydrive permissions method probably not needed
 		setPermissions(
-				(xml.getChild("mask") == null) ? "rwxdr-x-" : xml.getChild("mask").getValue());
+				(xml.getChild("mask") == null) ? "rwxd----" : xml.getChild("mask").getValue());
 	}
 
 	public Element xmlExport() {
@@ -90,7 +88,7 @@ public class User extends User_Base {
 
 		return element;
 	}
-	
+
 	public void delete(){
 		setUsersHome(null);
 		//*********************************
