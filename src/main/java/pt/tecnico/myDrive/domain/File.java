@@ -13,135 +13,156 @@ import java.util.ArrayList;
 
 public class File extends File_Base {
 
+	protected File() { /* for deriver classes */ }
 
-  protected File() { /* for deriver classes */ }
+	protected void init (String name, User owner) throws FileExistsException,
+			InvalidFileNameException {
 
-  public File(String name, DateTime modification, Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
-    init(name, modification, permissions, owner, parent);
-  }
-
-  public File(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
-	  this.xmlImport(xml, owner, parent);
-  }
-
-  protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException {
-    Integer id = Integer.parseInt(xml.getAttribute("id").getValue());
-    DateTime modification = new DateTime();
-    Integer permissions = 1;
-
-    if(xml.getChild("modification") != null)
-      modification = DateTime.parse(xml.getChild("modification").getValue());
-
-    if(xml.getChild("permissions") != null)
-      permissions = Integer.parseInt(xml.getChild("permissions").getValue());
-    init(xml.getChild("name").getValue(),
-      id, modification, permissions, owner, parent);
-  }
-
-  protected void init(String name, DateTime modification,
-		    Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
-
-	  init(name, MyDrive.getNewFileId() ,modification,permissions, owner, parent);
-  }
-
-  protected void init(String name, Integer id , DateTime modification,
-    Integer permissions, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
-	if(name.contains("/") || name.contains("\0")){
-		throw new InvalidFileNameException(name);
+		String permissions = owner.getPermissions();
+		init(name, MyDrive.getNewFileId(), new DateTime(), permissions, owner);
 	}
 
-	setName(name);
-
-	try {
-		parent.addFile("",this);
-	} catch (FileNotFoundException e) {
-		// Impossible condition
-	} catch (FileExistsException e ) {
-		this.deleteDomainObject();
-		throw e;
-	}
-	
-	if( name.equals(".") || name.equals("..") ) {
-		this.deleteDomainObject();
-		throw new FileExistsException(name);
+	/**
+	 * Constructor XML
+	 * @param xml
+	 * @param owner
+	 * @throws FileExistsException
+	 * @throws InvalidFileNameException
+	 */
+	public File(Element xml) {
+		this.xmlImport(xml);
 	}
 
-    setId(id);
-    setModification(modification);
-    setPermissions(permissions);
-    setOwner(owner);
+	protected void xmlImport(Element xml) {
+		DateTime modification = new DateTime();
+		if(xml.getChild("modification") != null)
+			modification = DateTime.parse(xml.getChild("modification").getValue());
+
+		String permissions = "rwxd----";
+		if(xml.getChild("permissions") != null)
+			permissions = xml.getChild("permissions").getValue();
+		try{
+		 init(xml.getChild("name").getValue(), MyDrive.getNewFileId(), modification,
+	 			permissions, null);
+		}catch(FileExistsException | InvalidFileNameException e){
+			System.out.println("This won't happen");
+		}
+	}
+
+	/**
+	 * Real Constructor of File that is used by every other constructor
+	 * Note that the parent directory is not set, the parent directory is the
+	 *  one that needs to add its child
+	 *
+	 * @param name
+	 * @param id
+	 * @param modification
+	 * @param permissions
+	 * @param owner
+	 * @throws FileExistsException
+	 * @throws InvalidFileNameException
+	 */
+	protected void init(String name, Integer id , DateTime modification,
+			String permissions, User owner) throws FileExistsException,
+				InvalidFileNameException{
+
+		if( name.contains("/") || name.contains("\0")){
+			this.deleteDomainObject();
+			throw new InvalidFileNameException(name);
+		}
+		if( name.equals(".") || name.equals("..") ) {
+			this.deleteDomainObject();
+			throw new FileExistsException(name);
+		}
+		setName(name);
+		setId(id);
+		setModification(modification);
+		setPermissions(permissions);
+		setOwner(owner);
+	}
+
+	/**
+	 * Removes file from FenixFramework Database
+	 *
+	 * @throws DirectoryIsNotEmptyException
+	 */
+	public void delete() throws DirectoryIsNotEmptyException {
+
+		this.setDir(null);
+		this.setOwner(null);
+
+		deleteDomainObject();
+	}
 
 
-  }
+	/**
+	 * Throws exception when File cannot be a parent File
+	 *
+	 * @throws NotDirectoryException
+	 */
+	public void isParentable() throws NotDirectoryException{
+		throw new NotDirectoryException();
+	}
 
-  /**
-   * Throws exception when File cannot be a parent File
-   *
-   * @throws NotDirectoryException
-   */
-  public void isParentable() throws NotDirectoryException{
-	  throw new NotDirectoryException();
-  }
+	public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
+		throw new NotDirectoryException(fileName);
+	}
 
-  public File getFile(String fileName) throws NotDirectoryException, FileNotFoundException {
-    throw new NotDirectoryException(fileName);
-  }
+	/**
+	 * @return String that is equal to File Path
+	 */
+	public String getPath() {
+		String myName = getName();
+		if (myName.equals("/"))
+			return myName;
+		else {
+			Directory fatherDir = getDir();
+			if(fatherDir.getPath().equals("/"))
+				return fatherDir.getPath() + myName;
+			return fatherDir.getPath() + "/" + myName;
+		}
+	}
 
-  public String getPath() {
-	  String myName = getName();
-	  if (myName.equals("/"))
-		  return myName;
-	  else {
-	      Directory fatherDir = getDir();
-	      if(fatherDir.getPath().equals("/")) return fatherDir.getPath() + myName;
-	      return fatherDir.getPath() + "/" + myName;
-	  }
-  }
-
-  public String getFatherPath() {
-      Directory fatherDir = getDir();
-      return fatherDir.getPath();
-  }
-
-  public void deleteFile() throws DirectoryIsNotEmptyException {
-
-    this.setDir(null);
-    this.setOwner(null);
-
-    deleteDomainObject();
-  }
-
-  public ArrayList<Element> xmlExport() {
-    ArrayList<Element> array = new ArrayList<Element>();
-    Element element = new Element("file");
-    element.setAttribute("id",getId().toString());
-
-    Element pathElement = new Element("path");
-    pathElement.addContent(getFatherPath());
- 	element.addContent(pathElement);
-
-    Element ownerElement = new Element("owner");
-    ownerElement.addContent(getOwner().getUsername());
- 	element.addContent(ownerElement);
-
-    Element nameElement = new Element("name");
-    nameElement.addContent(getName());
- 	element.addContent(nameElement);
-
- 	Element modificationElement = new Element("modification");
- 	modificationElement.addContent(getModification().toString());
- 	element.addContent(modificationElement);
-
- 	Element permissionsElement = new Element("permissions");
- 	permissionsElement.addContent(MyDrive.permissions(getPermissions()));
- 	element.addContent(permissionsElement);
-
-    array.add(element);
-    return array;
-  }
+	/**
+	 * @return String that is equal to File's Directory Path
+	 */
+	public String getFatherPath() {
+		Directory fatherDir = getDir();
+		return fatherDir.getPath();
+	}
 
 
-  public void accept(Visitor visitor) throws UnsupportedOperationException {
-    visitor.visitFile(this);
-  }
+	public ArrayList<Element> xmlExport() {
+		ArrayList<Element> array = new ArrayList<Element>();
+		Element element = new Element("file");
+		element.setAttribute("id",getId().toString());
+
+		Element pathElement = new Element("path");
+		pathElement.addContent(getFatherPath());
+		element.addContent(pathElement);
+
+		Element ownerElement = new Element("owner");
+		ownerElement.addContent(getOwner().getUsername());
+		element.addContent(ownerElement);
+
+		Element nameElement = new Element("name");
+		nameElement.addContent(getName());
+		element.addContent(nameElement);
+
+		Element modificationElement = new Element("modification");
+		modificationElement.addContent(getModification().toString());
+		element.addContent(modificationElement);
+
+		Element permissionsElement = new Element("permissions");
+		permissionsElement.addContent(getPermissions());
+		element.addContent(permissionsElement);
+		array.add(element);
+		return array;
+	}
+
+
+	public void accept(Visitor visitor) throws UnsupportedOperationException {
+		visitor.visitFile(this);
+	}
+
 }

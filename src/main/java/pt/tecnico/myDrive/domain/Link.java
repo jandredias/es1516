@@ -1,7 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
-import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
@@ -10,35 +9,36 @@ import java.util.ArrayList;
 
 public class Link extends Link_Base {
 
-    public Link(){ super(); }
+	public Link(){ super(); }
 
-    public Link(String name, DateTime modification,
-    Integer permissions, User owner, String content, Directory father) throws FileExistsException, InvalidFileNameException{
-   	  init(name,  modification, permissions, owner, content, father);
-    }
+	public Link(String name, User owner, String content) 
+			throws FileExistsException, InvalidFileNameException{
 
-    public Link(Element xml, User owner, Directory parent)throws FileExistsException, InvalidFileNameException {
-		    this.xmlImport(xml, owner, parent);
-    }
+		init(name, owner, content);
+	}
 
-	protected void xmlImport(Element xml, User owner, Directory parent) throws FileExistsException, InvalidFileNameException{
-		super.xmlImport(xml, owner, parent);
+	public Link(Element xml) throws FileExistsException, InvalidFileNameException {
+		this.xmlImport(xml);
+	}
+
+	protected void xmlImport(Element xml){
+		super.xmlImport(xml);
 	}
 
 	protected void importContent(Element xml) {
-    setContent(xml.getChild("value").getValue());
+		setContent(xml.getChild("value").getValue());
 	}
 
-    public ArrayList<Element> xmlExport() {
-        ArrayList<Element> array = super.xmlExport();
-       	array.get(0).setName("link");
+	public ArrayList<Element> xmlExport() {
+		ArrayList<Element> array = super.xmlExport();
+		array.get(0).setName("link");
 
-       	Element methotdElement = array.get(0).getChild("contents");
-       	methotdElement.setName("value");
+		Element methotdElement = array.get(0).getChild("contents");
+		methotdElement.setName("value");
 
-       	return array;
-    }
-    public void accept(Visitor visitor) throws UnsupportedOperationException {
-    	visitor.visitLink(this);
-    }
+		return array;
+	}
+	public void accept(Visitor visitor) throws UnsupportedOperationException {
+		visitor.visitLink(this);
+	}
 }

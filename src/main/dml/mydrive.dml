@@ -8,7 +8,7 @@ class User{
   String username;
   String password;
   String name;
-  Integer permissions;
+  String permissions;
 }
 
 class Root extends User;
@@ -17,7 +17,7 @@ class File {
   String name;
   Integer id;
   DateTime modification;
-  Integer permissions;
+  String permissions;
 }
 
 class PlainFile extends File {
