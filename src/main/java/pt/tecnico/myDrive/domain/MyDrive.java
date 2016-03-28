@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.TreeSet;
 import java.util.Comparator;
 
 import java.lang.reflect.*;
@@ -296,13 +295,14 @@ public class MyDrive extends MyDrive_Base {
 		this.addUser(newUser);
 	}
 
-	private void addUser(User user) throws UsernameAlreadyInUseException {
-		User existingUser = getUserByUsername(user.getUsername());
+	private void addUser(User newUser) throws UsernameAlreadyInUseException {
+		User existingUser = getUserByUsername(newUser.getUsername());
 		if( existingUser == null ) {
-			addUsers(user);
+			addUsers(newUser);
 		} else {
-			user.delete();
-			throw new UsernameAlreadyInUseException(user.getUsername());
+			String name = newUser.getUsername();
+			newUser.delete();
+			throw new UsernameAlreadyInUseException(name);
 		}
 	}
 
@@ -315,7 +315,6 @@ public class MyDrive extends MyDrive_Base {
 		file.accept(visitor);
 		return visitor.getFileNames();
 	}
-
 
 	private String getFileContents(File file) throws UnsupportedOperationException{
 
@@ -381,7 +380,6 @@ public class MyDrive extends MyDrive_Base {
 		this.addFile(path, file);
 	}
 
-
 	public void addLink(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
 			FileNotFoundException {
@@ -390,7 +388,6 @@ public class MyDrive extends MyDrive_Base {
 		this.addFile(path, file);
 	}
 
-
 	public void addPlainFile(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
 	FileNotFoundException {
@@ -398,7 +395,6 @@ public class MyDrive extends MyDrive_Base {
 		PlainFile file = new PlainFile(name, owner, content);
 		this.addFile(path, file);
 	}
-
 
 	/* ************************* Add Files Methods ENDS ********************* */
 	/* ********************************************************************** */
@@ -434,37 +430,6 @@ public class MyDrive extends MyDrive_Base {
 				element.addContent(el);
 
 		return doc;
-	}
-
-	/**
-	 *  FIXME
-	 *
-	 * @param Object
-	 */
-	private void importElement(Element e, Object j){
-		System.out.println("This should happen");
-	}
-
-	/**
-	 * Import element: adds it to its parent
-	 *FIXME
-	 * @param File
-	 */
-	private void importElement(Element e, File f){
-		//TODO
-		System.out.println("FILE HERE");
-		//f.setOwner(this.getUser(e.getChild("owner").getValue()));
-	}
-
-	/**
-	 * Import element: adds it to its parent
-	 *FIXME
-	 * @param User
-	 */
-	private void importElement(Element e, User u){
-		//TODO
-		System.out.println("User HERE");
-
 	}
 
 	/**

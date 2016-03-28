@@ -1,5 +1,4 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 
 import org.apache.commons.lang.StringUtils;
@@ -90,7 +89,7 @@ public class User extends User_Base implements Comparable<User> {
 		return element;
 	}
 
-	public void delete(){
+	protected void delete(){
 		setUsersHome(null);
 		//*********************************
 		//*********************************
