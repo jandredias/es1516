@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /*import org.junit.After;
-import org.junit.Before;
+import org.junit.Before; FIXME
 import org.junit.BeforeClass;*/
 
 import pt.ist.fenixframework.FenixFramework;
@@ -17,13 +17,13 @@ import pt.tecnico.myDrive.MyDriveApplication;
 public abstract class AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
 
-    //@BeforeClass // run once berfore each test class
+    //@BeforeClass // run once berfore each test class FIXME
     public static void setUpBeforeAll() throws Exception {
 	// run tests with a clean database!!!
 	MyDriveApplication.init();
     }
 
-   // @Before // run before each test
+   // @Before // run before each test FIXME
     public void setUp() throws Exception {
         try {
             FenixFramework.getTransactionManager().begin(false);
@@ -33,7 +33,7 @@ public abstract class AbstractServiceTest {
         }
     }
 
-    //@After // rollback after each test
+    //@After // rollback after each test FIXME
     public void tearDown() {
         try {
             FenixFramework.getTransactionManager().rollback();
