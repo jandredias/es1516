@@ -6,9 +6,9 @@ import javax.transaction.SystemException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/*import org.junit.After;
-import org.junit.Before; FIXME
-import org.junit.BeforeClass;*/
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.ist.fenixframework.core.WriteOnReadError;
@@ -23,7 +23,7 @@ public abstract class AbstractServiceTest {
 	MyDriveApplication.init();
     }
 
-   // @Before // run before each test FIXME
+    //@Before // run before each test FIXME
     public void setUp() throws Exception {
         try {
             FenixFramework.getTransactionManager().begin(false);
