@@ -28,6 +28,37 @@ class Directory extends File {}
 class Link extends PlainFile {}
 class Application extends PlainFile {}
 
+class Session {
+  Integer token;
+}
+
+relation MyDriveHasSessions {
+  MyDrive playsRole myDrive {
+    multiplicity 1..1;
+  }
+  Session playsRole session {
+    multiplicity 0..*;
+  }
+}
+
+relation UserHasSessions{
+  User playsRole user {
+    multiplicity 1..1;
+  }
+  Session playsRole session{
+    multiplicity 0..*;
+  }
+}
+
+relation SessionHasCurrentDirectory {
+  Session playsRole session {
+    multiplicity 0..*;
+  }
+  Directory playsRole currentDirectory {
+    multiplicity 1..1;
+  }
+}
+
 relation MyDriveDomain {
   .pt.ist.fenixframework.DomainRoot playsRole root {
     multiplicity 0..1;
