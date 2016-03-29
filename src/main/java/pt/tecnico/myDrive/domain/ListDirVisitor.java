@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ListDirVisitor implements Visitor{
 
@@ -19,12 +20,15 @@ public class ListDirVisitor implements Visitor{
     }
 
     public void visitDirectory(Directory d){
-		fileNames.add(".");
-		fileNames.add("..");
-        for(File file : d.getFilesSet()){
-	    if(file.getName() != "/")
-                fileNames.add(file.getName());
-        }
+    	for(File file : d.getFilesSet()){
+    		if(file.getName() != "/")
+    			fileNames.add(file.getName());
+    	}
+
+		Collections.sort(fileNames);
+		
+		fileNames.add(0, ".");
+		fileNames.add(1, "..");
     }
 
     public void visitPlainFile(PlainFile p) throws UnsupportedOperationException{
