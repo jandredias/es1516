@@ -5,7 +5,6 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
-import pt.tecnico.phonebook.exception.PersonDoesNotExistException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +21,7 @@ public abstract class MyDriveService{
 		return MyDrive.getInstance();
 	}
 	
-	protected User getUser( String username ){
+	protected User getUser( String username ) throws UserDoesNotExistsException{
 		User user = getMyDrive().getUserByUsername(username);
 		if (user == null)
 			throw new UserDoesNotExistsException(username);

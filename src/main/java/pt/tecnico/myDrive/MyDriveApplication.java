@@ -22,7 +22,7 @@ import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import pt.tecnico.myDrive.exception.NoSuchUserException;
+import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -201,7 +201,7 @@ public class MyDriveApplication {
 			System.out.println("File not found on XML import file");
 		} catch(NotDirectoryException e) {
 			System.out.println("Only directories can contain another files");
-		} catch(NoSuchUserException e) {
+		} catch(UserDoesNotExistsException e) {
 			System.out.println("There is not such a user on XML import file");
 		}catch(FileExistsException e){
 			System.out.println("Duplicated file on XML import file");

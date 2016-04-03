@@ -5,6 +5,7 @@ import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.UnknowFileTypeException;
+import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 
 public class CreateFileService extends MyDriveService {
 
@@ -38,10 +39,11 @@ public class CreateFileService extends MyDriveService {
 	 * @throws InvalidFileNameException 
 	 * @throws FileExistsException 
 	 * @throws UnknowFileTypeException 
+	 * @throws UserDoesNotExistsException 
 	 */
 	@Override
 	public final void dispatch() throws FileExistsException, 
-				InvalidFileNameException, FileNotFoundException, UnknowFileTypeException{
+				InvalidFileNameException, FileNotFoundException, UnknowFileTypeException, UserDoesNotExistsException{
 		
 		switch(_fileType) {
 			case "app":
