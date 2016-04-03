@@ -18,9 +18,9 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.NoSuchUserException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 
@@ -440,7 +440,7 @@ public class MyDrive extends MyDrive_Base {
 	 */
 	public void xmlImport(Element e)
 			throws InvalidUsernameException, FileNotFoundException,
-			NotDirectoryException, NoSuchUserException,
+			NotDirectoryException, UserDoesNotExistsException,
 			FileExistsException, InvalidFileNameException,
 			ClassNotFoundException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException,
@@ -490,6 +490,7 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 	/* ****************************** XML Related *************************** */
+	/* ********************************************************************** */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
 }
