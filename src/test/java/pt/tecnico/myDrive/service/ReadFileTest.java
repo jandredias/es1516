@@ -155,22 +155,52 @@ public class ReadFileTest extends AbstractServiceTest {
 
 	@Test
 	public void readOwnAppWithPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
+			myDrive.getFile("/home/me/application.apk").setPermissions("r-x-----");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		assertEquals("java.lang.NullPointerException", readFileService.readFile("/home/me/application.apk"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOwnAppWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
+			myDrive.getFile("/home/me/application.apk").setPermissions("--x-----");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		readFileService.readFile("/home/me/application.apk");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOtherAppWithPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
+			myDrive.getFile("/home/someone/application.apk").setPermissions("r-x-r-x-");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		assertEquals("java.lang.NullPointerException", readFileService.readFile("/home/someone/application.apk"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOtherAppWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
+			myDrive.getFile("/home/someone/application.apk").setPermissions("--x-----");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		readFileService.readFile("/home/someone/application.apk");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Override
