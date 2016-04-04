@@ -17,7 +17,7 @@ import pt.tecnico.myDrive.MyDriveApplication;
 public abstract class AbstractServiceTest {
     protected static final Logger log = LogManager.getRootLogger();
 
-    @BeforeClass // run once berfore each test class FIXME
+    @BeforeClass // run once before each test class FIXME
     public static void setUpBeforeAll() throws Exception {
 	// run tests with a clean database!!!
 	MyDriveApplication.init();
