@@ -119,7 +119,7 @@ public class Directory extends Directory_Base {
 		return true;
 	}
 
-public File getInnerFile(String fileName)	throws FileNotFoundException {
+	public File getInnerFile(String fileName)	throws FileNotFoundException {
 
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName))
@@ -170,7 +170,7 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 	 * @throws DirectoryIsNotEmptyException
 	 */
 	public void removeFile(String path) throws FileNotFoundException,
-			DirectoryIsNotEmptyException{
+	DirectoryIsNotEmptyException{
 
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
@@ -198,7 +198,7 @@ public File getInnerFile(String fileName)	throws FileNotFoundException {
 	 * @throws FileNotFoundException
 	 */
 	public void addFile(String path, File file) throws FileNotFoundException,
-				FileExistsException {
+	FileExistsException {
 
 		if(path.equals("") || path.equals("/")){
 			if(hasFile(file.getName()))
