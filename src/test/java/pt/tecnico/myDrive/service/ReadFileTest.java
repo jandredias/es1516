@@ -10,6 +10,7 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class ReadFileTest extends AbstractServiceTest {
 
@@ -21,10 +22,10 @@ public class ReadFileTest extends AbstractServiceTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		myDrive = MyDrive.getInstance();
-		
+
 		myDrive.addUser("me", "qwerty123", "Jimmy", null);
 		myDrive.addUser("someone", "qwerty123", "Sarah", null);
-		
+
 		me = myDrive.getUserByUsername("me");
 		someone = myDrive.getUserByUsername("someone");
 
@@ -43,9 +44,17 @@ public class ReadFileTest extends AbstractServiceTest {
 		assertEquals("qwerty", readFileService.readFile("/home/me/myFile.txt"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOwnFileWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
+			myDrive.getFile("/home/me/myFile.txt").setPermissions("--------");
+		} catch (MyDriveException e) {
+			fail("Should have not thrown exception");
+		}
+		
+		readFileService.readFile("/home/me/myFile.txt");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
@@ -107,7 +116,7 @@ public class ReadFileTest extends AbstractServiceTest {
 	protected void populate() {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@After
 	public void tearDown() {
 		super.tearDown();
