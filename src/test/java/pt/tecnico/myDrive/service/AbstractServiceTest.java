@@ -31,6 +31,7 @@ public abstract class AbstractServiceTest {
 		} catch (WriteOnReadError | NotSupportedException | SystemException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println("I am super before. Please remove me. Thank you");
 	}
 
 	@After // rollback after each test FIXME
