@@ -138,9 +138,19 @@ public class ReadFileTest extends AbstractServiceTest {
 		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/someone/myLink"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOtherLinkWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
+			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
+			myDrive.addLink("/home/someone", "myLink", someone, "/home/me/myFile.txt");
+			myDrive.getFile("/home/someone/myLink").setPermissions("--------"); // TODO check link permissions
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		readFileService.readFile("/home/someone/myLink");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
