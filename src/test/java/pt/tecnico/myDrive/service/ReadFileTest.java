@@ -3,14 +3,13 @@ package pt.tecnico.myDrive.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 
 public class ReadFileTest extends AbstractServiceTest {
 
@@ -19,7 +18,8 @@ public class ReadFileTest extends AbstractServiceTest {
 	private ReadFileService readFileService;
 
 	@Before
-	public void setUp() throws InvalidUsernameException, UsernameAlreadyInUseException {
+	public void setUp() throws Exception {
+		super.setUp();
 		myDrive = MyDrive.getInstance();
 		
 		myDrive.addUser("me", "qwerty123", "Jimmy", null);
@@ -106,6 +106,11 @@ public class ReadFileTest extends AbstractServiceTest {
 	@Override
 	protected void populate() {
 		// TODO Auto-generated method stub
+	}
+	
+	@After
+	public void tearDown() {
+		super.tearDown();
 	}
 
 }
