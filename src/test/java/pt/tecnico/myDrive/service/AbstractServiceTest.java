@@ -17,13 +17,13 @@ import pt.tecnico.myDrive.MyDriveApplication;
 public abstract class AbstractServiceTest {
 	protected static final Logger log = LogManager.getRootLogger();
 
-	@BeforeClass // run once berfore each test class FIXME
+	@BeforeClass // run once berfore each test class
 	public static void setUpBeforeAll() throws Exception {
 		// run tests with a clean database!!!
 		MyDriveApplication.init();
 	}
 
-	@Before // run before each test FIXME
+	@Before // run before each test
 	public void setUp() throws Exception {
 		try {
 			FenixFramework.getTransactionManager().begin(false);
@@ -33,7 +33,7 @@ public abstract class AbstractServiceTest {
 		}
 	}
 
-	@After // rollback after each test FIXME
+	@After // rollback after each test
 	public void tearDown() {
 		try {
 			FenixFramework.getTransactionManager().rollback();
