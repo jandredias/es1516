@@ -52,19 +52,34 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should have not thrown exception");
 		}
-		
+
 		readFileService.readFile("/home/me/myFile.txt");
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOtherFileWithPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
+			myDrive.getFile("/home/someone/theirFile.txt").setPermissions("----r---");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+
+		assertEquals("qwerty", readFileService.readFile("/home/someone/theirFile.txt"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOtherFileWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
+			myDrive.getFile("/home/someone/theirFile.txt").setPermissions("--------");
+		} catch (MyDriveException e) {
+			fail("Should have not thrown exception");
+		}
+
+		readFileService.readFile("/home/someone/theirFile.txt");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
