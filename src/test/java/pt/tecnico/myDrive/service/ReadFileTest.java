@@ -9,8 +9,12 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class ReadFileTest extends AbstractServiceTest {
 
@@ -82,9 +86,16 @@ public class ReadFileTest extends AbstractServiceTest {
 		// no asserts because PermissionDeniedException is expected
 	}
 
-	@Test
+	@Test(expected = UnsupportedOperationException.class)
 	public void readDirectoryTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addDirectory("/home/me", "durr", me);
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		readFileService.readFile("/home/me/durr");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
