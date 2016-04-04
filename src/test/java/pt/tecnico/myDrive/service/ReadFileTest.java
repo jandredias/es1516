@@ -101,7 +101,7 @@ public class ReadFileTest extends AbstractServiceTest {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 			myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-			myDrive.getFile("/home/me/myLink").setPermissions("r-------");
+			myDrive.getFile("/home/me/myLink").setPermissions("r-------"); // TODO check link permissions
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
@@ -115,7 +115,7 @@ public class ReadFileTest extends AbstractServiceTest {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 			myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-			myDrive.getFile("/home/me/myLink").setPermissions("--------");
+			myDrive.getFile("/home/me/myLink").setPermissions("--------"); // TODO check link permissions
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
@@ -126,7 +126,16 @@ public class ReadFileTest extends AbstractServiceTest {
 
 	@Test
 	public void readOtherLinkWithPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
+			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
+			myDrive.addLink("/home/someone", "myLink", someone, "/home/me/myFile.txt");
+			myDrive.getFile("/home/someone/myLink").setPermissions("----r---"); // TODO check link permissions
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/someone/myLink"));
 	}
 
 	@Test
