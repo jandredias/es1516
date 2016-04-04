@@ -60,7 +60,7 @@ public class User extends User_Base implements Comparable<User> {
 					xml.getChild("password").getValue());
 
 		setPermissions((xml.getChild("mask") == null) ?
-			"rwxd----" :
+			DEFAULT_PERMISSION :
 			xml.getChild("mask").getValue());
 	}
 

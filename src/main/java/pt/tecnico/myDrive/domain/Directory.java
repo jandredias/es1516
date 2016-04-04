@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Directory extends Directory_Base {
 
 	static final Logger log = LogManager.getRootLogger();
-	private static final String DEFAULT_PERMISSION = "rwxd----";
+	private static final String DEFAULT_ROOT_PERMISSION = "rwxd----";
 
 	/**
 	 * This is the most used constructor is used to create directories
@@ -52,7 +52,7 @@ public class Directory extends Directory_Base {
 	}
 
 	public static Directory createRootDirectory(User owner) {
-		return new Directory("/", new DateTime(), DEFAULT_PERMISSION, owner);
+		return new Directory("/", new DateTime(), DEFAULT_ROOT_PERMISSION, owner);
 	}
 
 	public Directory(Element xml) {
