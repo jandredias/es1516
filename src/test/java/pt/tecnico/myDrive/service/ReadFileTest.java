@@ -95,12 +95,21 @@ public class ReadFileTest extends AbstractServiceTest {
 		}
 		
 		readFileService.readFile("/home/me/durr");
-		// no asserts because PermissionDeniedException is expected
+		// no asserts because UnsupportedOperationException is expected
 	}
 
 	@Test
 	public void readOwnLinkWithPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
+			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
+			myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
+			myDrive.getFile("/home/me/myLink").setPermissions("r-------");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/me/myLink"));
 	}
 
 	@Test
