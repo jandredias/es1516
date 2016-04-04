@@ -9,9 +9,6 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.FileExistsException;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
-import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -112,9 +109,19 @@ public class ReadFileTest extends AbstractServiceTest {
 		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/me/myLink"));
 	}
 
-	@Test
+	@Test(expected = PermissionDeniedException.class)
 	public void readOwnLinkWithoutPermissionTest() {
-		fail("Not yet implemented");
+		try {
+			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
+			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
+			myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
+			myDrive.getFile("/home/me/myLink").setPermissions("--------");
+		} catch (MyDriveException e) {
+			fail("Should not have thrown exception");
+		}
+		
+		readFileService.readFile("/home/me/myLink");
+		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
