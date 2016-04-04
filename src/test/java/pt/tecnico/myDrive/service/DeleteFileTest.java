@@ -31,6 +31,7 @@ public class DeleteFileTest extends AbstractServiceTest {
 			//Create token 3333 current dir /ola/ola user teste
 			//Create token 4444 current dir /ola/ola, user teste2
 			//Create token 5555 current dir /ola/ola, user root
+			//Create token 6666 current dir /, user root
 
 			
 			
@@ -133,6 +134,12 @@ public class DeleteFileTest extends AbstractServiceTest {
 	@Test
 	public void DeleteDirectoryRoot(){
 		DeleteFileService service = new DeleteFileService(5555, "familia");
+		service.execute();
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteRootDirectory(){
+		DeleteFileService service = new DeleteFileService(6666, "/");
 		service.execute();
 	}
 	
