@@ -6,13 +6,17 @@ public class ReadFileService extends MyDriveService {
 
 	// TODO rsmlopes
 	
+	public ReadFileService(String filePath) {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	protected void dispatch() throws MyDriveException {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public String readFile(String path){
+	public String results(){
 		// TODO
 		return null;
 	}
