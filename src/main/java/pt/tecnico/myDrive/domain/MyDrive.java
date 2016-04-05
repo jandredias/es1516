@@ -16,6 +16,7 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
@@ -107,7 +108,6 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	/* ********************************************************************** */
-	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
 
 	/**
@@ -171,7 +171,6 @@ public class MyDrive extends MyDrive_Base {
 	}
 
 	/* *************************** Static Methods *************************** */
-	/* ********************************************************************** */
 	/* ********************************************************************** */
 
 	/**
@@ -340,7 +339,6 @@ public class MyDrive extends MyDrive_Base {
 
 
 	/* ********************************************************************** */
-	/* ********************************************************************** */
 	/* ************************* Add Files Methods ************************** */
 	private void addFile(String path, File file) throws FileExistsException ,
 			FileNotFoundException {
@@ -398,9 +396,7 @@ public class MyDrive extends MyDrive_Base {
 
 	/* ************************* Add Files Methods ENDS ********************* */
 	/* ********************************************************************** */
-	/* ********************************************************************** */
 	/* ---------------------------------------------------------------------- */
-	/* ********************************************************************** */
 	/* ********************************************************************** */
 	/* ****************************** XML Related *************************** */
 
@@ -491,6 +487,21 @@ public class MyDrive extends MyDrive_Base {
 	}
 	/* ****************************** XML Related *************************** */
 	/* ********************************************************************** */
+	
 	/* ********************************************************************** */
+	/* **************************** Tokens Related ************************** */
+	public void validateToken(long token) throws InvalidTokenException{
+		//FIXME:TODO:XXX
+		//if(true) // Method that checks two hours have not gone by
+	}
+	/*
+	private Session getSessionByToken(lonk token){
+		
+	}
+	*/
+	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
+	
+	
+	
 }

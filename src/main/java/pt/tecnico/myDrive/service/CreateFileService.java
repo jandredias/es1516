@@ -22,7 +22,9 @@ public class CreateFileService extends MyDriveService {
 	public CreateFileService(long token, String fileName, String fileType, 
 			String content ) {
 		
-		_drive = MyDrive.getInstance();
+		_drive = MyDriveService.getMyDrive();
+		
+		_drive.validateToken(token);
 		
 		//TODO:FIXME:XXX _username = Session.getUsername(token);
 		//TODO:FIXME:XXX _path 	  = Session.getCurrentDirectory(token);
