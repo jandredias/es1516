@@ -9,6 +9,7 @@ import org.jdom2.Element;
 import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 
@@ -190,26 +191,31 @@ public class Directory extends Directory_Base {
 	}
 
 	/**
-	 * Adds a file if it's a child or call a child element to do it for him
-	 *
+	 * 	 * Adds a file if it's a child or call a child element to do it for him
 	 * @param String
 	 * @param File
+	 * @param creator 
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
+	 * @throws PermissionDeniedException 
 	 */
-	public void addFile(String path, File file) throws FileNotFoundException,
-	FileExistsException {
-
+	public void addFile(String path, File file, User creator) throws FileNotFoundException,
+	FileExistsException, PermissionDeniedException {
 		if(path.equals("") || path.equals("/")){
-			if(hasFile(file.getName()))
-				throw new  FileExistsException(file.getName());
-			else
-				addFiles(file);
-			return;
+			if(creator.hasWritePermissions(this)){
+				if(hasFile(file.getName()))
+					throw new  FileExistsException(file.getName());
+				else
+					addFiles(file);
+				return;
+			}
+			else{
+				throw new PermissionDeniedException("Write on Directory: " + file.getName());
+			}
 		} else {
 			Directory nextDir = null;
 			nextDir = getDirectory(path);
-			nextDir.addFile("", file);
+			nextDir.addFile("", file, creator);
 		}
 	}
 }

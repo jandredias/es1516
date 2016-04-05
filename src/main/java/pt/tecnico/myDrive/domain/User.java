@@ -6,7 +6,7 @@ import org.jdom2.Element;
 
 public class User extends User_Base implements Comparable<User> {
 
-	private static final String DEFAULT_PERMISSION = "rwxd----"; // 11110000 == rwxd----
+	private static final String DEFAULT_PERMISSION = "rwxd----";
 
 	protected User() {/*for subclasses to use*/}
 
@@ -39,7 +39,7 @@ public class User extends User_Base implements Comparable<User> {
 		setUsername(username);
 		setPassword(pwd);
 		setName(name);
-		setPermissions(DEFAULT_PERMISSION);
+		setPermissions(permissions);
 	}
 
 
@@ -103,5 +103,19 @@ public class User extends User_Base implements Comparable<User> {
 
 	public int compareTo(User u){
 		return this.getUsername().compareTo(u.getUsername());
+	}
+
+	public boolean hasWritePermissions(File file){
+		User owner = file.getOwner();
+		String filePermissions = file.getPermissions();
+		if(filePermissions.length() == 8){
+			if(owner.equals(this)){
+				return filePermissions.substring(1, 2).equals("w");
+			}
+			else{
+				return filePermissions.substring(5, 6).equals("w");
+			}
+		}
+		return false;
 	}
 }

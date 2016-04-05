@@ -29,4 +29,10 @@ public class Root extends Root_Base {
 
 		return element;
 	}
+	
+	@Override
+	public boolean hasWritePermissions(File file){
+		//System.out.println("\u001B[33;1mROOT using its writing privileges\u001B[0m");
+		return true;
+	}
 }

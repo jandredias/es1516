@@ -18,6 +18,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
@@ -67,7 +68,7 @@ public class MyDrive extends MyDrive_Base {
 		Directory homeFolder = null;
 		try {
 			homeFolder = new Directory("home",root);
-			rootDirectory.addFile("", homeFolder);
+			rootDirectory.addFile("", homeFolder, root);			
 		} catch (FileExistsException e) {
 			try {
 				homeFolder = rootDirectory.getDirectory("home");
@@ -82,13 +83,16 @@ public class MyDrive extends MyDrive_Base {
 			log.error("CRIT ERROR: root dir should exist");
 			log.error("Message: " + exc.getMessage());
 			assert false;
+		} catch (PermissionDeniedException e) {
+			log.error("CRIT ERROR: root always have privileges");
+			assert false;
 		}
 
 
 		Directory home_root = null;
 		try {
 			home_root = new Directory("root", root);
-			homeFolder.addFile("", home_root );
+			homeFolder.addFile("", home_root , root); 
 		} catch (FileExistsException e) {
 			try {
 				home_root = rootDirectory.getDirectory("root");
@@ -98,6 +102,9 @@ public class MyDrive extends MyDrive_Base {
 				log.error("Message: " + exc.getMessage());
 				assert false;
 			}
+		}catch (PermissionDeniedException e){
+			log.error("CRIT ERROR: root always have privileges");
+			assert false;
 		} catch (InvalidFileNameException | FileNotFoundException exc) {
 			//Should Never Happen ;
 			log.error("CRIT ERROR: root dir should exist");
@@ -225,8 +232,9 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws FileExistsException
 	 * @throws InvalidFileNameException
 	 * @throws NotDirectoryException
+	 * @throws PermissionDeniedException 
 	 */
-	private Directory reallyGetDirectory(String path, User user) throws InvalidFileNameException, NotDirectoryException{
+	private Directory reallyGetDirectory(String path, User user) throws InvalidFileNameException, NotDirectoryException, PermissionDeniedException{
 
 		ArrayList<String> pieces = pathToArray(path);
 
@@ -238,7 +246,7 @@ public class MyDrive extends MyDrive_Base {
 				Directory newDirectory = null;
 				try {
 					newDirectory = new Directory(pieces.get(0), user);
-					nextDir.addFile("", newDirectory);
+					nextDir.addFile("", newDirectory , user);
 				} catch (FileExistsException | FileNotFoundException e1) {
 					//Will Never Happen
 				}
@@ -282,12 +290,16 @@ public class MyDrive extends MyDrive_Base {
 		Directory usersHome = null;
 		try {
 			reallyGetDirectory("/home", this.getRootUser()); //Making sure there is a /home directory
-			usersHome = reallyGetDirectory("/home/" + username, newUser);
+			usersHome = reallyGetDirectory("/home/" + username, this.getRootUser());
+			usersHome.setOwner(newUser);
 		} catch (InvalidFileNameException | NotDirectoryException e) {
 			//Should Never Happen ; File had just been Created;
 			log.error("CRIT ERROR: File that is not a Direcotry is already created, aborting");
 			String message = e.getMessage();
 			log.error("Message: " + message);
+			assert false;
+		} catch (PermissionDeniedException e) {
+			log.error("CRIT ERROR: root always have privileges");
 			assert false;
 		}
 		newUser.setUsersHome(usersHome);
@@ -340,12 +352,12 @@ public class MyDrive extends MyDrive_Base {
 
 	/* ********************************************************************** */
 	/* ************************* Add Files Methods ************************** */
-	private void addFile(String path, File file) throws FileExistsException ,
-			FileNotFoundException {
+	private void addFile(String path, File file, User creator) throws FileExistsException ,
+			FileNotFoundException, PermissionDeniedException {
 
 		log.trace("Creating new File: " + file.getName() + " on " + path);
 		try {
-			getRootDirectory().addFile(path, file);
+			getRootDirectory().addFile(path, file, creator);
 		} catch (FileExistsException | FileNotFoundException exception) {
 			try {
 				log.trace("Problems Creating File: " + file.getName());
@@ -364,34 +376,34 @@ public class MyDrive extends MyDrive_Base {
 
 	public void addApplication(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
-			FileNotFoundException {
+			FileNotFoundException, PermissionDeniedException {
 
 		Application file = new Application(name, owner, content);
-		this.addFile(path, file);
+		this.addFile(path, file, owner);
 	}
 
 	public void addDirectory(String path, String name, User owner)
 			throws FileExistsException, InvalidFileNameException,
-			FileNotFoundException {
+			FileNotFoundException, PermissionDeniedException {
 
 		Directory file = new Directory(name, owner);
-		this.addFile(path, file);
+		this.addFile(path, file, owner);
 	}
 
 	public void addLink(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
-			FileNotFoundException {
+			FileNotFoundException, PermissionDeniedException {
 
 		Link file = new Link(name, owner, content);
-		this.addFile(path, file);
+		this.addFile(path, file, owner);
 	}
 
 	public void addPlainFile(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
-	FileNotFoundException {
+	FileNotFoundException, PermissionDeniedException {
 
 		PlainFile file = new PlainFile(name, owner, content);
-		this.addFile(path, file);
+		this.addFile(path, file, owner);
 	}
 
 	/* ************************* Add Files Methods ENDS ********************* */
@@ -433,6 +445,7 @@ public class MyDrive extends MyDrive_Base {
 	 *
 	 * @param Element
 	 * @throws InvalidFileNameException
+	 * @throws PermissionDeniedException 
 	 */
 	public void xmlImport(Element e)
 			throws InvalidUsernameException, FileNotFoundException,
@@ -440,7 +453,7 @@ public class MyDrive extends MyDrive_Base {
 			FileExistsException, InvalidFileNameException,
 			ClassNotFoundException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException,
-			InvocationTargetException, UsernameAlreadyInUseException {
+			InvocationTargetException, UsernameAlreadyInUseException, PermissionDeniedException {
 
 		for(Element node : e.getChildren()){
 
@@ -490,18 +503,43 @@ public class MyDrive extends MyDrive_Base {
 	
 	/* ********************************************************************** */
 	/* **************************** Tokens Related ************************** */
-	public void validateToken(long token) throws InvalidTokenException{
-		//FIXME:TODO:XXX
-		//if(true) // Method that checks two hours have not gone by
+	
+	/**
+	 * return the corresponding Session 
+	 * @param token
+	 * @return
+	 * @throws InvalidTokenException
+	 */
+	public Session validateToken(long token) throws InvalidTokenException{
+		Session session = getSessionByTokenNr(token);
+		if(session != null){ 
+			if(session.isStillValid()){
+				session.extendTime();
+				return session;
+			}
+		}
+		log.warn("Non Active Token was used");
+		throw new InvalidTokenException();
 	}
+	
+	/**
+	 * Method that returns the @param token's session
+	 * returns null if token does not exists
+	 * 
+	 * @param token
+	 * @return Session that has @param tokem
+	 */
+	private Session getSessionByTokenNr(long token){
+		for(Session session : this.getSessionSet()){
+			if(token == session.getToken())
+				return session;
+		}
+		return null;
+	}
+	
 	/*
-	private Session getSessionByToken(lonk token){
-		
-	}
-	*/
+	@Override
+	public java.util.Set<Session> getSessionSet() throws UnsupportedOperationException{};*/
 	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
-	
-	
-	
 }

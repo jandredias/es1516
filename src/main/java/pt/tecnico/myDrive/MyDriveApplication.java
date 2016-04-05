@@ -9,6 +9,8 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
@@ -31,6 +34,9 @@ public class MyDriveApplication {
 
 	public static void main(String[] args) throws IOException {
 		//TODO
+		
+		//if (helloWorld())
+		//	return;
 		try {
 
 			init();
@@ -48,6 +54,17 @@ public class MyDriveApplication {
 
 	}
 
+	public static boolean helloWorld(){
+		DateTime currTime = new DateTime();
+		DateTime limitTime = new DateTime();
+		
+		limitTime = limitTime.minusSeconds(1); 
+
+		Duration duration = new Duration(currTime, limitTime);
+		System.out.println("Mins: " + duration.getMillis());
+		return true;
+	}
+	
 	@Atomic
 	public static void init() {
 		log.trace("Init: " + FenixFramework.getDomainRoot());
@@ -60,7 +77,8 @@ public class MyDriveApplication {
 		MyDrive md = MyDrive.getInstance();
 		log.trace("Setup: Create MyDrive");
 
-		/*step1(md);
+		/*
+		step1(md);
 		step2(md);
 		step3(md);
 		step4(md);
@@ -69,7 +87,14 @@ public class MyDriveApplication {
 		step7(md);
 		step8(md);
 		step9(md);
-		step10(md);*/
+		step10(md);
+		
+		//-----
+		// POS ENTREGA 1
+		//-----
+		
+		step11(md);
+		*/
 	}
 
 	public static void step1(MyDrive md){
@@ -77,7 +102,7 @@ public class MyDriveApplication {
 			User rootUsr = md.getRootUser();
 			md.addPlainFile("/home","README",rootUsr ,"Lista De Utilizadores");
 
-		}catch(FileNotFoundException | FileExistsException | InvalidFileNameException e){
+		}catch(FileNotFoundException | FileExistsException | InvalidFileNameException | PermissionDeniedException e){
 			System.out.println("creating readme.. ");
 			e.printStackTrace();
 		}
@@ -88,7 +113,7 @@ public class MyDriveApplication {
 			md.addDirectory("/", "usr", rootUsr);
 			md.addDirectory("/usr", "local", rootUsr);
 			md.addDirectory("/usr/local", "bin", rootUsr);
-		} catch (FileExistsException | FileNotFoundException | InvalidFileNameException  e) {
+		} catch (FileExistsException | FileNotFoundException | InvalidFileNameException | PermissionDeniedException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -157,6 +182,26 @@ public class MyDriveApplication {
 			e1.printStackTrace();
 		}
 	}
+	
+	public static void step11(MyDrive md){
+
+		try {
+			md.addUser("JAO", "JAO", "JAO", "rwdxrwdx");
+			User normalUsr = md.getUserByUsername("JAO");
+			md.addDirectory("/home/JAO", "usr", normalUsr);
+		} catch (FileExistsException | InvalidFileNameException | FileNotFoundException
+				| PermissionDeniedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidUsernameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsernameAlreadyInUseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 
 	/*
@@ -214,6 +259,9 @@ public class MyDriveApplication {
 		} catch (InstantiationException | IllegalAccessException e){
 			e.printStackTrace();
 		} catch( InvocationTargetException e){
+			e.printStackTrace();
+		} catch (PermissionDeniedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		log.trace("End of xmlScan");
