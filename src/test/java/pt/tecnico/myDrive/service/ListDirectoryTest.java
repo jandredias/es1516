@@ -1,171 +1,383 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.Application;
+import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 
 //public class ListDirectoryTest extends TokenServiceTest {
 
 public class ListDirectoryTest extends AbstractServiceTest {
 
-	protected void populate() {
-		
-		
-		MyDrive md = MyDrive.getInstance();
-/*
-		Person p = new Person(pb, "João");
-		new Person(pb, "António");
+	private long token;
+	
+	protected void populate() {}
 
-		new Contact(p, "António", 123456);
-*/
+	private void createUserJoaoAndHisFolder(String permissions) throws MyDriveException{
+		MyDrive md = MyDriveService.getMyDrive();
+		String username = "joao"; 
+		md.addUser(username,username,username,permissions);
+		User joao = md.getUserByUsername("joao");
+		md.addDirectory("/home/joao/", "TestDir", joao);
+
+		token = 0;// = getValidToken("joao","/home/joao/TestDir");
 	}
-/*
-	private Contact getContact(String personName, String contactName) {
-		Person p = PhoneBookService.getPhoneBook().getPersonByName(personName);
-		return p.getContactByName(contactName);
-	}
-*/
+
 	/* ---------------------------------------------------------------------- */
 	/* ------------------------ Permissions Related ------------------------- */
 	/* ---------------------------------------------------------------------- */
 
 	@Test
-	public void ownUserHasPermissions(){
+	public void ownUserHasPermissions() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
+
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+		assertNotNull(service.result());
 	}
 
 	@Test
-	public void otherUserHasPermissions(){
+	public void otherUserHasPermissions() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");		
+		MyDrive md = MyDriveService.getMyDrive();
+		md.addUser("ze","joao","joao","rwdxrwdx");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
+		token = 0;// = getValidToken("ze","/home/joao/TestDir"); //XXX DIFF
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+		assertNotNull(service.result());
 	}
-	
+
 	@Test(expected = PermissionDeniedException.class)
-	public void ownUserHasNoPermissions(){
+	public void ownUserHasNoPermissions() throws MyDriveException{
+		createUserJoaoAndHisFolder("-wdxrwdx");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
 	}
-		
+
 	@Test(expected = PermissionDeniedException.class)
-	public void otherUserHasNoPermissions(){
+	public void otherUserHasNoPermissions() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdx----");
+
+		MyDriveService.getMyDrive().addUser("ze","joao","joao","rwdxrwdx");
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
+		token = 0;// = getValidToken("ze","/home/joao/TestDir"); //XXX DIFF
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
 	}
 
 	@Test
-	public void rootUserHasNoPermissions(){
+	public void rootUserHasNoPermissions() throws MyDriveException{
+		createUserJoaoAndHisFolder("--------");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
+		long token = 0;// = getValidToken("root","/home/joao/TestDir"); //XXX DIFF
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+		assertNotNull(service.result());
 	}
-	
+
 	/* ---------------------------------------------------------------------- */
 	/* --------------------------List Generally ----------------------------- */
 	/* ---------------------------------------------------------------------- */
-	@Test
-	public void listEmptyDirectory(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
+	private void checkNotNullWithNFiles(List<List<String>> filesList, int numberOfFiles){
+		assertEquals(numberOfFiles, filesList.size());
+		for (List<String> individualFileList : filesList){
+			assertEquals("each file must have 7 fields",7,individualFileList.size());
+			for (String field : individualFileList ){
+				assertNotNull("fields must not be null", field);
+				assertTrue("fields must not be empty", !(field.equals("")));
+			}
+		}
 	}
-	
-	@Test
-	public void listDirectoryWithPlainFile(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
+	private void checkSingleFileStuff(File file, List<String> fileList, String FileType){
+
+		String listedFileType = fileList.get(0);
+		assertEquals("file type",listedFileType, FileType );
+
+		String listedPermissions = fileList.get(1);
+		assertEquals("permissions ",listedPermissions , file.getPermissions() );
+
+		//Dimension has its own special Tests;
+
+		String listedUsername = fileList.get(3);
+		assertEquals("username",listedUsername, file.getOwner().getUsername());
+
+		//TODO:: Check letters COMPATIBILITY
+		String listedId = fileList.get(4);
+		assertEquals("id",listedId, file.getId());
+
+		String listedDate = fileList.get(5);
+		assertEquals("date",listedDate, file.getModification().toString());
+
+		String listedName = fileList.get(6);
+		assertEquals("name ",listedName, file.getName());
 	}
-	
+
 	@Test
-	public void listDirectoryWithDirectory(){
+	public void listEmptyDirectory() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> resultList = service.result();
+		checkNotNullWithNFiles(resultList, 2);
+
+		String fileType = resultList.get(0).get(0);
+		assertEquals("Only Directorys on empty dir", fileType, "Directory");
+		fileType = resultList.get(1).get(0);
+		assertEquals("Only Directorys on empty dir", fileType, "Directory");
+
+		String name			= resultList.get(0).get(6);
+		assertEquals("second file must be named .", name, ".");
+		name			= resultList.get(1).get(6);
+		assertEquals("second file must be named ..", name, "..");
 	}
-	
+
 	@Test
-	public void listDirectoryWithlink(){
+	public void listDirectoryWithPlainFile() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "content");
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 3);
+
+		List<String> plainFileList = serviceList.get(2);
+		PlainFile file = ( PlainFile ) md.getFile("/home/joao/TestDir/PlainFile");
+		checkSingleFileStuff(file, plainFileList, "Plain File");
+
+		//TODO:: Check letters dont crash
+		String listedDimension	= plainFileList.get(2);	
+		assertEquals("dimension",listedDimension, file.getContent().length());
 	}
-	
+
 	@Test
-	public void listDirectoryWithApp(){
+	public void listDirectoryWithDirectory() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addDirectory("/home/joao/TestDir", "Directory", joao);
+
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 3);
+
+		List<String> directoryList = serviceList.get(2);
+		Directory file = ( Directory ) md.getFile("/home/joao/TestDir/Directory");
+		checkSingleFileStuff(file, directoryList , "Directory");
+
+		//Dimension has its own special tests
 	}
+
+	@Test
+	public void listDirectoryWithlink() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addLink("/home/joao/TestDir", "Link", joao, "linkContent");
+
+		assert false;//FIXME:TODO:XXX
+		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 3);
+
+		List<String> linkList = serviceList.get(2); 
+		Link  file = ( Link ) md.getFile("/home/joao/TestDir/Link");
+		checkSingleFileStuff(file, linkList , "Link"); 
+
+		//TODO:: Check letters dont crash
+		String listedDimension	= linkList.get(2);	
+		assertEquals("dimension",listedDimension, file.getContent().length());
+	}
+
+	@Test
+	public void listDirectoryWithApp() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
+
+		assert false;//FIXME:TODO:XXX
+		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 3);
+
+		List<String> applicationList = serviceList.get(2);
+		Application file = ( Application ) md.getFile("/home/joao/TestDir/App");
+		checkSingleFileStuff(file, applicationList , "Application");
+
+		//TODO:: Check letters dont crash
+		String listedDimension	= applicationList.get(2);	
+		assertEquals("dimension",listedDimension, file.getContent().length());
+	}
+
+	@Test
+	public void listDirectoryWith6FilesAlphabeticly() throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "AppCOntent"); 
+		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
+		md.addLink("/home/joao/TestDir", "Link", joao, "AppCOntent"); 
+		md.addDirectory("/home/joao/TestDir", "Dir2", joao); 
+		md.addDirectory("/home/joao/TestDir", "Dir1", joao); 
+		md.addApplication("/home/joao/TestDir", ".App534", joao, "AppCOntent"); 
 		
-	@Test
-	public void listDirectoryWith6Files(){
+		ArrayList<String> createdNamesList = new ArrayList<String>();
+		createdNamesList.add(0, ".");
+		createdNamesList.add(1, "..");
+		createdNamesList.add(2, "PlainFile");
+		createdNamesList.add(3, "App");
+		createdNamesList.add(4, "Link");
+		createdNamesList.add(5, "Dir2");
+		createdNamesList.add(6, "Dir1");
+		createdNamesList.add(7, ".App534");
+		
+		Collections.sort(createdNamesList);
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+		
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 2 + 6);
+
+		ArrayList<String> receivedNamesList = new ArrayList<String>();
+		for (List<String> fileList : serviceList ){
+			receivedNamesList.add(-1, fileList.get(6));
+		}
+		
+		for (int index = 0 ; index < receivedNamesList.size(); index++){
+			assertEquals(createdNamesList.get(index), receivedNamesList.get(index));
+		}
 	}
-	
+
 	/* ---------------------------------------------------------------------- */
 	/* -------------------------- Dimension Tests --------------------------- */
 	/* ---------------------------------------------------------------------- */
 	
-	@Test
-	public void emptyPlainFileDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
-	}
-	
+	/**
+	 * Method that tests plainFile is Listed with dimension of size @param contentSize 
+	 * @param contentSize
+	 * @throws MyDriveException
+	 */
+	private void plainFileDimension(int contentSize) throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+		String content = StringUtils.repeat("t", contentSize);
 
-	@Test
-	public void char_1_PlainFileDimension(){
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		md.addPlainFile("/home/joao/TestDir", "Plain", joao, content);
+		
 		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
 		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 3);
+		
+		List<String> plainFileList = serviceList.get(2);
+
+		String listedDimension	= plainFileList.get(2);	
+		assertEquals("dimension",listedDimension, contentSize);
 	}
 	
 	@Test
-	public void char_1000_PlainFileDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
-	}
-	
-	@Test
-	public void emptyDirectoryDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
-	}
-	
-	@Test
-	public void files_3_DirectoryDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
-	}
-	
-	@Test
-	public void linkDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
+	public void emptyPlainFileDimension() throws MyDriveException{
+		plainFileDimension(0);
 	}
 
 	@Test
-	public void appDimension(){
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken();
-		ListDirectoryService service = new ListDirectoryService(token);
+	public void char_1_PlainFileDimension() throws MyDriveException{
+		plainFileDimension(1);
 	}
 
+	@Test
+	public void char_1000_PlainFileDimension() throws MyDriveException{
+		plainFileDimension(1000);
+	}
+
+	/**
+	 * Method that tests plainFile is Listed with dimension of size @param numberOfFiles
+	 * @param numberOfFiles
+	 * @throws MyDriveException
+	 */
+	private void directoryDimension(int numberOfFiles) throws MyDriveException{
+		createUserJoaoAndHisFolder("rwdxrwdx");
+
+		MyDrive md = MyDriveService.getMyDrive(); 
+		User joao = md.getUserByUsername("joao");
+		
+		for(int i = 0; i < numberOfFiles ; i++ )
+			md.addPlainFile("/home/joao/TestDir", "PlainFile"+i, joao, "");
+		
+		assert false;//FIXME:TODO:XXX
+		long token = 0;// = getValidToken("joao","/home/joao"); //XXX dif Token
+		ListDirectoryService service = new ListDirectoryService(token);
+		service.execute();
+
+		List<List<String>> serviceList = service.result();
+		checkNotNullWithNFiles(serviceList, 2 + numberOfFiles);
+		
+		List<String> directoryList = serviceList.get(2);
+
+		String listedDimension	= directoryList.get(2);	
+		assertEquals("dimension",listedDimension, numberOfFiles + 2);
+	}
+	
+	@Test
+	public void emptyDirectoryDimension() throws MyDriveException{
+		directoryDimension(0);
+	}
+
+	@Test
+	public void files_1_DirectoryDimension() throws MyDriveException{
+		directoryDimension(1);
+	}
+	
+	@Test
+	public void files_7_DirectoryDimension() throws MyDriveException{
+		directoryDimension(7);
+	}
 }
