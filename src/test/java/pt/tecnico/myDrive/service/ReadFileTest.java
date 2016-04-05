@@ -29,12 +29,10 @@ public class ReadFileTest extends AbstractServiceTest {
 
 		me = myDrive.getUserByUsername("me");
 		someone = myDrive.getUserByUsername("someone");
-
-		readFileService = new ReadFileService();
 	}
 
 	@Test
-	public void readOwnFileWithPermissionTest() {
+	public void readOwnFileWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
@@ -42,11 +40,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 
-		assertEquals("qwerty", readFileService.readFile("/home/me/myFile.txt"));
+		readFileService = new ReadFileService("/home/me/myFile.txt");
+		readFileService.dispatch();
+		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOwnFileWithoutPermissionTest() {
+	public void readOwnFileWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("--------");
@@ -54,12 +54,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should have not thrown exception");
 		}
 
-		readFileService.readFile("/home/me/myFile.txt");
+		readFileService = new ReadFileService("/home/me/myFile.txt");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
-	public void readOtherFileWithPermissionTest() {
+	public void readOtherFileWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
 			myDrive.getFile("/home/someone/theirFile.txt").setPermissions("----r---");
@@ -67,11 +68,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 
-		assertEquals("qwerty", readFileService.readFile("/home/someone/theirFile.txt"));
+		readFileService = new ReadFileService("/home/someone/theirFile.txt");
+		readFileService.dispatch();
+		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOtherFileWithoutPermissionTest() {
+	public void readOtherFileWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
 			myDrive.getFile("/home/someone/theirFile.txt").setPermissions("--------");
@@ -79,24 +82,26 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should have not thrown exception");
 		}
 
-		readFileService.readFile("/home/someone/theirFile.txt");
+		readFileService = new ReadFileService("/home/someone/theirFile.txt");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
-	public void readDirectoryTest() {
+	public void readDirectoryTest() throws MyDriveException {
 		try {
 			myDrive.addDirectory("/home/me", "durr", me);
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
 		
-		readFileService.readFile("/home/me/durr");
+		readFileService = new ReadFileService("/home/me/durr");
+		readFileService.dispatch();
 		// no asserts because UnsupportedOperationException is expected
 	}
 
 	@Test
-	public void readOwnLinkWithPermissionTest() {
+	public void readOwnLinkWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
@@ -106,11 +111,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/me/myLink"));
+		readFileService = new ReadFileService("/home/me/myLink");
+		readFileService.dispatch();
+		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOwnLinkWithoutPermissionTest() {
+	public void readOwnLinkWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
@@ -120,41 +127,45 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		readFileService.readFile("/home/me/myLink");
+		readFileService = new ReadFileService("/home/me/myLink");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
-	public void readOtherLinkWithPermissionTest() {
+	public void readOtherLinkWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-			myDrive.addLink("/home/someone", "myLink", someone, "/home/me/myFile.txt");
-			myDrive.getFile("/home/someone/myLink").setPermissions("----r--l");
+			myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
+			myDrive.getFile("/home/someone/theirLink").setPermissions("----r--l");
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
 		
-		assertEquals("/home/me/myFile.txt", readFileService.readFile("/home/someone/myLink"));
+		readFileService = new ReadFileService("/home/someone/theirLink");
+		readFileService.dispatch();
+		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOtherLinkWithoutPermissionTest() {
+	public void readOtherLinkWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 			myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-			myDrive.addLink("/home/someone", "myLink", someone, "/home/me/myFile.txt");
-			myDrive.getFile("/home/someone/myLink").setPermissions("-------l");
+			myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
+			myDrive.getFile("/home/someone/theirLink").setPermissions("-------l");
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
 		
-		readFileService.readFile("/home/someone/myLink");
+		readFileService = new ReadFileService("/home/someone/theirLink");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
-	public void readOwnAppWithPermissionTest() {
+	public void readOwnAppWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
 			myDrive.getFile("/home/me/application.apk").setPermissions("r-x-----");
@@ -162,11 +173,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		assertEquals("java.lang.NullPointerException", readFileService.readFile("/home/me/application.apk"));
+		readFileService = new ReadFileService("/home/me/application.apk");
+		readFileService.dispatch();
+		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOwnAppWithoutPermissionTest() {
+	public void readOwnAppWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
 			myDrive.getFile("/home/me/application.apk").setPermissions("--x-----");
@@ -174,12 +187,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		readFileService.readFile("/home/me/application.apk");
+		readFileService = new ReadFileService("/home/me/application.apk");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
-	public void readOtherAppWithPermissionTest() {
+	public void readOtherAppWithPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
 			myDrive.getFile("/home/someone/application.apk").setPermissions("r-x-r-x-");
@@ -187,11 +201,13 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		assertEquals("java.lang.NullPointerException", readFileService.readFile("/home/someone/application.apk"));
+		readFileService = new ReadFileService("/home/someone/application.apk");
+		readFileService.dispatch();
+		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void readOtherAppWithoutPermissionTest() {
+	public void readOtherAppWithoutPermissionTest() throws MyDriveException {
 		try {
 			myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
 			myDrive.getFile("/home/someone/application.apk").setPermissions("--x-----");
@@ -199,7 +215,8 @@ public class ReadFileTest extends AbstractServiceTest {
 			fail("Should not have thrown exception");
 		}
 		
-		readFileService.readFile("/home/someone/application.apk");
+		readFileService = new ReadFileService("/home/someone/application.apk");
+		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
 	}
 
