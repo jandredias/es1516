@@ -102,6 +102,13 @@ public class ListDirectoryTest extends AbstractServiceTest {
 	/* ---------------------------------------------------------------------- */
 	/* --------------------------List Generally ----------------------------- */
 	/* ---------------------------------------------------------------------- */
+	/**
+	 * Method that checks a @param filesList has @param numberOfFiles and
+	 * every field is not null
+	 * 
+	 * @param filesList
+	 * @param numberOfFiles
+	 */
 	private void checkNotNullWithNFiles(List<List<String>> filesList, int numberOfFiles){
 		assertEquals(numberOfFiles, filesList.size());
 		for (List<String> individualFileList : filesList){
@@ -112,6 +119,13 @@ public class ListDirectoryTest extends AbstractServiceTest {
 			}
 		}
 	}
+	
+	/**
+	 * Checks that every @param file is listed correctly in @param fileList
+	 * @param file
+	 * @param fileList
+	 * @param FileType
+	 */
 	private void checkSingleFileStuff(File file, List<String> fileList, String FileType){
 
 		String listedFileType = fileList.get(0);
