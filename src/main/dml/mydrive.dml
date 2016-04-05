@@ -1,84 +1,129 @@
 package pt.tecnico.myDrive.domain;
 
 class MyDrive{
-  Integer fileId;
+	Integer fileId;
 }
 
 class User{
-  String username;
-  String password;
-  String name;
-  String permissions;
+	String username;
+	String password;
+	String name;
+	String permissions;
 }
 
 class Root extends User;
 
 class File {
-  String name;
-  Integer id;
-  DateTime modification;
-  String permissions;
+	String name;
+	Integer id;
+	DateTime modification;
+	String permissions;
 }
 
 class PlainFile extends File {
-  String content;
+	String content;
 }
 
 class Directory extends File {}
 class Link extends PlainFile {}
 class Application extends PlainFile {}
 
+class Session {
+	Long token;
+	DateTime lastUsed;
+}
+
+class Variable {
+	String name;
+	String value;
+}
+
+relation SessionHasVariables {
+	Session playsRole session {
+		multiplicity 1..1;
+	}
+	Variable playsRole variables {
+		multiplicity 0..*;
+	}
+}
+
+relation MyDriveHasSessions {
+	MyDrive playsRole myDrive {
+		multiplicity 1..1;
+	}
+	Session playsRole session {
+		multiplicity 0..*;
+	}
+}
+
+relation UserHasSessions{
+	User playsRole user {
+		multiplicity 1..1;
+	}
+	Session playsRole session{
+		multiplicity 0..*;
+	}
+}
+
+relation SessionHasCurrentDirectory {
+	Session playsRole session {
+		multiplicity 0..*;
+	}
+	Directory playsRole currentDirectory {
+		multiplicity 1..1;
+	}
+}
+
 relation MyDriveDomain {
-  .pt.ist.fenixframework.DomainRoot playsRole root {
-    multiplicity 0..1;
-  }
-  MyDrive playsRole myDrive {
-    multiplicity 0..1;
-  }
+	.pt.ist.fenixframework.DomainRoot playsRole root {
+		multiplicity 0..1;
+	}
+	MyDrive playsRole myDrive {
+		multiplicity 0..1;
+	}
 }
 
 relation MyDriveHasUsers{
-  User playsRole users {
-    multiplicity 1..*;
-  }
-  MyDrive playsRole myDrive {
-    multiplicity 1..1;
-  }
+	User playsRole users {
+		multiplicity 1..*;
+	}
+	MyDrive playsRole myDrive {
+		multiplicity 1..1;
+	}
 }
 
 relation UserHasFiles {
-  User playsRole owner {
-    multiplicity 1..1;
-  }
-  File playsRole ownedFiles {
-    multiplicity 0..*;
-  }
+	User playsRole owner {
+		multiplicity 1..1;
+	}
+	File playsRole ownedFiles {
+		multiplicity 0..*;
+	}
 }
 
 relation UserHasHome {
-  User playsRole ownerHome {
-   multiplicity 0..*;
-  }
-  Directory playsRole usersHome {
-    multiplicity 1..1;
-  }
+	User playsRole ownerHome {
+		multiplicity 0..*;
+	}
+	Directory playsRole usersHome {
+		multiplicity 1..1;
+	}
 }
 
 relation DirectoryHasFiles {
-  Directory playsRole dir {
-    multiplicity 1..1;
-  }
-  File playsRole files{
-    multiplicity 0..*;
-  }
+	Directory playsRole dir {
+		multiplicity 1..1;
+	}
+	File playsRole files{
+		multiplicity 0..*;
+	}
 }
 
 relation MyDriveHasRoot {
-  MyDrive playsRole myDrive {
-    multiplicity 0..1;
-  }
-  Directory playsRole rootDirectory {
-    multiplicity 1..1;
-  }
+	MyDrive playsRole myDrive {
+		multiplicity 0..1;
+	}
+	Directory playsRole rootDirectory {
+		multiplicity 1..1;
+	}
 }
-
