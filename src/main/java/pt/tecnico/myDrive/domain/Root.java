@@ -38,7 +38,7 @@ public class Root extends Root_Base {
 	}
 	
 	@Override
-	public void delete() throws PrivateResourceException{
+	public void delete(User deleter) throws PrivateResourceException{
 		throw new PrivateResourceException("Tring to delete root user");
 	}
 }

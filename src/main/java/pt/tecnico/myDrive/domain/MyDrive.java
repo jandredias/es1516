@@ -304,7 +304,7 @@ public class MyDrive extends MyDrive_Base {
 			addUsers(newUser);
 		} else {
 			String name = newUser.getUsername();
-			newUser.delete();
+			newUser.delete(getRootUser());
 			throw new UsernameAlreadyInUseException(name);
 		}
 	}
@@ -409,7 +409,7 @@ public class MyDrive extends MyDrive_Base {
 	 *
 	 * @return Document
 	 */
-	public Document xmlExport() {
+	public Document xmlExport(){
 		Element element = new Element("mydrive");
 		Document doc = new Document(element);
 

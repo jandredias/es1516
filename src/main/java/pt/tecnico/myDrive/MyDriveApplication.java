@@ -1,9 +1,12 @@
 package pt.tecnico.myDrive;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -11,12 +14,11 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.domain.*;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
@@ -27,9 +29,6 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.service.MyDriveService;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();

@@ -7,9 +7,11 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 
 public class ReadFileTest extends AbstractServiceTest {
 
@@ -17,15 +19,19 @@ public class ReadFileTest extends AbstractServiceTest {
 	private User me, someone;
 	private ReadFileService readFileService;
 
-	protected void populate() throws MyDriveException {
+	protected void populate(){
+			myDrive = MyDriveService.getMyDrive();
 
-		myDrive = MyDrive.getInstance();
+			try {
+				myDrive.addUser("me", "qwerty123", "Jimmy", null);
+				myDrive.addUser("someone", "qwerty123", "Sarah", null);
+			} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
+				assert false;
+			}
 
-		myDrive.addUser("me", "qwerty123", "Jimmy", null);
-		myDrive.addUser("someone", "qwerty123", "Sarah", null);
-
-		me = myDrive.getUserByUsername("me");
-		someone = myDrive.getUserByUsername("someone");
+			me = myDrive.getUserByUsername("me");
+			someone = myDrive.getUserByUsername("someone");
+		
 	}
 
 	@Test

@@ -89,11 +89,14 @@ public class User extends User_Base implements Comparable<User> {
 		return element;
 	}
 
-	protected void delete(){
+	protected void delete(User deleter){
 		setUsersHome(null);
 		//*********************************
 		//*********************************
 		//FIXME inner files
+//		for (File file : getOwnedFilesSet()){
+//			file.delete(deleter);
+//		}
 		this.set$ownedFiles(null);
 		//FIXME inner files
 		//*********************************
@@ -106,6 +109,7 @@ public class User extends User_Base implements Comparable<User> {
 	}
 
 	/**
+	 * METHOD ONLY USED BY USERS AND SUBCLASSES!!
 	 * General method that states whether or not a user has permissions to access a file
 	 * @param file
 	 * @param position
