@@ -1,12 +1,11 @@
 package pt.tecnico.myDrive.domain;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
-import java.util.Comparator;
-
-import java.lang.reflect.*;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,17 +13,18 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
+import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
-import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.exception.FileExistsException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -63,61 +63,25 @@ public class MyDrive extends MyDrive_Base {
 		rootDirectory = Directory.createRootDirectory(root);
 
 		this.setRootDirectory(rootDirectory);
-
-		Directory homeFolder = null;
-		try {
+		try{
+			Directory homeFolder = null;
 			homeFolder = new Directory("home",root);
-			rootDirectory.addFile("", homeFolder, root);			
-		} catch (FileExistsException e) {
-			try {
-				homeFolder = rootDirectory.getDirectory("home");
-			} catch (FileNotFoundException exc) {
-				//Should Never Happen
-				log.error("CRIT ERROR: root dir should exist");
-				log.error("Message: " + exc.getMessage());
-				assert false;
-			}
-		} catch (InvalidFileNameException | FileNotFoundException exc) {
-			//Should Never Happen ;
-			log.error("CRIT ERROR: root dir should exist");
-			log.error("Message: " + exc.getMessage());
-			assert false;
-		} catch (PermissionDeniedException e) {
-			log.error("CRIT ERROR: root always have privileges");
-			assert false;
-		}
-
-
-		Directory home_root = null;
-		try {
+			rootDirectory.addFile("", homeFolder, root);
+			
+			Directory home_root = null;
 			home_root = new Directory("root", root);
 			homeFolder.addFile("", home_root , root); 
-		} catch (FileExistsException e) {
-			try {
-				home_root = rootDirectory.getDirectory("root");
-			} catch (FileNotFoundException exc) {
-				//Should Never Happen
-				log.error("CRIT ERROR: root dir should exist");
-				log.error("Message: " + exc.getMessage());
-				assert false;
-			}
-		}catch (PermissionDeniedException e){
-			log.error("CRIT ERROR: root always have privileges");
-			assert false;
-		} catch (InvalidFileNameException | FileNotFoundException exc) {
-			//Should Never Happen ;
-			log.error("CRIT ERROR: root dir should exist");
-			log.error("Message: " + exc.getMessage());
-			assert false;
+			root.setUsersHome(home_root);
+		} catch (FileNotFoundException | FileExistsException | PermissionDeniedException | InvalidFileNameException e){
+			//Wont Happen. When EMPTY Database; 
 		}
-		root.setUsersHome(home_root);
 	}
 
 	
 	public void cleanup(){
 		/* FIXME:TODO:XXX miguel-amaral (do not delete this)
 		 * 
-		 * 
+		 *
 		Root root = getRootUser();
 
 		for (User user : getUsersSet()){
@@ -541,10 +505,8 @@ public class MyDrive extends MyDrive_Base {
 	public Session validateToken(long token) throws InvalidTokenException{
 		Session session = getSessionByTokenNr(token);
 		if(session != null){ 
-			if(session.isStillValid()){
-				session.extendTime();
+			if(session.validateSession());
 				return session;
-			}
 		}
 		log.warn("Non Active Token was used");
 		throw new InvalidTokenException();
@@ -558,16 +520,25 @@ public class MyDrive extends MyDrive_Base {
 	 * @return Session that has @param tokem
 	 */
 	private Session getSessionByTokenNr(long token){
-		for(Session session : this.getSessionSet()){
+		for(Session session : this.getDriveSessions()){
 			if(token == session.getToken())
 				return session;
 		}
 		return null;
 	}
 	
-	/*
+	
 	@Override
-	public java.util.Set<Session> getSessionSet() throws UnsupportedOperationException{};*/
+	public java.util.Set<Session> getSessionSet() throws PrivateResourceException{
+		log.warn("Atempting to access session Set");
+		throw new PrivateResourceException("Session Set is private");
+	}
+	
+	private java.util.Set<Session> getDriveSessions() {
+		return super.getSessionSet();
+	}
+	
+	
 	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
 }

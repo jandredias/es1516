@@ -33,21 +33,21 @@ public class ListDirectoryTest extends AbstractServiceTest {
 	private void createUserJoaoAndHisFolder(String permissions) throws MyDriveException{
 		try{
 			MyDrive md = MyDriveService.getMyDrive();
-			System.out.println("\u001B[33;1m"+"MyDrive Exists" +"\u001B[33;1m");
+			System.out.println("\u001B[33;1m"+"MyDrive Exists" +"\u001B[0m");
 			String username = "joao"; 
 			md.addUser(username,username,username,permissions);
-			System.out.println("\u001B[33;1m"+"User Created" +" \u001B[33;1m");
+			System.out.println("\u001B[33;1m"+"User Created" +" \u001B[0m");
 			User joao = md.getUserByUsername("joao");
-			System.out.println("\u001B[33;1m"+"Have User" +" \u001B[33;1m");
+			System.out.println("\u001B[33;1m"+"Have User" +" \u001B[0m");
 			md.addDirectory("/home/joao/", "TestDir", joao);
-			System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[33;1m");
+			System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[0m");
 		}
 		catch(MyDriveException E){
-			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[33;1m");
+			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[0m");
 			throw E;
 		}
 		token++;// = getValidToken("joao","/home/joao/TestDir");
-		System.out.println("\u001B[32;1m"+token +" \u001B[33;1m");
+		System.out.println("\u001B[32;1m"+token +" \u001B[0m");
 
 	}
 

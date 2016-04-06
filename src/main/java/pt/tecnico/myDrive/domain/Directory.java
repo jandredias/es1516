@@ -52,7 +52,7 @@ public class Directory extends Directory_Base {
 		setDir(this);
 	}
 
-	public static Directory createRootDirectory(User owner) {
+	protected static Directory createRootDirectory(User owner) {
 		return new Directory("/", new DateTime(), DEFAULT_ROOT_PERMISSION, owner);
 	}
 

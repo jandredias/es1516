@@ -105,17 +105,31 @@ public class User extends User_Base implements Comparable<User> {
 		return this.getUsername().compareTo(u.getUsername());
 	}
 
-	public boolean hasWritePermissions(File file){
+	
+	protected boolean hasPermissions(File file, int position, String permissionLetter){
 		User owner = file.getOwner();
 		String filePermissions = file.getPermissions();
 		if(filePermissions.length() == 8){
 			if(owner.equals(this)){
-				return filePermissions.substring(1, 2).equals("w");
+				return filePermissions.substring(position, position+1).equals(permissionLetter);
 			}
 			else{
-				return filePermissions.substring(5, 6).equals("w");
+				return filePermissions.substring(position+4, position+5).equals(permissionLetter);
 			}
 		}
 		return false;
+	}
+
+	public boolean hasReadPermissions(File file){
+		return hasPermissions(file,0,"r");
+	}
+	public boolean hasWritePermissions(File file){
+		return hasPermissions(file,1,"w");
+	}
+	public boolean hasExecutePermissions(File file){
+		return hasPermissions(file,2,"x");
+	}
+	public boolean hasDeletePermissions(File file){
+		return hasPermissions(file,3,"d");
 	}
 }

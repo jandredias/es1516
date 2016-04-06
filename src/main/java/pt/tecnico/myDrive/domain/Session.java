@@ -3,7 +3,7 @@ package pt.tecnico.myDrive.domain;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.PrivateResourceException;
 
 public class Session extends Session_Base {
 
@@ -11,7 +11,11 @@ public class Session extends Session_Base {
 		super();
 	}
 
-	public boolean isStillValid() {
+	/**
+	 * Method that returns true when a Session is still valid
+	 * @return
+	 */
+	protected boolean validateSession() {
 		DateTime currentTime = new DateTime();
 		DateTime limitTime = getLastUsed();
 		
@@ -20,12 +24,29 @@ public class Session extends Session_Base {
 		
 		long miliSeconds = interval.getMillis();
 		
-		return miliSeconds > 0;
+		boolean valid = miliSeconds > 0; 
+		if (valid)
+			extendTime();
+		
+		return valid;
 	}
 
-	public void extendTime() {
+	private void extendTime() {
 		DateTime currTime = new DateTime();
 		currTime = currTime.plusHours(2);
-		setLastUsed(currTime);
+		super.setLastUsed(currTime);
 	}
+	
+	@Override
+	public void setLastUsed(DateTime newTime) throws PrivateResourceException{
+		DateTime limitTime = super.getLastUsed();
+
+		Duration interval = new Duration(newTime, limitTime); 
+		if(interval.getMillis() < 0) //When Extending Limit Time
+			throw new PrivateResourceException("Canot extend session time!");
+		else
+			super.setLastUsed(newTime);
+	}
+	
+
 }

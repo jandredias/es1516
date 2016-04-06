@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.MyDriveException;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ public class File extends File_Base {
 			System.out.println("This won't happen");
 		}
 	}
-
+	
 	/**
 	 * Real Constructor of File that is used by every other constructor
 	 * Note that the parent directory is not set, the parent directory is the
