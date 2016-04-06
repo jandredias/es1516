@@ -3,8 +3,6 @@ package pt.tecnico.myDrive.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -19,9 +17,8 @@ public class ReadFileTest extends AbstractServiceTest {
 	private User me, someone;
 	private ReadFileService readFileService;
 
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
+	protected void populate() throws MyDriveException {
+
 		myDrive = MyDrive.getInstance();
 
 		myDrive.addUser("me", "qwerty123", "Jimmy", null);
@@ -218,16 +215,6 @@ public class ReadFileTest extends AbstractServiceTest {
 		readFileService = new ReadFileService("/home/someone/application.apk");
 		readFileService.dispatch();
 		// no asserts because PermissionDeniedException is expected
-	}
-
-	@Override
-	protected void populate() {
-		// TODO Auto-generated method stub
-	}
-
-	@After
-	public void tearDown() {
-		super.tearDown();
 	}
 
 }

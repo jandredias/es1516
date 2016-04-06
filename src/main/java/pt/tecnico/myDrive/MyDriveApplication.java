@@ -98,16 +98,17 @@ public class MyDriveApplication {
 		
 		step11(md);
 		*/
-		//step12(md);
+		step12(md);
 	}
 	public static void step12(MyDrive md){
-		String permissions = "-wxdrwxd";
+		String permissions = "rwxdrwxd";
 		System.out.println("\u001B[33;1m"+"MyDrive Exists" +"\u001B[0m");
 		String username = "joao"; 
 		md.addUser(username,username,username,permissions);
 		System.out.println("\u001B[33;1m"+"User Created" +" \u001B[0m");
 		User joao = md.getUserByUsername("joao");
 		System.out.println("\u001B[33;1m"+"Have User" +" \u001B[0m");
+		System.out.println("\u001B[33;1m"+joao.getName() +" \u001B[0m");
 		md.addDirectory("/home/joao/", "TestDir", joao);
 		System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[0m");
 	}
