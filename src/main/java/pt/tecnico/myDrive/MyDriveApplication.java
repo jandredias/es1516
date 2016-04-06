@@ -27,6 +27,8 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
+import pt.tecnico.myDrive.service.MyDriveService;
+
 import java.lang.reflect.InvocationTargetException;
 
 public class MyDriveApplication {
@@ -96,8 +98,19 @@ public class MyDriveApplication {
 		
 		step11(md);
 		*/
+		//step12(md);
 	}
-
+	public static void step12(MyDrive md){
+		String permissions = "-wxdrwxd";
+		System.out.println("\u001B[33;1m"+"MyDrive Exists" +"\u001B[0m");
+		String username = "joao"; 
+		md.addUser(username,username,username,permissions);
+		System.out.println("\u001B[33;1m"+"User Created" +" \u001B[0m");
+		User joao = md.getUserByUsername("joao");
+		System.out.println("\u001B[33;1m"+"Have User" +" \u001B[0m");
+		md.addDirectory("/home/joao/", "TestDir", joao);
+		System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[0m");
+	}
 	public static void step1(MyDrive md){
 		try{
 			User rootUsr = md.getRootUser();

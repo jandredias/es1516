@@ -26,27 +26,29 @@ import java.util.Collections;
 
 public class ListDirectoryTest extends AbstractServiceTest {
 
-	private long token;
+	private long token = 0;
 	
 	protected void populate() {}
 
 	private void createUserJoaoAndHisFolder(String permissions) throws MyDriveException{
 		try{
 			MyDrive md = MyDriveService.getMyDrive();
-			System.out.println("\u100B[33;1m"+"MyDrive Exists" +"\u100B[33;1m");
+			System.out.println("\u001B[33;1m"+"MyDrive Exists" +"\u001B[33;1m");
 			String username = "joao"; 
 			md.addUser(username,username,username,permissions);
-			System.out.println("\u100B[33;1m"+"User Created" +" \u100B[33;1m");
+			System.out.println("\u001B[33;1m"+"User Created" +" \u001B[33;1m");
 			User joao = md.getUserByUsername("joao");
-			System.out.println("\u100B[33;1m"+"Have User" +" \u100B[33;1m");
+			System.out.println("\u001B[33;1m"+"Have User" +" \u001B[33;1m");
 			md.addDirectory("/home/joao/", "TestDir", joao);
-			System.out.println("\u100B[33;1m"+"Dir Created" +" \u100B[33;1m");
+			System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[33;1m");
 		}
 		catch(MyDriveException E){
-			System.out.println("\u100B[31;1m"+"TEST ERROR" +" \u100B[33;1m");
+			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[33;1m");
 			throw E;
 		}
-		token = 0;// = getValidToken("joao","/home/joao/TestDir");
+		token++;// = getValidToken("joao","/home/joao/TestDir");
+		System.out.println("\u001B[32;1m"+token +" \u001B[33;1m");
+
 	}
 
 	/* ---------------------------------------------------------------------- */
@@ -55,7 +57,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void ownUserHasPermissions() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		assert false;//FIXME:TODO:XXX
 
@@ -66,9 +68,9 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void otherUserHasPermissions() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");		
+		createUserJoaoAndHisFolder("rwxdrwxd");		
 		MyDrive md = MyDriveService.getMyDrive();
-		md.addUser("ze","joao","joao","rwdxrwdx");
+		md.addUser("ze","joao","joao","rwxdrwxd");
 
 		assert false;//FIXME:TODO:XXX
 		token = 0;// = getValidToken("ze","/home/joao/TestDir"); //XXX DIFF
@@ -79,7 +81,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test(expected = PermissionDeniedException.class)
 	public void ownUserHasNoPermissions() throws MyDriveException{
-		createUserJoaoAndHisFolder("-wdxrwdx");
+		createUserJoaoAndHisFolder("-wxdrwxd");
 
 		assert false;//FIXME:TODO:XXX
 		ListDirectoryService service = new ListDirectoryService(token);
@@ -88,9 +90,9 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test(expected = PermissionDeniedException.class)
 	public void otherUserHasNoPermissions() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdx----");
+		createUserJoaoAndHisFolder("rwxd----");
 
-		MyDriveService.getMyDrive().addUser("ze","joao","joao","rwdxrwdx");
+		MyDriveService.getMyDrive().addUser("ze","joao","joao","rwxdrwxd");
 		assert false;//FIXME:TODO:XXX
 		token = 0;// = getValidToken("ze","/home/joao/TestDir"); //XXX DIFF
 		ListDirectoryService service = new ListDirectoryService(token);
@@ -161,7 +163,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listEmptyDirectory() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		assert false;//FIXME:TODO:XXX
 		ListDirectoryService service = new ListDirectoryService(token);
@@ -183,7 +185,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listDirectoryWithPlainFile() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -207,7 +209,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listDirectoryWithDirectory() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -229,7 +231,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listDirectoryWithlink() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -253,7 +255,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listDirectoryWithApp() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -277,7 +279,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 
 	@Test
 	public void listDirectoryWith6FilesAlphabeticly() throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -326,7 +328,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 	 * @throws MyDriveException
 	 */
 	private void plainFileDimension(int contentSize) throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 		String content = StringUtils.repeat("t", contentSize);
 
 		MyDrive md = MyDriveService.getMyDrive(); 
@@ -367,7 +369,7 @@ public class ListDirectoryTest extends AbstractServiceTest {
 	 * @throws MyDriveException
 	 */
 	private void directoryDimension(int numberOfFiles) throws MyDriveException{
-		createUserJoaoAndHisFolder("rwdxrwdx");
+		createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
