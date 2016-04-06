@@ -61,7 +61,6 @@ public class MyDrive extends MyDrive_Base {
 
 		Directory rootDirectory;
 		rootDirectory = Directory.createRootDirectory(root);
-		getNewFileId();
 
 		this.setRootDirectory(rootDirectory);
 
@@ -114,6 +113,35 @@ public class MyDrive extends MyDrive_Base {
 		root.setUsersHome(home_root);
 	}
 
+	
+	public void cleanup(){
+		/* FIXME:TODO:XXX miguel-amaral (do not delete this)
+		 * 
+		 * 
+		Root root = getRootUser();
+
+		for (User user : getUsersSet()){
+			if(! user.getName().equals("root"))
+				user.delete(root);
+		}
+		
+		//Cleaning up every File left
+		Directory rootDir = getRootDirectory();
+		for (File file : rootDir.getFilesSet()){
+			file.delete(root);
+		}
+		
+		
+		Directory homeFolder = new Directory("home",root);
+		this.addFile("", homeFolder, root);
+		
+		Directory home_root = new Directory("root", root);
+		this.addFile("/home/", home_root , root);
+		
+		root.setUsersHome(home_root);
+		*/
+		
+	}
 	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
 

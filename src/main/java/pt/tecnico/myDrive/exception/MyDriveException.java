@@ -5,7 +5,7 @@ package pt.tecnico.myDrive.exception;
  * @author Pedro Bucho
  *
  */
-public class MyDriveException extends Exception {
+public class MyDriveException extends RuntimeException {
 
 	private static final long serialVersionUID = -5495644594099515732L;
 	

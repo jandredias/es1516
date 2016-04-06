@@ -35,8 +35,8 @@ public class MyDriveApplication {
 	public static void main(String[] args) throws IOException {
 		//TODO
 		
-		//if (helloWorld())
-		//	return;
+//		if (helloWorld())
+//			return;
 		try {
 
 			init();
@@ -68,6 +68,7 @@ public class MyDriveApplication {
 	@Atomic
 	public static void init() {
 		log.trace("Init: " + FenixFramework.getDomainRoot());
+		MyDrive.getInstance().cleanup();
 	}
 
 	@Atomic

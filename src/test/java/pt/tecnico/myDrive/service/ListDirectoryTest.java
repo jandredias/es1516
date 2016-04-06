@@ -31,12 +31,21 @@ public class ListDirectoryTest extends AbstractServiceTest {
 	protected void populate() {}
 
 	private void createUserJoaoAndHisFolder(String permissions) throws MyDriveException{
-		MyDrive md = MyDriveService.getMyDrive();
-		String username = "joao"; 
-		md.addUser(username,username,username,permissions);
-		User joao = md.getUserByUsername("joao");
-		md.addDirectory("/home/joao/", "TestDir", joao);
-
+		try{
+			MyDrive md = MyDriveService.getMyDrive();
+			System.out.println("\u100B[33;1m"+"MyDrive Exists" +"\u100B[33;1m");
+			String username = "joao"; 
+			md.addUser(username,username,username,permissions);
+			System.out.println("\u100B[33;1m"+"User Created" +" \u100B[33;1m");
+			User joao = md.getUserByUsername("joao");
+			System.out.println("\u100B[33;1m"+"Have User" +" \u100B[33;1m");
+			md.addDirectory("/home/joao/", "TestDir", joao);
+			System.out.println("\u100B[33;1m"+"Dir Created" +" \u100B[33;1m");
+		}
+		catch(MyDriveException E){
+			System.out.println("\u100B[31;1m"+"TEST ERROR" +" \u100B[33;1m");
+			throw E;
+		}
 		token = 0;// = getValidToken("joao","/home/joao/TestDir");
 	}
 
