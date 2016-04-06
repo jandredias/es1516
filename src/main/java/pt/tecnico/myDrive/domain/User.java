@@ -105,7 +105,13 @@ public class User extends User_Base implements Comparable<User> {
 		return this.getUsername().compareTo(u.getUsername());
 	}
 
-	
+	/**
+	 * General method that states whether or not a user has permissions to access a file
+	 * @param file
+	 * @param position
+	 * @param permissionLetter
+	 * @return
+	 */
 	protected boolean hasPermissions(File file, int position, String permissionLetter){
 		User owner = file.getOwner();
 		String filePermissions = file.getPermissions();

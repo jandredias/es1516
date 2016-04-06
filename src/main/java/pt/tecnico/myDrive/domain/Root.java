@@ -33,7 +33,7 @@ public class Root extends Root_Base {
 	
 	@Override
 	public boolean hasPermissions(File file, int position, String permissionLetter ){
-		//System.out.println("\u001B[33;1mROOT using its SUPER privileges\u001B[0m");
+		System.out.println("\u001B[33;1mROOT using its SUPER privileges\u001B[0m");
 		return true;
 	}
 	
