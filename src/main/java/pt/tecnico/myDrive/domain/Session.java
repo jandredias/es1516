@@ -8,6 +8,8 @@ import pt.tecnico.myDrive.exception.PrivateResourceException;
 public class Session extends Session_Base {
 
 	public Session() {
+		//Whenever there is a need to setUp user do this:
+		// super.setUser(user);
 		super();
 	}
 
@@ -48,5 +50,11 @@ public class Session extends Session_Base {
 			super.setLastUsed(newTime);
 	}
 	
+	@Override
+	public void setUser(User user) throws PrivateResourceException{
+		//Whenever there is a need to setUp user do this:
+		//super.setUser(user);
+		throw new PrivateResourceException("A User token cannot be transfered");
+	}
 
 }

@@ -458,14 +458,12 @@ public class MyDrive extends MyDrive_Base {
 				if(!node.getAttribute("username").getValue().equals("root")){
 					user = new User(node);
 					addUser(user);
-				}else{
-					user = this.getRootUser();
-					user.xmlImport(node);
-				}
-				//Update users home
-				String home = "/home/" + node.getAttribute("username").getValue();
-				if(node.getChild("home") != null) home = node.getChild("home").getValue();
-				user.setUsersHome(reallyGetDirectory(home, getRootUser()));
+					//Update users home
+					String home = "/home/" + node.getAttribute("username").getValue();
+					if(node.getChild("home") != null) home = node.getChild("home").getValue();
+					user.setUsersHome(reallyGetDirectory(home, getRootUser()));
+				}//IGNORE ROOT IMPORT!
+				
 
 
 			}else{
