@@ -261,6 +261,19 @@ public class MyDrive extends MyDrive_Base {
 			if(user.getUsername().equals(username)) return user;
 		return null;
 	}
+	
+	/**
+	 * gets a session by token
+	 *
+	 * @param long token
+	 * @return Session
+	 */
+	public Session getSessionByToken(long token) {
+		for(Session session : getSessionSet())
+			if(session.getToken().equals(token)) return session;
+		return null;
+	}
+
 
 	/**
 	 * interface that adds a user to the file system
