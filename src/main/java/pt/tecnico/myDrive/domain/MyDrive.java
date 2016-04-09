@@ -495,7 +495,7 @@ public class MyDrive extends MyDrive_Base {
 	/* **************************** Tokens Related ************************** */
 	
 	/**
-	 * return the corresponding Session 
+	 * return the corresponding Session if the token is valid
 	 * @param token
 	 * @return
 	 * @throws InvalidTokenException

@@ -35,9 +35,9 @@ public class MyDriveApplication {
 
 	public static void main(String[] args) throws IOException {
 		//TODO
-		
-//		if (helloWorld())
-//			return;
+
+		if (helloWorld())
+			return;
 		try {
 
 			init();
@@ -56,16 +56,10 @@ public class MyDriveApplication {
 	}
 
 	public static boolean helloWorld(){
-		DateTime currTime = new DateTime();
-		DateTime limitTime = new DateTime();
-		
-		limitTime = limitTime.minusSeconds(1); 
 
-		Duration duration = new Duration(currTime, limitTime);
-		System.out.println("Mins: " + duration.getMillis());
 		return true;
 	}
-	
+
 	@Atomic
 	public static void init() {
 		log.trace("Init: " + FenixFramework.getDomainRoot());
@@ -90,13 +84,13 @@ public class MyDriveApplication {
 		step8(md);
 		step9(md);
 		step10(md);
-		
+
 		//-----
 		// POS ENTREGA 1
 		//-----
-		
+
 		step11(md);
-		*/
+		 */
 		step12(md);
 	}
 	public static void step12(MyDrive md){
@@ -110,7 +104,7 @@ public class MyDriveApplication {
 			System.out.println("\u001B[33;1m"+"Have User" +" \u001B[0m");
 			System.out.println("\u001B[33;1m"+joao.getName() +" \u001B[0m");
 			md.addDirectory("/home/joao/", "TestDir", joao);
-		System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[0m");
+			System.out.println("\u001B[33;1m"+"Dir Created" +" \u001B[0m");
 		} catch (InvalidUsernameException | UsernameAlreadyInUseException | FileExistsException | InvalidFileNameException | FileNotFoundException | PermissionDeniedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -201,7 +195,7 @@ public class MyDriveApplication {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public static void step11(MyDrive md){
 
 		try {
@@ -285,7 +279,7 @@ public class MyDriveApplication {
 		}
 		log.trace("End of xmlScan");
 	}
-/*
+	/*
 	@Atomic
 	public static void listDirectoryTest() throws InvalidFileNameException {
 
@@ -314,7 +308,7 @@ public class MyDriveApplication {
 		}
 
 	}
-*/
+	 */
 	@Atomic
 	public static void teste_tiago(){}
 }
