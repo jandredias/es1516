@@ -20,6 +20,10 @@ public class LoginUserService extends MyDriveService {
 		//TODO
 		throw new MyDriveException("Service not implemented yet");
 	}
+	
+	public final long result() {
+        return 0;
+    }
 }
 
 
