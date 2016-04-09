@@ -58,7 +58,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		}
 		catch(MyDriveException E){
 			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[0m");
-			throw E;
+			assert false;
 		}
 		
 		if(userBeingTested.equals("OWNER"))

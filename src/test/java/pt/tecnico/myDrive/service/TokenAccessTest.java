@@ -1,12 +1,6 @@
 package pt.tecnico.myDrive.service;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
-
-import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public abstract class TokenAccessTest extends AbstractServiceTest{
 	
@@ -14,7 +8,6 @@ public abstract class TokenAccessTest extends AbstractServiceTest{
 
 	protected abstract MyDriveService createTokenService(long token);
 
-	
 	@Test
 	//tokenAccessClass: Mock example, not Implemented FIXME:TODO:XXX
 	public void test1(){
