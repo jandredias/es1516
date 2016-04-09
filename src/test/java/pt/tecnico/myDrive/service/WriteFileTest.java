@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
 
-public class WriteFileTeste extends AbstractServiceTest {
-
+public class WriteFileTest extends PermissionTest {
+	private long token = 0; //FIXME
 	@Override
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
@@ -47,7 +47,9 @@ public class WriteFileTeste extends AbstractServiceTest {
 		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
+		//token = getValidToken("test1", "/home/test1");
+		WriteFileService service = new WriteFileService(token,
+				"plainfile1", "teste");
 		service.execute();
 		
 		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
@@ -55,10 +57,12 @@ public class WriteFileTeste extends AbstractServiceTest {
 	
 	@Test
 	public void writeOthersFileWithPermissionTest() {
-		/*FIXME user1 or 2 needs to be logged in and currentdir contain plainfile3*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
+		//token = getValidToken("test1", "/home/test3");
+		WriteFileService service = new WriteFileService(token,
+				"plainfile3", "teste");
 		service.execute();
 		
 		assertEquals("teste", md.getFileContents("/home/test3/plainfile3"));
@@ -66,9 +70,10 @@ public class WriteFileTeste extends AbstractServiceTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void writeOwnFileWithoutPermissionTest() {
-		/*FIXME user3 needs to be logged in and currentdir contain plainfile3*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
+		//token = getValidToken("test3", "/home/test3");
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
@@ -76,18 +81,20 @@ public class WriteFileTeste extends AbstractServiceTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void writeOthersFileWithoutPermissionTest() {
-		/*FIXME user4 needs to be logged in and currentdir contain plainfile3*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
+		//token = getValidToken("test4", "/home/test3");
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
 	}
 	@Test
 	public void rootWriteFileTest(){
-		/*FIXME root needs to be logged and currentdir contain plainfile1*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
+		//token = getValidToken("root", "/home/test1");
 		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
 		service.execute();
 		
@@ -96,10 +103,10 @@ public class WriteFileTeste extends AbstractServiceTest {
 	
 	@Test
 	public void writeGoodLink(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
+		//token = getValidToken("test1", "/home/test1");
 		WriteFileService service = new WriteFileService(token, "link1",
 				"/home/test4/plainfile4");
 		service.execute();
@@ -110,12 +117,12 @@ public class WriteFileTeste extends AbstractServiceTest {
 	
 	@Test(expected = ContentNotLinkException.class)
 	public void writeBadLink(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
+		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
+		//token = getValidToken("test1", "/home/test1");
 		WriteFileService service = new WriteFileService(token, "link1",
-				"olaolaola")
+				"olaolaola");
 		service.execute();
 				
 	}

@@ -10,8 +10,8 @@ import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.ContentNotLinkException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
-public class CreateFileTest extends AbstractServiceTest {
-
+public class CreateFileTest extends PermissionTest {
+	private long token = 0; /*FIXME when tokens are done*/
 	@Override
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
@@ -38,8 +38,11 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test
 	public void createFileOwnDirWithPermissionTest() {
-		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"PlainFile", "PlainFileTest1");
@@ -51,10 +54,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test
 	public void createFileOthersDirWithPermissionTest() {
-		/*FIXME user1 or 2 needs to be logged in and currentdir contain 
-		 * plainfile3*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test3");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"PlainFile", "PlainFileTest");
@@ -66,9 +71,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOwnDirWithoutPermissionTest() {
-		/*FIXME user3 needs to be logged in and currentdir contain plainfile3*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test3", "/home/test3");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"PlainFile", "PlainFileTest1");
@@ -78,9 +86,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOthersDirWithoutPermissionTest() {
-		/*FIXME user4 needs to be logged in and currentdir contain plainfile3*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test4", "/home/test3");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"PlainFile", "PlainFileTest1");
@@ -89,9 +100,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	}
 	@Test
 	public void rootCreateFileTest(){
-		/*FIXME root needs to be logged and currentdir contain plainfile1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("root", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"PlainFile", "PlainFileTest");
@@ -102,9 +116,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected=InvalidFileNameException.class)
 	public void CreateFileDashCharacterTest(){
-		/*FIXME root needs to be logged and currentdir contain plainfile1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "plain/file", 
 				"PlainFile", "PlainFileTest1");
@@ -115,9 +132,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected=InvalidFileNameException.class)
 	public void CreateFileNullCharacterTest(){
-		/*FIXME root needs to be logged and currentdir contain plainfile1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "plain\0file", 
 				"PlainFile", "PlainFileTest1");
@@ -128,15 +148,22 @@ public class CreateFileTest extends AbstractServiceTest {
 	@Test
 	public void createFilePath1024CharsTest() {
 		/* Currentdir = /b * 1021
-		 * FIXME user1 needs to be logged in and currentdir contain plainfile1*/
+		 * FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		String pathb = "/" + new String(new char[1021]).replace('\0', 'b');
+		//pathb = / + b*1021 = 1022 chars
+		//token = getValidToken("test1", pathb);
+		
+
+		pathb += "/b";
+		//pathb = / + b*1021 + /b = 1024 chars
+
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "b", 
 				"PlainFile", "PlainFileTest");
 		service.execute();
-		
-		String pathb = "/" + new String(new char[1021]).replace('\0', 'b') +
-				"/b";
 		
 		assertEquals("PlainFileTest",
 				md.getFileContents(pathb));
@@ -144,9 +171,15 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected=InvalidFileNameException.class)
 	public void createFilePath1025CharsTest() {
-		/* Currentdir = /c * 1022
-		 * FIXME user1 needs to be logged*/
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		String pathc = "/" + new String(new char[1022]).replace('\0', 'c');
+
+		//token = getValidToken("test1", pathc);
+		pathc +="/c";
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "c", 
 				"PlainFile", "PlainFileTest2");
@@ -156,10 +189,13 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test
 	public void createGoodLink(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testLink",
 				"link",	"/home/test4/plainfile4");
@@ -171,10 +207,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test(expected = ContentNotLinkException.class)
 	public void createBadLink(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testLink",
 				"link", "olaolaola");
@@ -184,10 +222,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test
 	public void createAppAnyContent(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testApp",
 				"App", "olaolaola");
@@ -200,13 +240,15 @@ public class CreateFileTest extends AbstractServiceTest {
 	
 	@Test
 	public void createAppWithoutContent(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type)*/
 		CreateFileService service = new CreateFileService(token, "testApp",
-				"App" ,"olaolaola");
+				"App", "");
 		service.execute();
 		
 		assertEquals("",
@@ -215,10 +257,12 @@ public class CreateFileTest extends AbstractServiceTest {
 	}
 	@Test
 	public void createPlainFileWithContent(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, 
 				"PlainFileTest", "PlainFile", "olaolaola");
@@ -230,13 +274,15 @@ public class CreateFileTest extends AbstractServiceTest {
 	}
 	@Test
 	public void createPlainFileWithoutContent(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1*/
-		fail("FIX ME");
+		/*FIXME*/
+		fail();
 		MyDrive md = MyDrive.getInstance();
+		
+		//token = getValidToken("test1", "/home/test1");
+		
 		/*createFileService(token, name, type)*/
-		CreateFileService service = new CreateFileService(token, 
-				"PlainFileTest", "PlainFile");
+		CreateFileService service = new CreateFileService(token,
+				"PlainFileTest", "PlainFile", "");
 		service.execute();
 		
 		assertEquals("",
