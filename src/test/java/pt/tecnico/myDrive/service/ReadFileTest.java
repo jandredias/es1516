@@ -19,8 +19,12 @@ public class ReadFileTest extends PermissionsTest {
 	private User me, someone;
 	private ReadFileService readFileService;
 
+	private long token = 0;
+
 	protected void populate() {
 		myDrive = MyDriveService.getMyDrive();
+
+		token = 0; // = getValidToken("joao","/home/joao"); //XXX dif Token
 
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
@@ -32,15 +36,15 @@ public class ReadFileTest extends PermissionsTest {
 		me = myDrive.getUserByUsername("me");
 		someone = myDrive.getUserByUsername("someone");
 	}
-	
+
 	@Override
 	protected MyDriveService createTokenService(long token) {
-		return new ListDirectoryService(token);
+		return null;
 	}
 
 	@Override
 	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
-		return new ListDirectoryService(token);
+		return null;
 	}
 
 	@Override
@@ -53,7 +57,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 
-		readFileService = new ReadFileService("/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
@@ -63,7 +67,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("--------");
 
-		readFileService = new ReadFileService("/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -73,7 +77,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
 		myDrive.getFile("/home/someone/theirFile.txt").setPermissions("----r---");
 
-		readFileService = new ReadFileService("/home/someone/theirFile.txt");
+		readFileService = new ReadFileService(token, "/home/someone/theirFile.txt");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
@@ -83,7 +87,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
 		myDrive.getFile("/home/someone/theirFile.txt").setPermissions("--------");
 
-		readFileService = new ReadFileService("/home/someone/theirFile.txt");
+		readFileService = new ReadFileService(token, "/home/someone/theirFile.txt");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -92,7 +96,7 @@ public class ReadFileTest extends PermissionsTest {
 	public void readDirectoryTest() throws MyDriveException {
 		myDrive.addDirectory("/home/me", "durr", me);
 
-		readFileService = new ReadFileService("/home/me/durr");
+		readFileService = new ReadFileService(token, "/home/me/durr");
 		readFileService.execute();
 		// no asserts because UnsupportedOperationException is expected
 	}
@@ -104,7 +108,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
 		myDrive.getFile("/home/me/myLink").setPermissions("r------l");
 
-		readFileService = new ReadFileService("/home/me/myLink");
+		readFileService = new ReadFileService(token, "/home/me/myLink");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
@@ -116,7 +120,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
 		myDrive.getFile("/home/me/myLink").setPermissions("-------l");
 
-		readFileService = new ReadFileService("/home/me/myLink");
+		readFileService = new ReadFileService(token, "/home/me/myLink");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -128,7 +132,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
 		myDrive.getFile("/home/someone/theirLink").setPermissions("----r--l");
 
-		readFileService = new ReadFileService("/home/someone/theirLink");
+		readFileService = new ReadFileService(token, "/home/someone/theirLink");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
@@ -140,7 +144,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
 		myDrive.getFile("/home/someone/theirLink").setPermissions("-------l");
 
-		readFileService = new ReadFileService("/home/someone/theirLink");
+		readFileService = new ReadFileService(token, "/home/someone/theirLink");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -150,7 +154,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
 		myDrive.getFile("/home/me/application.apk").setPermissions("r-x-----");
 
-		readFileService = new ReadFileService("/home/me/application.apk");
+		readFileService = new ReadFileService(token, "/home/me/application.apk");
 		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
@@ -160,7 +164,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
 		myDrive.getFile("/home/me/application.apk").setPermissions("--x-----");
 
-		readFileService = new ReadFileService("/home/me/application.apk");
+		readFileService = new ReadFileService(token, "/home/me/application.apk");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -170,7 +174,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
 		myDrive.getFile("/home/someone/application.apk").setPermissions("r-x-r-x-");
 
-		readFileService = new ReadFileService("/home/someone/application.apk");
+		readFileService = new ReadFileService(token, "/home/someone/application.apk");
 		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
@@ -180,7 +184,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
 		myDrive.getFile("/home/someone/application.apk").setPermissions("--x-----");
 
-		readFileService = new ReadFileService("/home/someone/application.apk");
+		readFileService = new ReadFileService(token, "/home/someone/application.apk");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
