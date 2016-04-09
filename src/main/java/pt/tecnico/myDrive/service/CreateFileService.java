@@ -14,13 +14,10 @@ import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 public class CreateFileService extends MyDriveService {
 
 	private MyDrive _drive;
-	//private String  _username = "";
-	//private String  _path     = "";
 	private String  _content;
 	private String  _fileType;
 	private String  _fileName;
 	private long 	_token;
-
 
 	/**
 	 * Default Constructor
@@ -48,7 +45,9 @@ public class CreateFileService extends MyDriveService {
 	 */
 	@Override
 	public final void dispatch() throws FileExistsException, 
-			InvalidFileNameException, FileNotFoundException, UnknowFileTypeException, UserDoesNotExistsException, InvalidTokenException, PermissionDeniedException{
+			InvalidFileNameException, FileNotFoundException, 
+			UnknowFileTypeException, UserDoesNotExistsException, 
+			InvalidTokenException, PermissionDeniedException{
 
 		Session session = _drive.validateToken(_token);
 		User    user    = session.getUser();

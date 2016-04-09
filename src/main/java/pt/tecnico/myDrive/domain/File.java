@@ -1,16 +1,16 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.ArrayList;
+
 import org.jdom2.Element;
 import org.joda.time.DateTime;
-import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
-import pt.tecnico.myDrive.exception.MyDriveException;
-
-import java.util.ArrayList;
+import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class File extends File_Base {
 

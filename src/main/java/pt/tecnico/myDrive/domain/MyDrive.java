@@ -22,6 +22,7 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
@@ -346,7 +347,6 @@ public class MyDrive extends MyDrive_Base {
 		return getFileContents(file);
 	}
 
-
 	public void deleteFile (String path) throws FileNotFoundException,
 			DirectoryIsNotEmptyException {
 
@@ -538,6 +538,29 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 	
+	public long getValidSession(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
+		if(testsOnly != null){
+			User user = getUserByUsername(username);
+			if(user == null)
+				throw new TestSetupException("GetValidSessionError: Invalid user: " + username);
+			
+			Directory directory = null;
+			try {
+				directory= getDirectory(currentDirectoryPath);
+			} catch (FileNotFoundException | NotDirectoryException e) {
+				throw new TestSetupException("GetValidSessionError: Invalid directory: " + currentDirectoryPath);
+			}
+			//As it is only run on tests context the database is clean,
+			//	so 666 can be used
+			long token = 666;
+			Session session = new Session(user, token);
+			session.setCurrentDirectory(directory);
+			this.addSession(session);
+			return token;
+		} else {
+			throw new TestSetupException("Only Tests Allowed");
+		}
+	}
 	
 	@Override
 	public java.util.Set<Session> getSessionSet() throws PrivateResourceException{

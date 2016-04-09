@@ -13,6 +13,15 @@ public class Session extends Session_Base {
 		super();
 	}
 
+	public Session(User user, long token){
+		super.setToken(token);
+		super.setUser(user);
+		Directory currentDirectory = user.getUsersHome(); 
+		super.setCurrentDirectory(currentDirectory);
+		DateTime lastUsed = new DateTime();
+		super.setLastUsed(lastUsed);
+	}
+	
 	/**
 	 * Method that returns true when a Session is still valid
 	 * @return
