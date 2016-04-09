@@ -19,19 +19,18 @@ public class ReadFileTest extends AbstractServiceTest {
 	private User me, someone;
 	private ReadFileService readFileService;
 
-	protected void populate(){
-			myDrive = MyDriveService.getMyDrive();
+	protected void populate() {
+		myDrive = MyDriveService.getMyDrive();
 
-			try {
-				myDrive.addUser("me", "qwerty123", "Jimmy", null);
-				myDrive.addUser("someone", "qwerty123", "Sarah", null);
-			} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
-				assert false;
-			}
+		try {
+			myDrive.addUser("me", "qwerty123", "Jimmy", null);
+			myDrive.addUser("someone", "qwerty123", "Sarah", null);
+		} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
+			assert false;
+		}
 
-			me = myDrive.getUserByUsername("me");
-			someone = myDrive.getUserByUsername("someone");
-		
+		me = myDrive.getUserByUsername("me");
+		someone = myDrive.getUserByUsername("someone");
 	}
 
 	@Test
@@ -44,7 +43,7 @@ public class ReadFileTest extends AbstractServiceTest {
 		}
 
 		readFileService = new ReadFileService("/home/me/myFile.txt");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
@@ -58,7 +57,7 @@ public class ReadFileTest extends AbstractServiceTest {
 		}
 
 		readFileService = new ReadFileService("/home/me/myFile.txt");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
@@ -72,7 +71,7 @@ public class ReadFileTest extends AbstractServiceTest {
 		}
 
 		readFileService = new ReadFileService("/home/someone/theirFile.txt");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
@@ -86,7 +85,7 @@ public class ReadFileTest extends AbstractServiceTest {
 		}
 
 		readFileService = new ReadFileService("/home/someone/theirFile.txt");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
@@ -97,9 +96,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/me/durr");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because UnsupportedOperationException is expected
 	}
 
@@ -113,9 +112,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/me/myLink");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
@@ -129,9 +128,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/me/myLink");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
@@ -145,9 +144,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/someone/theirLink");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
@@ -161,9 +160,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/someone/theirLink");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
@@ -175,9 +174,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/me/application.apk");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
@@ -189,9 +188,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/me/application.apk");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
@@ -203,9 +202,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/someone/application.apk");
-		readFileService.dispatch();
+		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
@@ -217,9 +216,9 @@ public class ReadFileTest extends AbstractServiceTest {
 		} catch (MyDriveException e) {
 			fail("Should not have thrown exception");
 		}
-		
+
 		readFileService = new ReadFileService("/home/someone/application.apk");
-		readFileService.dispatch();
+		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
 
