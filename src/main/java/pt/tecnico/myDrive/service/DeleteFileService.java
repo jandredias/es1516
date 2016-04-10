@@ -7,6 +7,7 @@ import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 
@@ -18,11 +19,14 @@ public class DeleteFileService extends MyDriveService {
 	
 	/**
 	 * Default Constructor
+	 * @throws InvalidFileNameException 
 	 */
-	public DeleteFileService(long token, String fileName) {
+	public DeleteFileService(long token, String fileName) throws InvalidFileNameException {
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
-		_fileName = "./" + fileName;
+		if(fileName==null)
+			throw new InvalidFileNameException();
+		_fileName = fileName;
 	}
 	
 	/**
@@ -41,20 +45,5 @@ public class DeleteFileService extends MyDriveService {
 		if(user.hasDeletePermissions(targetFile)){
 			targetFile.delete();
 		}
-		
-		/*if(targetFile instanceof Directory){
-			if( ((Directory)targetFile).getFilesSet().isEmpty()){
-				targetFile.delete();
-			}
-			else{
-				for (File f : ((Directory)targetFile).getFilesSet()) {
-					DeleteFileService service = new DeleteFileService(_token, f.getName());
-					service.execute();
-				}
-			}
-		}
-		else{
-			targetFile.delete();
-		}*/
 	}
 }
