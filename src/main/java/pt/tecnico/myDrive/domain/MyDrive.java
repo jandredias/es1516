@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,20 +69,20 @@ public class MyDrive extends MyDrive_Base {
 			Directory homeFolder = null;
 			homeFolder = new Directory("home",root);
 			rootDirectory.addFile("", homeFolder, root);
-			
+
 			Directory home_root = null;
 			home_root = new Directory("root", root);
-			homeFolder.addFile("", home_root , root); 
+			homeFolder.addFile("", home_root , root);
 			root.setUsersHome(home_root);
 		} catch (FileNotFoundException | FileExistsException | PermissionDeniedException | InvalidFileNameException e){
-			//Wont Happen. When EMPTY Database; 
+			//Wont Happen. When EMPTY Database;
 		}
 	}
 
-	
+
 	public void cleanup(){
 		/* FIXME:TODO:XXX miguel-amaral (do not delete this)
-		 * 
+		 *
 		 *
 		Root root = getRootUser();
 
@@ -89,23 +90,23 @@ public class MyDrive extends MyDrive_Base {
 			if(! user.getName().equals("root"))
 				user.delete(root);
 		}
-		
+
 		//Cleaning up every File left
 		Directory rootDir = getRootDirectory();
 		for (File file : rootDir.getFilesSet()){
 			file.delete(root);
 		}
-		
-		
+
+
 		Directory homeFolder = new Directory("home",root);
 		this.addFile("", homeFolder, root);
-		
+
 		Directory home_root = new Directory("root", root);
 		this.addFile("/home/", home_root , root);
-		
+
 		root.setUsersHome(home_root);
 		*/
-		
+
 	}
 	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
@@ -225,7 +226,7 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws FileExistsException
 	 * @throws InvalidFileNameException
 	 * @throws NotDirectoryException
-	 * @throws PermissionDeniedException 
+	 * @throws PermissionDeniedException
 	 */
 	private Directory reallyGetDirectory(String path, User user) throws InvalidFileNameException, NotDirectoryException, PermissionDeniedException{
 
@@ -262,7 +263,7 @@ public class MyDrive extends MyDrive_Base {
 			if(user.getUsername().equals(username)) return user;
 		return null;
 	}
-	
+
 	/**
 	 * gets a session by token
 	 *
@@ -270,11 +271,19 @@ public class MyDrive extends MyDrive_Base {
 	 * @return Session
 	 */
 	public Session getSessionByToken(long token) {
-		for(Session session : getSessionSet())
+		for(Session session : getDriveSessions())
 			if(session.getToken().equals(token)) return session;
 		return null;
 	}
 
+	public Long getNewToken(){
+		while(true){
+			Long token = ThreadLocalRandom.current().nextLong();
+			for(Session session : getDriveSessions())
+				if(session.getToken().equals(token)) continue;
+			return token;
+		}
+	}
 
 	/**
 	 * interface that adds a user to the file system
@@ -450,7 +459,7 @@ public class MyDrive extends MyDrive_Base {
 	 *
 	 * @param Element
 	 * @throws InvalidFileNameException
-	 * @throws PermissionDeniedException 
+	 * @throws PermissionDeniedException
 	 */
 	public void xmlImport(Element e)
 			throws InvalidUsernameException, FileNotFoundException,
@@ -476,7 +485,7 @@ public class MyDrive extends MyDrive_Base {
 					if(node.getChild("home") != null) home = node.getChild("home").getValue();
 					user.setUsersHome(reallyGetDirectory(home, getRootUser()));
 				}//IGNORE ROOT IMPORT!
-				
+
 
 
 			}else{
@@ -503,10 +512,10 @@ public class MyDrive extends MyDrive_Base {
 	}
 	/* ****************************** XML Related *************************** */
 	/* ********************************************************************** */
-	
+
 	/* ********************************************************************** */
 	/* **************************** Tokens Related ************************** */
-	
+
 	/**
 	 * return the corresponding Session if the token is valid
 	 * @param token
@@ -515,18 +524,18 @@ public class MyDrive extends MyDrive_Base {
 	 */
 	public Session validateToken(long token) throws InvalidTokenException{
 		Session session = getSessionByTokenNr(token);
-		if(session != null){ 
+		if(session != null){
 			if(session.validateSession());
 				return session;
 		}
 		log.warn("Non Active Token was used");
 		throw new InvalidTokenException();
 	}
-	
+
 	/**
 	 * Method that returns the @param token's session
 	 * returns null if token does not exists
-	 * 
+	 *
 	 * @param token
 	 * @return Session that has @param tokem
 	 */
@@ -537,13 +546,13 @@ public class MyDrive extends MyDrive_Base {
 		}
 		return null;
 	}
-	
+
 	public long getValidSession(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
 		if(testsOnly != null){
 			User user = getUserByUsername(username);
 			if(user == null)
 				throw new TestSetupException("GetValidSessionError: Invalid user: " + username);
-			
+
 			Directory directory = null;
 			try {
 				directory= getDirectory(currentDirectoryPath);
@@ -561,18 +570,28 @@ public class MyDrive extends MyDrive_Base {
 			throw new TestSetupException("Only Tests Allowed");
 		}
 	}
-	
+
 	@Override
 	public java.util.Set<Session> getSessionSet() throws PrivateResourceException{
 		log.warn("Atempting to access session Set");
 		throw new PrivateResourceException("Session Set is private");
 	}
-	
+
 	private java.util.Set<Session> getDriveSessions() {
 		return super.getSessionSet();
 	}
-	
-	
+
+
 	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
+
+
+	/**
+ 	* This method cleans old sessions of any user in the system
+ 	*/
+	public void cleanSessions(){
+		for(Session s : getDriveSessions())
+			if(!s.valid())
+				removeSession(s);
+	}
 }
