@@ -35,7 +35,9 @@ public class DeleteFileService extends MyDriveService {
 		Directory currentDir = session.getCurrentDirectory();
 		File targetFile = currentDir.getFile(_fileName);
 		
-		if(targetFile instanceof Directory){
+		targetFile.delete();
+		
+		/*if(targetFile instanceof Directory){
 			if( ((Directory)targetFile).getFilesSet().isEmpty()){
 				targetFile.delete();
 			}
@@ -48,6 +50,6 @@ public class DeleteFileService extends MyDriveService {
 		}
 		else{
 			targetFile.delete();
-		}
+		}*/
 	}
 }

@@ -80,7 +80,7 @@ public class Directory extends Directory_Base {
 	@Override
 	public void delete() throws DirectoryIsNotEmptyException {
 
-		if(getFilesSet().isEmpty()){
+		/*if(getFilesSet().isEmpty()){
 			for (User user : getOwnerHomeSet()) {
 				Directory newHome = this.getDir();
 				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
@@ -88,7 +88,24 @@ public class Directory extends Directory_Base {
 			}
 			super.delete();
 		}
-		else throw new DirectoryIsNotEmptyException();
+		else{
+			for (File f : getFilesSet()) {
+				f.delete();
+			}
+			
+		}*/
+		
+		if(!getFilesSet().isEmpty()){
+			for (File f : getFilesSet()) {
+				f.delete();
+			}
+		}
+		for (User user : getOwnerHomeSet()) {
+			Directory newHome = this.getDir();
+			log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
+			user.setUsersHome(newHome);
+		}
+		super.delete();
 	}
 
 	public ArrayList<Element> xmlExport() {
