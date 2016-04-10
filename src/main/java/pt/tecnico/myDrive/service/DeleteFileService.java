@@ -4,6 +4,7 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
@@ -30,12 +31,16 @@ public class DeleteFileService extends MyDriveService {
 	 */
 	public final void dispatch() throws InvalidTokenException,
 			FileNotFoundException, DirectoryIsNotEmptyException, MyDriveException{
-		//TODO
+		
 		Session session = _drive.validateToken(_token);
+		
 		Directory currentDir = session.getCurrentDirectory();
 		File targetFile = currentDir.getFile(_fileName);
 		
-		targetFile.delete();
+		User user = session.getUser();
+		if(user.hasDeletePermissions(targetFile)){
+			targetFile.delete();
+		}
 		
 		/*if(targetFile instanceof Directory){
 			if( ((Directory)targetFile).getFilesSet().isEmpty()){
