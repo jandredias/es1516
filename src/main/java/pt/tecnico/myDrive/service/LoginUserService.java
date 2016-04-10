@@ -27,18 +27,18 @@ public class LoginUserService extends MyDriveService {
 		MyDrive myDrive = MyDrive.getInstance();
 
 		myDrive.cleanSessions();
-		
+
 		if(this._username == null) throw new InvalidUsernameException();
+
 		if(this._password == null) throw new InvalidPasswordException();
 
-		if(this._username.equals(""))
-			throw new InvalidUsernameException();
-		if(!StringUtils.isAlphanumeric(this._username))
-			throw new InvalidUsernameException();
-		if(this._password.equals(""))
-			throw new WrongPasswordException();
-		if(this._username.length() < 3)
-			throw new InvalidUsernameException();
+		if(this._username.equals("")) throw new InvalidUsernameException();
+
+		if(!StringUtils.isAlphanumeric(this._username)) throw new InvalidUsernameException();
+
+		if(this._password.equals("")) throw new WrongPasswordException();
+
+		if(this._username.length() < 3) throw new InvalidUsernameException();
 
 		User user = myDrive.getUserByUsername(this._username);
 		if(user == null) throw new UserDoesNotExistsException();
