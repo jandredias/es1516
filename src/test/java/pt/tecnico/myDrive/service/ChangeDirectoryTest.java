@@ -61,152 +61,152 @@ public class ChangeDirectoryTest extends TokenAccessTest {
 	@Test(expected = MyDriveException.class)//FIXME
 	public void noPathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken, null);
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test(expected = MyDriveException.class) //FIXME
 	public void emptyPathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken, "");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test
 	public void validAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken, "/home");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home", service.result());
 	}
 
 	@Test
 	public void selfAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"/./home");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home", service.result());
 	}
 
 	@Test
 	public void parentAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"/home/../home");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home", service.result());
 	}
 
 	@Test
 	public void selfParentAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"/./home/../home/root");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/root", service.result());
 	}
 
 	@Test
 	public void rootParentAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"/../home");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home", service.result());
 	}
 
 	@Test(expected = MyDriveException.class) //FIXME
 	public void invalidSyntaxAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"//home//");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void absolutePathDoesNotExistTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(rootToken,"/this/path/does/not/exists");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void noPermissionsAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste1Token,"/home/teste2");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test
 	public void noPermissionsTargetDirectoryAbsolutePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste1Token, "/home/teste1/everyoneReadsThis");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste1/everyoneReadsThis", service.result());
 	}
 
 	@Test(expected = NotDirectoryException.class)
 	public void AbsolutePathIsNotDirectoryTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste1Token, "/home/teste1/file");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test
 	public void relativePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "abc");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2/abc", service.result());
 	}
 
 	@Test
 	public void selfOnlyRelativePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, ".");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2", service.result());
 	}
 
 	@Test
 	public void parentOnlyRelativePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "..");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home", service.result());
 	}
 
 	@Test
 	public void selfRelativePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "abc/./def");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2/abc/def", service.result());
 	}
 
 	@Test
 	public void parentRelativePathTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "abc/../abc");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2/abc", service.result());
 	}
 	@Test
 	public void checkRelativePathSelfAndParentTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "abc/./../abc");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2/abc", service.result());
 	}
 
 	@Test
 	public void relativePathParentOverRootTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "../../../../../../../home/teste2");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2", service.result());
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void relativePathDoesNotExistsTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "../../../../../../teste2");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void relativePathHasNoListingPermissionsTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "../teste1");
-		service.dispatch();
+		service.execute();
 	}
 
 	@Test
 	public void relativePathTargetDirectoryListingPermissionsTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste2Token, "notAllowed");
-		service.dispatch();
+		service.execute();
 		assertEquals("/home/teste2/notAllowed", service.result());
 	}
 
 	@Test
 	public void relativePathIsFileTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste1Token, "file");
-		service.dispatch();
+		service.execute();
 	}
 
 }
