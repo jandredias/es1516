@@ -37,12 +37,12 @@ public class ChangeDirectoryTest extends TokenAccessTest {
 			myDrive.addDirectory("/home/teste2", "abc", myDrive.getUserByUsername("teste2"));
 			myDrive.addDirectory("/home/teste2", "notAllowed", myDrive.getUserByUsername("teste2"));
 
-			/*myDrive.getDirectory("/home/teste2/notAllowed").setPermissions("--------");
+			myDrive.getDirectory("/home/teste2/notAllowed").setPermissions("--------");
 			myDrive.addDirectory("/home/teste2/abc", "def", myDrive.getUserByUsername("teste2"));
 			myDrive.getDirectory("/home/teste1/everyoneReadsThis").setPermissions("--------");
 
 			myDrive.addPlainFile("/home/teste1", "file", myDrive.getUserByUsername("teste1"), "File's content");
-*/
+
 			teste1Token = myDrive.getValidSession("teste1", "/home/teste1", new StrictlyTestObject());
 			teste2Token = myDrive.getValidSession("teste2", "/home/teste2", new StrictlyTestObject());
 			rootToken = myDrive.getValidSession("root", "/", new StrictlyTestObject());
