@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
 
-public class WriteFileTest extends PermissionTest {
+public class WriteFileTest extends PermissionsTest {
 	private long token = 0; //FIXME
 	@Override
 	protected void populate() {
@@ -42,25 +42,53 @@ public class WriteFileTest extends PermissionTest {
 		
 	}
 	
+	/*FIXME  Perguntem ao amaral que eu tmb nao sei*/
+	
+	@Override
+	protected MyDriveService createTokenService(long token) {
+		return new WriteFileService(token, "ola", "PlainFileTest1");
+	}
+
+	@Override
+	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
+		return new WriteFileService(token, "ola", "PlainFileTest1");
+	}
+	
+	@Override
+	protected char getPermissionChar() {
+		return 'w';
+	}
+	
+	
+	@Override
+	protected void assertServiceExecutedWithSuccess(){
+		/*FIXME createFileService = (CreateFileService) permissionsService; //From Upper class
+		assertNotNull(createFileService.result());*/
+	}
+	
+	/* ---------TESTS------------- */
+	
+	
 	@Test
-	public void writeOwnFileWithPermissionTest() {
+	public void writeOwnFileWithPermissionTest() throws Exception  {
 		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test1", "/home/test1", new StrictTestObject());
+		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile1", "teste");
 		service.execute();
 		
 		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
+	
 	}
 	
 	@Test
-	public void writeOthersFileWithPermissionTest() {
+	public void writeOthersFileWithPermissionTest() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test1", "/home/test3", new StrictTestObject());
+		token = md.getValidSession("test1", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile3", "teste");
 		service.execute();
@@ -69,32 +97,32 @@ public class WriteFileTest extends PermissionTest {
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
-	public void writeOwnFileWithoutPermissionTest() {
+	public void writeOwnFileWithoutPermissionTest() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test3", "/home/test3", new StrictTestObject());
+		token = md.getValidSession("test3", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
-	public void writeOthersFileWithoutPermissionTest() {
+	public void writeOthersFileWithoutPermissionTest() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test4", "/home/test3", new StrictTestObject());
+		token = md.getValidSession("test4", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
 	}
 	@Test
-	public void rootWriteFileTest(){
+	public void rootWriteFileTest() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("root", "/home/test1", new StrictTestObject());
+		token = md.getValidSession("root", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
 		service.execute();
 		
@@ -102,11 +130,11 @@ public class WriteFileTest extends PermissionTest {
 	}
 	
 	@Test
-	public void writeGoodLink(){
+	public void writeGoodLink() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test1", "/home/test1", new StrictTestObject());
+		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"/home/test4/plainfile4");
 		service.execute();
@@ -116,11 +144,11 @@ public class WriteFileTest extends PermissionTest {
 	}
 	
 	@Test(expected = ContentNotLinkException.class)
-	public void writeBadLink(){
+	public void writeBadLink() throws Exception  {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		token = getValidSession("test1", "/home/test1", new StrictTestObject());
+		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"olaolaola");
 		service.execute();
