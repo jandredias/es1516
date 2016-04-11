@@ -47,7 +47,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test1", "/home/test1");
+		token = getValidSession("test1", "/home/test1", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile1", "teste");
 		service.execute();
@@ -60,7 +60,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test1", "/home/test3");
+		token = getValidSession("test1", "/home/test3", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile3", "teste");
 		service.execute();
@@ -73,7 +73,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test3", "/home/test3");
+		token = getValidSession("test3", "/home/test3", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
@@ -84,7 +84,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test4", "/home/test3");
+		token = getValidSession("test4", "/home/test3", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
@@ -94,7 +94,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("root", "/home/test1");
+		token = getValidSession("root", "/home/test1", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
 		service.execute();
 		
@@ -106,7 +106,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test1", "/home/test1");
+		token = getValidSession("test1", "/home/test1", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"/home/test4/plainfile4");
 		service.execute();
@@ -120,7 +120,7 @@ public class WriteFileTest extends PermissionTest {
 		/*FIXME*/
 		fail("FIX ME");
 		MyDrive md = MyDrive.getInstance();
-		//token = getValidToken("test1", "/home/test1");
+		token = getValidSession("test1", "/home/test1", new StrictTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"olaolaola");
 		service.execute();
