@@ -150,7 +150,7 @@ public class LoginUserServiceTest extends AbstractServiceTest {
         assertEquals("Invalid session username", "Joao", username);
         assertEquals("Invalid session current directory", d.getPath(), s.getCurrentDirectory().getPath());
 
-        //Check if the other session is still valid, need session method
+        //Check if the other session is still valid
         assertEquals("Deleted previous session", 2, user.getSessionSet().size());
 	}
 }
