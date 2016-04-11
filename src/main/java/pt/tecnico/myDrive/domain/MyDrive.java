@@ -564,7 +564,6 @@ public class MyDrive extends MyDrive_Base {
 			long token = 666;
 			Session session = new Session(user, token);
 			session.setCurrentDirectory(directory);
-			this.addSession(session);
 			return token;
 		} else {
 			throw new TestSetupException("Only Tests Allowed");

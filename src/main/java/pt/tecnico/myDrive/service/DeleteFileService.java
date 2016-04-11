@@ -15,7 +15,7 @@ public class DeleteFileService extends MyDriveService {
 	private MyDrive _drive;
 	private long _token;
 	private String _fileName;
-	
+
 	/**
 	 * Default Constructor
 	 */
@@ -24,24 +24,24 @@ public class DeleteFileService extends MyDriveService {
 		_token = token;
 		_fileName = "./" + fileName;
 	}
-	
+
 	/**
 	 * Implementation of the service
-	 * @throws InvalidTokenException 
+	 * @throws InvalidTokenException
 	 */
 	public final void dispatch() throws InvalidTokenException,
 			FileNotFoundException, DirectoryIsNotEmptyException, MyDriveException{
-		
+
 		Session session = _drive.validateToken(_token);
-		
+
 		Directory currentDir = session.getCurrentDirectory();
 		File targetFile = currentDir.getFile(_fileName);
-		
+
 		User user = session.getUser();
 		if(user.hasDeletePermissions(targetFile)){
 			targetFile.delete();
 		}
-		
+
 		/*if(targetFile instanceof Directory){
 			if( ((Directory)targetFile).getFilesSet().isEmpty()){
 				targetFile.delete();

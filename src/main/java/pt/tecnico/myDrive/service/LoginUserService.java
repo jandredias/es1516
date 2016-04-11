@@ -46,11 +46,12 @@ public class LoginUserService extends MyDriveService {
 		if(!user.getPassword().equals(this._password)) throw new WrongPasswordException();
 
 		Session s = new Session(user, myDrive.getNewToken());
+
 		this._token = s.getToken();
 		s.setCurrentDirectory(user.getUsersHome());
 	}
 
 	public final long result() {
         return _token;
-    }
+  }
 }

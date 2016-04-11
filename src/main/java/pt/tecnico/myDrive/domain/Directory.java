@@ -78,32 +78,16 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void delete() throws DirectoryIsNotEmptyException {
+	public void delete(User user) throws DirectoryIsNotEmptyException {
 
-		/*if(getFilesSet().isEmpty()){
-			for (User user : getOwnerHomeSet()) {
-				Directory newHome = this.getDir();
-				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
-				user.setUsersHome(newHome);
-			}
-			super.delete();
-		}
-		else{
-			for (File f : getFilesSet()) {
-				f.delete();
-			}
-			
-		}*/
-		
-		if(!getFilesSet().isEmpty()){
-			for (File f : getFilesSet()) {
-				f.delete();
-			}
-		}
+		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException();
+
+		for(File f : getFilesSet())
+			f.delete(user);
+
 		for (User user : getOwnerHomeSet()) {
-			Directory newHome = this.getDir();
-			log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
-			user.setUsersHome(newHome);
+			log.info("User " + user.getName() + " changed his home directory to " + this.getDir().getPath()  );
+			user.setUsersHome(this.getDir());
 		}
 		super.delete();
 	}
@@ -211,10 +195,10 @@ public class Directory extends Directory_Base {
 	 * 	 * Adds a file if it's a child or call a child element to do it for him
 	 * @param String
 	 * @param File
-	 * @param creator 
+	 * @param creator
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
-	 * @throws PermissionDeniedException 
+	 * @throws PermissionDeniedException
 	 */
 	public void addFile(String path, File file, User creator) throws FileNotFoundException,
 	FileExistsException, PermissionDeniedException {
