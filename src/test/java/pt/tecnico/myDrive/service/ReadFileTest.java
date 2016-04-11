@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -16,6 +17,7 @@ import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 public class ReadFileTest extends PermissionsTest {
 
 	private MyDrive myDrive;
+	private String myUsername, theirUsername;
 	private User me, someone;
 	private ReadFileService readFileService;
 
@@ -24,17 +26,19 @@ public class ReadFileTest extends PermissionsTest {
 	protected void populate() {
 		myDrive = MyDriveService.getMyDrive();
 
-		token = 0; // = getValidToken("joao","/home/joao"); //XXX dif Token
-
+		myUsername = "me";
+		theirUsername = "someone";
+		
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
 			myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
 			fail("Should not have thrown exception");
 		}
+		token = MyDriveService.getMyDrive().getValidSession(myUsername, "/home/" + myUsername, new StrictlyTestObject());
 
-		me = myDrive.getUserByUsername("me");
-		someone = myDrive.getUserByUsername("someone");
+		me = myDrive.getUserByUsername(myUsername);
+		someone = myDrive.getUserByUsername(theirUsername);
 	}
 
 	@Override
@@ -50,6 +54,12 @@ public class ReadFileTest extends PermissionsTest {
 	@Override
 	protected char getPermissionChar() {
 		return 'r';
+	}
+	
+	@Override
+	protected void assertServiceExecutedWithSuccess() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Test
