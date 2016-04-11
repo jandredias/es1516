@@ -8,12 +8,10 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 
 public class ReadFileTest extends PermissionsTest {
 
@@ -33,7 +31,7 @@ public class ReadFileTest extends PermissionsTest {
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
 			myDrive.addUser("someone", "qwerty123", "Sarah", null);
-		} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
+		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
 		}
 		token = MyDriveService.getMyDrive().getValidSession(myUsername, "/home/" + myUsername, new StrictlyTestObject());
