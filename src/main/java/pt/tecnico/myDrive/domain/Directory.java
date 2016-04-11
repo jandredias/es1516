@@ -79,7 +79,7 @@ public class Directory extends Directory_Base {
 
 	@Override
 	public void delete(User deleter)
-			throws DirectoryIsNotEmptyException, PermissionDeniedException {
+			throws PermissionDeniedException {
 
 		if(!deleter.hasDeletePermissions(this)) throw new PermissionDeniedException();
 

@@ -89,8 +89,9 @@ public class File extends File_Base {
 	 * @throws DirectoryIsNotEmptyException
 	 */
 	public void delete(User user)
-			throws DirectoryIsNotEmptyException, PermissionDeniedException {
+			throws PermissionDeniedException {
 
+		if(!user.hasWritePermissions(this.getDir())) throw new PermissionDeniedException();
 		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException();
 		this.setDir(null);
 		this.setOwner(null);

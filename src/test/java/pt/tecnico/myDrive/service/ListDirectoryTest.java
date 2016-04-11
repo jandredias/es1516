@@ -28,7 +28,9 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 public class ListDirectoryTest extends PermissionsTest {
 
 	private ListDirectoryService listDirService;
-	
+	/**
+	 * Method that runs before each @Test
+	 */
 	protected void populate() {
 		String username	= "Joao"; 
 		String folder 	= "TestDir";
@@ -54,7 +56,6 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	/* ---------------------------------------------------------------------- */
 	/* ------------------------ Permissions Related ------------------------- */
-	/* ---------------------------------------------------------------------- */
 	@Override
 	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
 		return new ListDirectoryService(token);
@@ -64,10 +65,16 @@ public class ListDirectoryTest extends PermissionsTest {
 	protected char getPermissionChar() {
 		return 'r';
 	}
+	
+	@Override
+	protected void assertServiceExecutedWithSuccess(){
+		listDirService = (ListDirectoryService) permissionsService; //From Upper class
+		assertNotNull(listDirService.result());
+	}
+	/* ------------------------ Permissions Related ------------------------- */
+	/* ---------------------------------------------------------------------- */
 
-	/* ---------------------------------------------------------------------- */
-	/* --------------------------List Generally ----------------------------- */
-	/* ---------------------------------------------------------------------- */
+
 	/**
 	 * Method that checks a @param filesList has @param numberOfFiles and
 	 * every field is not null
@@ -116,6 +123,8 @@ public class ListDirectoryTest extends PermissionsTest {
 		assertEquals("name ",listedName, file.getName());
 	}
 
+	/* ---------------------------------------------------------------------- */
+	/* ----------------------------- Tests ---------------------------------- */
 	@Test
 	public void listEmptyDirectory() throws MyDriveException{
 
@@ -256,9 +265,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	}
 
 	/* ---------------------------------------------------------------------- */
-	/* -------------------------- Dimension Tests --------------------------- */
-	/* ---------------------------------------------------------------------- */
-	
+	/* -------------------------- Dimension Tests --------------------------- */	
 	/**
 	 * Method that tests plainFile is Listed with dimension of size @param contentSize 
 	 * @param contentSize
@@ -335,10 +342,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void files_7_DirectoryDimension() throws MyDriveException{
 		directoryDimension(7);
 	}
-
-	
-
-
-
+	/* ----------------------------- Tests ---------------------------------- */
+	/* ---------------------------------------------------------------------- */
 
 }

@@ -20,6 +20,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
@@ -27,7 +28,6 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -86,10 +86,10 @@ public class MyDrive extends MyDrive_Base {
 			Root root = getRootUser();
 
 			for (User user : getUsersSet()){
-				if(! user.getUsername().equals("root"))
+				if( user != root )
 					user.delete(root);
 			}
-
+			System.out.println("\u001B[33;1mDeleted Users\u001B[0m");
 			//Cleaning up every File left
 			Directory rootDir = getRootDirectory();
 			for (File file : rootDir.getFilesSet()){
@@ -327,7 +327,11 @@ public class MyDrive extends MyDrive_Base {
 			addUsers(newUser);
 		} else {
 			String name = newUser.getUsername();
-			newUser.delete(getRootUser());
+			try {
+				newUser.delete(getRootUser());
+			} catch (PermissionDeniedException e) {
+				// root always have permission
+			}
 			throw new UsernameAlreadyInUseException(name);
 		}
 	}
@@ -376,12 +380,8 @@ public class MyDrive extends MyDrive_Base {
 			try {
 				log.trace("Problems Creating File: " + file.getName());
 				file.delete(getRootUser());
-			} catch (DirectoryIsNotEmptyException exc) {
-				//Should Never Happen ; File had just been Created;
-				log.error("CRIT ERROR: Just Created File, NotEmptyException");
-				String message = exc.getMessage();
-				log.error("Message: " + message);
-				assert false;
+			} catch (PermissionDeniedException exc) {
+				//Root always have permissions
 			}
 			throw exception;
 		}

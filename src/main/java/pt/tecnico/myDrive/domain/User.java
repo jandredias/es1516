@@ -1,5 +1,7 @@
 package pt.tecnico.myDrive.domain;
+import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
@@ -89,16 +91,14 @@ public class User extends User_Base implements Comparable<User> {
 		return element;
 	}
 
-	protected void delete(User deleter){
+	protected void delete(User deleter) throws PermissionDeniedException{
+		//*********************************
+		//*********************************
+		for (File file : getOwnedFilesSet()){
+			file.delete(deleter);
+		}
 		setUsersHome(null);
-		//*********************************
-		//*********************************
-		//FIXME inner files
-//		for (File file : getOwnedFilesSet()){
-//			file.delete(deleter);
-//		}
-		this.set$ownedFiles(null);
-		//FIXME inner files
+		this.setMyDrive(null);
 		//*********************************
 		//*********************************
 		this.deleteDomainObject();
