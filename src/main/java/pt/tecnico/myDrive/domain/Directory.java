@@ -78,18 +78,19 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void delete(User user) throws DirectoryIsNotEmptyException {
+	public void delete(User deleter)
+			throws DirectoryIsNotEmptyException, PermissionDeniedException {
 
-		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException();
+		if(!deleter.hasDeletePermissions(this)) throw new PermissionDeniedException();
 
 		for(File f : getFilesSet())
-			f.delete(user);
+			f.delete(deleter);
 
 		for (User user : getOwnerHomeSet()) {
 			log.info("User " + user.getName() + " changed his home directory to " + this.getDir().getPath()  );
 			user.setUsersHome(this.getDir());
 		}
-		super.delete();
+		super.delete(deleter);
 	}
 
 	public ArrayList<Element> xmlExport() {
@@ -171,8 +172,8 @@ public class Directory extends Directory_Base {
 	 * @throws FileNotFoundException
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void removeFile(String path) throws FileNotFoundException,
-	DirectoryIsNotEmptyException{
+	public void removeFile(String path, User user) throws FileNotFoundException,
+	DirectoryIsNotEmptyException, PermissionDeniedException{
 
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
@@ -180,14 +181,14 @@ public class Directory extends Directory_Base {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
-			fileToBeDeleted.delete();
+			fileToBeDeleted.delete(user);
 
 		} else {
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
 
 			String newPath = MyDrive.arrayToString(pieces);
-			nextDir.removeFile(newPath);
+			nextDir.removeFile(newPath, user);
 		}
 	}
 

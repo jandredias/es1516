@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
@@ -49,7 +50,7 @@ public class File extends File_Base {
 			System.out.println("This won't happen");
 		}
 	}
-	
+
 	/**
 	 * Real Constructor of File that is used by every other constructor
 	 * Note that the parent directory is not set, the parent directory is the
@@ -87,8 +88,10 @@ public class File extends File_Base {
 	 *
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void delete() throws DirectoryIsNotEmptyException {
+	public void delete(User user)
+			throws DirectoryIsNotEmptyException, PermissionDeniedException {
 
+		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException();
 		this.setDir(null);
 		this.setOwner(null);
 

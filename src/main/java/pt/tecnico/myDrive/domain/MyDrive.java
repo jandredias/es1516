@@ -27,6 +27,7 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
+import pt.tecnico.myDrive.exception.MyDriveException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -81,32 +82,31 @@ public class MyDrive extends MyDrive_Base {
 
 
 	public void cleanup(){
-		/* FIXME:TODO:XXX miguel-amaral (do not delete this)
-		 *
-		 *
-		Root root = getRootUser();
+		/*try{
+			Root root = getRootUser();
 
-		for (User user : getUsersSet()){
-			if(! user.getName().equals("root"))
-				user.delete(root);
-		}
+			for (User user : getUsersSet()){
+				if(! user.getUsername().equals("root"))
+					user.delete(root);
+			}
 
-		//Cleaning up every File left
-		Directory rootDir = getRootDirectory();
-		for (File file : rootDir.getFilesSet()){
-			file.delete(root);
-		}
+			//Cleaning up every File left
+			Directory rootDir = getRootDirectory();
+			for (File file : rootDir.getFilesSet()){
+				file.delete(root);
+			}
 
 
-		Directory homeFolder = new Directory("home",root);
-		this.addFile("", homeFolder, root);
+			Directory homeFolder = new Directory("home",root);
+			this.addFile("", homeFolder, root);
 
-		Directory home_root = new Directory("root", root);
-		this.addFile("/home/", home_root , root);
+			Directory home_root = new Directory("root", root);
+			this.addFile("/home/", home_root , root);
 
-		root.setUsersHome(home_root);
-		*/
-
+			root.setUsersHome(home_root);
+		}catch(MyDriveException e){
+			//Won't happen... I hope so...
+		}*/
 	}
 	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
@@ -180,9 +180,9 @@ public class MyDrive extends MyDrive_Base {
 	 * @param String path that includes the file to delete
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void removeFile(String path)
-		throws FileNotFoundException, DirectoryIsNotEmptyException{
-			getRootDirectory().removeFile(path);
+	public void removeFile(String path, User user)
+		throws FileNotFoundException, DirectoryIsNotEmptyException, PermissionDeniedException{
+			getRootDirectory().removeFile(path, user);
 		}
 
 	/**
@@ -356,10 +356,10 @@ public class MyDrive extends MyDrive_Base {
 		return getFileContents(file);
 	}
 
-	public void deleteFile (String path) throws FileNotFoundException,
-			DirectoryIsNotEmptyException {
+	public void deleteFile (String path, User user) throws FileNotFoundException,
+			DirectoryIsNotEmptyException, PermissionDeniedException {
 
-		this.getRootDirectory().removeFile(path);
+		this.getRootDirectory().removeFile(path, user);
 	}
 
 
@@ -375,7 +375,7 @@ public class MyDrive extends MyDrive_Base {
 		} catch (FileExistsException | FileNotFoundException exception) {
 			try {
 				log.trace("Problems Creating File: " + file.getName());
-				file.delete();
+				file.delete(getRootUser());
 			} catch (DirectoryIsNotEmptyException exc) {
 				//Should Never Happen ; File had just been Created;
 				log.error("CRIT ERROR: Just Created File, NotEmptyException");

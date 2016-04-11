@@ -30,7 +30,7 @@ public abstract class AbstractServiceTest {
 			FenixFramework.getTransactionManager().begin(false);
 			populate();
 		} catch (WriteOnReadError | NotSupportedException | SystemException e1) {
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
 	}
 
@@ -39,7 +39,7 @@ public abstract class AbstractServiceTest {
 		try {
 			FenixFramework.getTransactionManager().rollback();
 		} catch (IllegalStateException | SecurityException | SystemException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
