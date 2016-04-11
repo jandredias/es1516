@@ -78,17 +78,19 @@ public class Directory extends Directory_Base {
 	}
 
 	@Override
-	public void delete() throws DirectoryIsNotEmptyException {
+	public void delete(User deleter)
+			throws PermissionDeniedException {
 
-		if(getFilesSet().isEmpty()){
-			for (User user : getOwnerHomeSet()) {
-				Directory newHome = this.getDir();
-				log.info("User " + user.getName() + " changed his home directory to " + newHome.getPath()  );
-				user.setUsersHome(newHome);
-			}
-			super.delete();
+		if(!deleter.hasDeletePermissions(this)) throw new PermissionDeniedException();
+
+		for(File f : getFilesSet())
+			f.delete(deleter);
+
+		for (User user : getOwnerHomeSet()) {
+			log.info("User " + user.getName() + " changed his home directory to " + this.getDir().getPath()  );
+			user.setUsersHome(this.getDir());
 		}
-		else throw new DirectoryIsNotEmptyException();
+		super.delete(deleter);
 	}
 
 	public ArrayList<Element> xmlExport() {
@@ -170,8 +172,8 @@ public class Directory extends Directory_Base {
 	 * @throws FileNotFoundException
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void removeFile(String path) throws FileNotFoundException,
-	DirectoryIsNotEmptyException{
+	public void removeFile(String path, User user) throws FileNotFoundException,
+	DirectoryIsNotEmptyException, PermissionDeniedException{
 
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
@@ -179,14 +181,14 @@ public class Directory extends Directory_Base {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
 				throw new FileNotFoundException(pieces.get(0));
-			fileToBeDeleted.delete();
+			fileToBeDeleted.delete(user);
 
 		} else {
 			Directory nextDir = getDirectory(pieces.get(0));
 			pieces.remove(0);
 
 			String newPath = MyDrive.arrayToString(pieces);
-			nextDir.removeFile(newPath);
+			nextDir.removeFile(newPath, user);
 		}
 	}
 
@@ -194,10 +196,10 @@ public class Directory extends Directory_Base {
 	 * 	 * Adds a file if it's a child or call a child element to do it for him
 	 * @param String
 	 * @param File
-	 * @param creator 
+	 * @param creator
 	 * @throws FileExistsException
 	 * @throws FileNotFoundException
-	 * @throws PermissionDeniedException 
+	 * @throws PermissionDeniedException
 	 */
 	public void addFile(String path, File file, User creator) throws FileNotFoundException,
 	FileExistsException, PermissionDeniedException {

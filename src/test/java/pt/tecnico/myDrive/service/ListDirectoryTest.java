@@ -17,16 +17,20 @@ import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
 
 //public class ListDirectoryTest extends TokenServiceTest {
 
 public class ListDirectoryTest extends PermissionsTest {
 
-	private long token = 0;
-	
+	private ListDirectoryService listDirService;
+	/**
+	 * Method that runs before each @Test
+	 */
 	protected void populate() {
 		String username	= "Joao"; 
 		String folder 	= "TestDir";
@@ -37,9 +41,12 @@ public class ListDirectoryTest extends PermissionsTest {
 			md.addDirectory("/home/" + username, folder, user);
 		}
 		catch(MyDriveException E){
-			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[0m");
-			assert false;
+			throw new TestSetupException("ListDirectoryService: Populate");
 		}
+		
+		StrictlyTestObject dummyObject = new StrictlyTestObject(); 
+		long token = MyDriveService.getMyDrive().getValidSession(username,"/home/" + username + "/" + folder, dummyObject);
+		listDirService = new ListDirectoryService(token);
 	}
 
 	@Override
@@ -49,7 +56,6 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	/* ---------------------------------------------------------------------- */
 	/* ------------------------ Permissions Related ------------------------- */
-	/* ---------------------------------------------------------------------- */
 	@Override
 	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
 		return new ListDirectoryService(token);
@@ -59,10 +65,16 @@ public class ListDirectoryTest extends PermissionsTest {
 	protected char getPermissionChar() {
 		return 'r';
 	}
+	
+	@Override
+	protected void assertServiceExecutedWithSuccess(){
+		listDirService = (ListDirectoryService) permissionsService; //From Upper class
+		assertNotNull(listDirService.result());
+	}
+	/* ------------------------ Permissions Related ------------------------- */
+	/* ---------------------------------------------------------------------- */
 
-	/* ---------------------------------------------------------------------- */
-	/* --------------------------List Generally ----------------------------- */
-	/* ---------------------------------------------------------------------- */
+
 	/**
 	 * Method that checks a @param filesList has @param numberOfFiles and
 	 * every field is not null
@@ -111,15 +123,14 @@ public class ListDirectoryTest extends PermissionsTest {
 		assertEquals("name ",listedName, file.getName());
 	}
 
+	/* ---------------------------------------------------------------------- */
+	/* ----------------------------- Tests ---------------------------------- */
 	@Test
 	public void listEmptyDirectory() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> resultList = service.result();
+		List<List<String>> resultList = listDirService.result();
 		checkNotNullWithNFiles(resultList, 2);
 
 		String fileType = resultList.get(0).get(0);
@@ -135,17 +146,14 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	@Test
 	public void listDirectoryWithPlainFile() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "content");
 
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> plainFileList = serviceList.get(2);
@@ -159,17 +167,14 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	@Test
 	public void listDirectoryWithDirectory() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addDirectory("/home/joao/TestDir", "Directory", joao);
 
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> directoryList = serviceList.get(2);
@@ -181,17 +186,14 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	@Test
 	public void listDirectoryWithlink() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addLink("/home/joao/TestDir", "Link", joao, "linkContent");
 
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> linkList = serviceList.get(2); 
@@ -205,17 +207,14 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	@Test
 	public void listDirectoryWithApp() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
 
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> applicationList = serviceList.get(2);
@@ -229,7 +228,6 @@ public class ListDirectoryTest extends PermissionsTest {
 
 	@Test
 	public void listDirectoryWith6FilesAlphabeticly() throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -251,11 +249,9 @@ public class ListDirectoryTest extends PermissionsTest {
 		createdNamesList.add(7, ".App534");
 		
 		Collections.sort(createdNamesList);
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 		
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 2 + 6);
 
 		ArrayList<String> receivedNamesList = new ArrayList<String>();
@@ -269,27 +265,22 @@ public class ListDirectoryTest extends PermissionsTest {
 	}
 
 	/* ---------------------------------------------------------------------- */
-	/* -------------------------- Dimension Tests --------------------------- */
-	/* ---------------------------------------------------------------------- */
-	
+	/* -------------------------- Dimension Tests --------------------------- */	
 	/**
 	 * Method that tests plainFile is Listed with dimension of size @param contentSize 
 	 * @param contentSize
 	 * @throws MyDriveException
 	 */
 	private void plainFileDimension(int contentSize) throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 		String content = StringUtils.repeat("t", contentSize);
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addPlainFile("/home/joao/TestDir", "Plain", joao, content);
 		
-		assert false;//FIXME:TODO:XXX
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 3);
 		
 		List<String> plainFileList = serviceList.get(2);
@@ -319,7 +310,6 @@ public class ListDirectoryTest extends PermissionsTest {
 	 * @throws MyDriveException
 	 */
 	private void directoryDimension(int numberOfFiles) throws MyDriveException{
-		//createUserJoaoAndHisFolder("rwxdrwxd");
 
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
@@ -327,12 +317,9 @@ public class ListDirectoryTest extends PermissionsTest {
 		for(int i = 0; i < numberOfFiles ; i++ )
 			md.addPlainFile("/home/joao/TestDir", "PlainFile"+i, joao, "");
 		
-		assert false;//FIXME:TODO:XXX
-		long token = 0;// = getValidToken("joao","/home/joao"); //XXX dif Token
-		ListDirectoryService service = new ListDirectoryService(token);
-		service.execute();
+		listDirService.execute();
 
-		List<List<String>> serviceList = service.result();
+		List<List<String>> serviceList = listDirService.result();
 		checkNotNullWithNFiles(serviceList, 2 + numberOfFiles);
 		
 		List<String> directoryList = serviceList.get(2);
@@ -355,10 +342,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void files_7_DirectoryDimension() throws MyDriveException{
 		directoryDimension(7);
 	}
-
-	
-
-
-
+	/* ----------------------------- Tests ---------------------------------- */
+	/* ---------------------------------------------------------------------- */
 
 }

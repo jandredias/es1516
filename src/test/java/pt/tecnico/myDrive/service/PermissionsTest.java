@@ -3,13 +3,15 @@ package pt.tecnico.myDrive.service;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
 public abstract class PermissionsTest extends TokenAccessTest{
 	
-	private MyDriveService service;
+	protected MyDriveService permissionsService;
 	protected abstract void populate(); 
 
 	protected abstract MyDriveService createTokenService(long token);
@@ -39,6 +41,11 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		return permissions;
 	}
 	
+	/**
+	 * Method that every subclass redefines and ensures a service as run
+	 */
+	protected abstract void assertServiceExecutedWithSuccess();
+	
 	/* ********************************************************************** */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
@@ -49,23 +56,23 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		String username			= "PermissionsUser"; 
 		String folder 			= "PermissionsTestFolder";
 		String testBaseFolder 	= "/home/" + username + "/" + folder;
+		MyDrive md = MyDriveService.getMyDrive();
 		try{
-			MyDrive md = MyDriveService.getMyDrive();
-			md.addUser(username,username,username,permissions);
+			md.addUser(username,username,username,"rwxdrwxd");
 			User user = md.getUserByUsername(username);
 			md.addDirectory("/home/" + username, folder, user);
 			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
-		}
-		catch(MyDriveException E){
-			System.out.println("\u001B[31;1m"+"TEST ERROR" +" \u001B[0m");
-			assert false;
+			md.getFile("/home/" + username + "/" + folder + "/testedFile").setPermissions(permissions);
+			md.getFile("/home/" + username + "/" + folder).setPermissions(permissions);
+		} catch(MyDriveException E){
+			throw new TestSetupException("buliding permissions test");
 		}
 		
 		if(userBeingTested.equals("OWNER"))
 			userBeingTested = username;
 		
-		long token = 0;// = getValidToken(userBeingTested,testBaseFolder);
-		service = createPermissionsService(token, "testedFile");
+		long token = md.getValidSession(userBeingTested,testBaseFolder, new StrictlyTestObject());
+		permissionsService = createPermissionsService(token, "testedFile");
 		System.out.println("\u001B[32;1m" + token +" \u001B[0m");
 	}
 	/* ********************************************************************** */
@@ -74,9 +81,8 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	@Test
 	public void ownUserHasPermissions() throws MyDriveException{
 		setUpPermissionsTest("rwxd----","OWNER");
-		assert false;//FIXME:TODO:XXX
-		service.execute();
-		//assertNotNull(service.result());
+		permissionsService.execute();
+		assertServiceExecutedWithSuccess();
 	}
 
 	@Test
@@ -84,17 +90,15 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		MyDrive md = MyDriveService.getMyDrive();
 		md.addUser("otherPermissionUser","...","...","--------");
 		setUpPermissionsTest("----rwxd","otherPermissionUser");		
-
-		assert false;//FIXME:TODO:XXX
-		service.execute();
+		permissionsService.execute();
+		assertServiceExecutedWithSuccess();
 //		assertNotNull(service.result());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void ownUserHasNoPermissions() throws MyDriveException{
 		setUpPermissionsTest("----rwxd","OWNER");
-		assert false;//FIXME:TODO:XXX
-		service.execute();
+		permissionsService.execute();
 	}
 
 	@Test(expected = PermissionDeniedException.class)
@@ -102,14 +106,13 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		MyDrive md = MyDriveService.getMyDrive();
 		md.addUser("otherPermissionUser","...","...","----rwxd");
 		setUpPermissionsTest("rwxd----","otherPermissionUser");
-		assert false;//FIXME:TODO:XXX
-		service.execute();
+		permissionsService.execute();
 	}
 
 	@Test
 	public void rootUserHasNoPermissions() throws MyDriveException{
 		setUpPermissionsTest("--------","root");
-		assert false;//FIXME:TODO:XXX
-		service.execute();
+		permissionsService.execute();
+		assertServiceExecutedWithSuccess();
 	}
 }

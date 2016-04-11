@@ -111,13 +111,14 @@ public class LoginUserServiceTest extends AbstractServiceTest {
 	
 	@Test
 	public void sucessWithInvalidSessionsDeleted() throws MyDriveException{
-		//Create expired session ("Ricardo","slb1904") TODO
+		//Create expired session ("Ricardo","slb1904")
 		LoginUserService serv = new LoginUserService("Ricardo","slb1904");
 		serv.execute();
 		long token = serv.result();
 		
-		Session s = MyDrive.getInstance().getSessionByToken(token);
-		//Isto funciona?? TODO
+		MyDrive mD = MyDrive.getInstance();
+		
+		Session s = mD.getSessionByToken(token);
 		DateTime time = new DateTime();
 		time = time.minusHours(2);
 		s.setLastUsed(time);
@@ -125,7 +126,8 @@ public class LoginUserServiceTest extends AbstractServiceTest {
 		LoginUserService service = new LoginUserService("Xila", "qwerty");
 		service.execute();
 		
-		//Confirm if the invalid session was deleted, need session method TODO
+		//Confirm if the invalid session was deleted
+		assertNull("Invalid session was not deleted", mD.getSessionByToken(token));
 	}
 	
 	@Test
