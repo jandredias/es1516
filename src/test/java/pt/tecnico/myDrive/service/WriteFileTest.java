@@ -9,6 +9,8 @@ import static org.junit.Assert.assertEquals;
 
 import pt.tecnico.myDrive.domain.*;
 import pt.tecnico.myDrive.exception.*;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+
 
 public class WriteFileTest extends PermissionsTest {
 	private long token = 0; //FIXME
@@ -72,7 +74,7 @@ public class WriteFileTest extends PermissionsTest {
 	@Test
 	public void writeOwnFileWithPermissionTest() throws Exception  {
 		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
@@ -86,7 +88,7 @@ public class WriteFileTest extends PermissionsTest {
 	@Test
 	public void writeOthersFileWithPermissionTest() throws Exception  {
 		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test1", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
@@ -98,8 +100,7 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void writeOwnFileWithoutPermissionTest() throws Exception  {
-		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test3", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
@@ -109,8 +110,7 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void writeOthersFileWithoutPermissionTest() throws Exception  {
-		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test4", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
@@ -119,8 +119,7 @@ public class WriteFileTest extends PermissionsTest {
 	}
 	@Test
 	public void rootWriteFileTest() throws Exception  {
-		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("root", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
@@ -131,8 +130,7 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Test
 	public void writeGoodLink() throws Exception  {
-		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
@@ -145,8 +143,7 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Test(expected = ContentNotLinkException.class)
 	public void writeBadLink() throws Exception  {
-		/*FIXME*/
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
@@ -161,7 +158,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeGoodApp(){
 		/*FIXME user with permissions must be logged in and currentdir contain
 		 * app1
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		WriteFileService service = new WriteFileService(token, "app1",
 				"");
@@ -175,7 +172,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeBadApp(){
 		/*FIXME user with permissions must be logged in and currentdir contain
 		 * link1
-		fail("FIX ME");
+		
 		MyDrive md = MyDrive.getInstance();
 		WriteFileService service = new WriteFileService(token, "app1",
 				"olaolaola")
@@ -183,6 +180,15 @@ public class WriteFileTest extends PermissionsTest {
 				
 	}
 	*/
+	@Test(expected = UnsupportedOperationException.class)
+	public void writeContentOfDir() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidSession("test1", "/home", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "test1",
+				"olaolaola");
+		service.execute();
+				
+	}
 	
 	
 	
