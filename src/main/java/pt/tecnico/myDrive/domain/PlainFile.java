@@ -32,7 +32,13 @@ public class PlainFile extends PlainFile_Base {
 		super.xmlImport(xml);
 		this.importContent(xml);
 	}
-
+	
+	public void setContent(String content, User user){
+		user.hasWritePermissions(this);
+		this.setContent(content);
+	}
+	
+	
 	/**
 	 * Method that every subclass will override
 	 * @param xml
