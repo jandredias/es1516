@@ -1,7 +1,7 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -11,6 +11,7 @@ import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 
@@ -33,7 +34,7 @@ public class ReadFileTest extends PermissionsTest {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
 			myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
-			fail("Should not have thrown exception");
+			throw new TestSetupException("ReadFileTest failed on setup");
 		}
 		token = MyDriveService.getMyDrive().getValidSession(myUsername, "/home/" + myUsername, new StrictlyTestObject());
 
@@ -43,12 +44,12 @@ public class ReadFileTest extends PermissionsTest {
 
 	@Override
 	protected MyDriveService createTokenService(long token) {
-		return null;
+		return new ReadFileService(token, null);
 	}
 
 	@Override
 	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
-		return null;
+		return new ReadFileService(token, nameOfFileItOPerates);
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class ReadFileTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		// TODO Auto-generated method stub
-		
+		readFileService = (ReadFileService) permissionsService;
+		assertNotNull(readFileService);
 	}
 
 	@Test
