@@ -6,7 +6,7 @@ public class ReadFileService extends MyDriveService {
 
 	// TODO rsmlopes
 	
-	public ReadFileService(String filePath) {
+	public ReadFileService(long token, String filePath) {
 		// TODO Auto-generated constructor stub
 	}
 	
