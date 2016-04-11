@@ -115,7 +115,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-		myDrive.getFile("/home/me/myLink").setPermissions("r------l");
+		myDrive.getFile("/home/me/myLink").setPermissions("r-------");
 
 		readFileService = new ReadFileService(token, "/home/me/myLink");
 		readFileService.execute();
@@ -127,7 +127,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-		myDrive.getFile("/home/me/myLink").setPermissions("-------l");
+		myDrive.getFile("/home/me/myLink").setPermissions("--------");
 
 		readFileService = new ReadFileService(token, "/home/me/myLink");
 		readFileService.execute();
@@ -139,7 +139,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
-		myDrive.getFile("/home/someone/theirLink").setPermissions("----r--l");
+		myDrive.getFile("/home/someone/theirLink").setPermissions("----r---");
 
 		readFileService = new ReadFileService(token, "/home/someone/theirLink");
 		readFileService.execute();
@@ -151,7 +151,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
-		myDrive.getFile("/home/someone/theirLink").setPermissions("-------l");
+		myDrive.getFile("/home/someone/theirLink").setPermissions("--------");
 
 		readFileService = new ReadFileService(token, "/home/someone/theirLink");
 		readFileService.execute();
