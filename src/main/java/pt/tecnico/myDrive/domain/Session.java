@@ -24,6 +24,7 @@ public class Session extends Session_Base {
 		super.setMyDrive(user.getMyDrive());
 	}
 
+	/**FIXME REPEATED METHOD */
 	public boolean valid(){
 		Period p = new Period(getLastUsed(),new DateTime());
 		if(p.getHours() >= 2) return false;

@@ -5,6 +5,7 @@ import org.jdom2.Element;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class Link extends Link_Base {
 		throw new PrivateResourceException("Link content cannot be changed");
 	}
 	
-	public File getFile(User user) throws FileNotFoundException{
+	public File getFile(User user) throws FileNotFoundException, PermissionDeniedException{
 		String content = this.getContent();
 		if(content.charAt(0) == '/')
 			return MyDrive.getInstance().getFile(content,user);

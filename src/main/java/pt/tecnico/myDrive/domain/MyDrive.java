@@ -182,26 +182,49 @@ public class MyDrive extends MyDrive_Base {
 	public void removeFile(String path, User user)
 		throws FileNotFoundException, DirectoryIsNotEmptyException, PermissionDeniedException{
 			getRootDirectory().removeFile(path, user);
-		}
+	}
+	
+	/**FIXME should not be public only curr Dir; upper too ^ !**/
+	public void deleteFile (String path, User user) throws FileNotFoundException,
+			DirectoryIsNotEmptyException, PermissionDeniedException {
 
+		this.getRootDirectory().removeFile(path, user);
+	}
+	
 	/**
 	 * Get File from a directory
 	 */
 	public File getFile(String path) throws FileNotFoundException {
+		/**FIXME Try to delete method**/
+		return getFile(path, getRootUser());
+	}
+	
+	public File getFile(String path, User user) throws FileNotFoundException {
 		if (path.equals("/"))
 			return getRootDirectory();
 
 		return getRootDirectory().getFile(path);
 	}
+	
 
 	/**
 	 * Gets a directory using getFile method
-	 *
+	 * FIXME try to delete method;
 	 * @param String path
 	 */
 	public Directory getDirectory(String path)
 		throws FileNotFoundException, NotDirectoryException {
-			File f = getFile(path);
+			return getDirectory(path, getRootUser());
+	}
+	
+	/**
+	 * Gets a directory using getFile method
+	 * FIXME try to delete method;
+	 * @param String path
+	 */
+	public Directory getDirectory(String path, User user)
+		throws FileNotFoundException, NotDirectoryException {
+			File f = getFile(path, user);
 			f.isParentable();
 			return (Directory) f;
 	}
@@ -335,6 +358,8 @@ public class MyDrive extends MyDrive_Base {
 		}
 	}
 
+	
+	/**FIXME should not be public only curr Dir !**/
 	public ArrayList<String> listDir(String path)
 			throws UnsupportedOperationException, FileNotFoundException,
 			NotDirectoryException {
@@ -345,6 +370,7 @@ public class MyDrive extends MyDrive_Base {
 		return visitor.getFileNames();
 	}
 
+	/**FIXME should not be public only curr Dir !**/
 	private String getFileContents(File file) throws UnsupportedOperationException{
 
 		FileContentsVisitor visitor = new FileContentsVisitor();
@@ -352,17 +378,12 @@ public class MyDrive extends MyDrive_Base {
 		return visitor.getFileContents();
 	}
 
+	/**FIXME should not be public only curr Dir !**/
 	public String getFileContents(String path)	throws FileNotFoundException,
 			NotDirectoryException, UnsupportedOperationException {
 
 		File file = getFile(path);
 		return getFileContents(file);
-	}
-
-	public void deleteFile (String path, User user) throws FileNotFoundException,
-			DirectoryIsNotEmptyException, PermissionDeniedException {
-
-		this.getRootDirectory().removeFile(path, user);
 	}
 
 
