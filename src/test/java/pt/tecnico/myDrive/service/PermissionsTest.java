@@ -58,8 +58,10 @@ public abstract class PermissionsTest extends TokenAccessTest{
 			User user = md.getUserByUsername(username);
 			md.addDirectory("/home/" + username, folder, user);
 			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
-			md.getFile("/home/" + username + "/" + folder + "/testedFile").setPermissions(permissions);
-			md.getFile("/home/" + username + "/" + folder).setPermissions(permissions);
+			md.addDirectory(testBaseFolder, "changeDir",user);
+			md.getFile(testBaseFolder + "/testedFile").setPermissions(permissions);
+			md.getFile(testBaseFolder + "/changeDir" ).setPermissions(permissions);
+			md.getFile(testBaseFolder).setPermissions(permissions);
 		} catch(MyDriveException E){
 			throw new TestSetupException("buliding permissions test");
 		}

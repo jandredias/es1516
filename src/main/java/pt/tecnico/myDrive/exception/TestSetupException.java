@@ -11,7 +11,7 @@ public class TestSetupException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public TestSetupException(String reason) {
-		super("\u001B[31;1m"+"TEST ERROR : " +reason+ "\u001B[0m");
+		super("\u001B[31;1m"+"TEST SETUP ERROR : " +reason+ "\u001B[0m");
 	}
 	
 }

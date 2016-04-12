@@ -1,29 +1,19 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.domain.Directory;
-import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
-import pt.tecnico.myDrive.domain.File;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
-import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
-import pt.tecnico.myDrive.exception.InvalidPathException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
-import pt.tecnico.myDrive.exception.FileExistsException;
 
-public class ChangeDirectoryTest extends TokenAccessTest {
+public class ChangeDirectoryTest extends PermissionsTest{
 
 	private MyDrive myDrive;
 	Long rootToken;
@@ -212,20 +202,18 @@ public class ChangeDirectoryTest extends TokenAccessTest {
 
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
-		
-		try {
-			return new ChangeDirectoryService(teste1Token,nameOfFileItOPerates);
-		} catch (InvalidPathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return abstractClassService;
+		return new ChangeDirectoryService(token,"changeDir");
 	}
 
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		// TODO Auto-generated method stub
-		
+		ChangeDirectoryService changeDirectoryService = (ChangeDirectoryService) abstractClassService; //From Upper class
+		assertNotNull(changeDirectoryService.result());
+	}
+
+	@Override
+	protected char getPermissionChar() {
+		return 'x';
 	}
 
 }
