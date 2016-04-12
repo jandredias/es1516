@@ -71,7 +71,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		if(userBeingTested.equals("OWNER"))
 			userBeingTested = username;
 		
-		long token = md.getValidSession(userBeingTested,testBaseFolder, new StrictlyTestObject());
+		long token = md.getValidToken(userBeingTested,testBaseFolder, new StrictlyTestObject());
 		permissionsService = createPermissionsService(token, "testedFile");
 		System.out.println("\u001B[32;1m" + token +" \u001B[0m");
 	}

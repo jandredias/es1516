@@ -67,7 +67,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createFileOwnDirWithPermissionTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"plainfile", "PlainFileTest1");
@@ -82,7 +82,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
@@ -98,7 +98,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test3", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
@@ -111,7 +111,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createFileOthersDirWithoutPermissionTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test4", "/home/test3",new StrictlyTestObject());
+		token = md.getValidToken("test4", "/home/test3",new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
@@ -124,7 +124,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("root", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("root", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
@@ -138,7 +138,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void CreateFileDashCharacterTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "plain/file", 
@@ -152,7 +152,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void CreateFileNullCharacterTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "plain\0file", 
@@ -170,7 +170,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		String pathb = "/home/test1/"+new String(new char[1010]).replace('\0', 'b');
 		//pathb = /home/test1/ + b*1010 = 1022 chars
-		token = md.getValidSession("test1", pathb, new StrictlyTestObject());
+		token = md.getValidToken("test1", pathb, new StrictlyTestObject());
 		
 
 		pathb += "/b";
@@ -192,7 +192,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		String pathc = "/home/test1/"+new String(new char[1011]).replace('\0', 'c');
 
-		token = md.getValidSession("test1", pathc, new StrictlyTestObject());
+		token = md.getValidToken("test1", pathc, new StrictlyTestObject());
 		pathc +="/c";
 		
 		/*createFileService(token, name, type, content)*/
@@ -208,7 +208,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testLink",
@@ -225,7 +225,7 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testLink",
@@ -238,7 +238,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createAppAnyContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testApp",
@@ -254,7 +254,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createAppWithoutContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type)*/
 		CreateFileService service = new CreateFileService(token, "testApp",
@@ -269,7 +269,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createPlainFileWithContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, 
@@ -284,7 +284,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createPlainFileWithoutContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type)*/
 		CreateFileService service = new CreateFileService(token,
@@ -300,7 +300,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createDirectoryNoContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testDir",
@@ -315,7 +315,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createDirectoryAnyContent() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testDir",

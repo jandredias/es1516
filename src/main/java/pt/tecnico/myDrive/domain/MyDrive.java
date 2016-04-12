@@ -546,7 +546,7 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 
-	public long getValidSession(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
+	public long getValidToken(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
 		if(testsOnly != null){
 			User user = getUserByUsername(username);
 			if(user == null)

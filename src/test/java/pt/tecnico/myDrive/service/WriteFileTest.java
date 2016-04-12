@@ -76,7 +76,7 @@ public class WriteFileTest extends PermissionsTest {
 		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile1", "teste");
 		service.execute();
@@ -90,7 +90,7 @@ public class WriteFileTest extends PermissionsTest {
 		/*FIXME*/
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
 				"plainfile3", "teste");
 		service.execute();
@@ -102,7 +102,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeOwnFileWithoutPermissionTest() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test3", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
@@ -112,7 +112,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeOthersFileWithoutPermissionTest() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test4", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test4", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 
@@ -121,7 +121,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void rootWriteFileTest() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("root", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("root", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
 		service.execute();
 		
@@ -132,7 +132,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeGoodLink() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"/home/test4/plainfile4");
 		service.execute();
@@ -145,7 +145,7 @@ public class WriteFileTest extends PermissionsTest {
 	public void writeBadLink() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
 				"olaolaola");
 		service.execute();
@@ -183,7 +183,7 @@ public class WriteFileTest extends PermissionsTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void writeContentOfDir() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidSession("test1", "/home", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "test1",
 				"olaolaola");
 		service.execute();

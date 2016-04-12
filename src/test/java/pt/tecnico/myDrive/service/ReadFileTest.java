@@ -34,7 +34,7 @@ public class ReadFileTest extends PermissionsTest {
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
 		}
-		token = MyDriveService.getMyDrive().getValidSession(myUsername, "/home/" + myUsername, new StrictlyTestObject());
+		token = MyDriveService.getMyDrive().getValidToken(myUsername, "/home/" + myUsername, new StrictlyTestObject());
 
 		me = myDrive.getUserByUsername(myUsername);
 		someone = myDrive.getUserByUsername(theirUsername);
