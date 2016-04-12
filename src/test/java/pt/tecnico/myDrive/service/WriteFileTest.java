@@ -40,20 +40,15 @@ public class WriteFileTest extends PermissionsTest {
 			//FIXME md.addApplication("/home/test1", "app1", testUser1, );
 			
 		}
-		catch(Exception e){};
+		catch(Exception e){
+			throw new TestSetupException("WriteFileTest: Populate");
+		};
 		
 	}
 	
-	/*FIXME  Perguntem ao amaral que eu tmb nao sei*/
-	
 	@Override
-	protected MyDriveService createTokenService(long token) {
-		return new WriteFileService(token, "ola", "PlainFileTest1");
-	}
-
-	@Override
-	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
-		return new WriteFileService(token, "ola", "PlainFileTest1");
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
+		return new WriteFileService(token, nameOfFileItOPerates, "ola");
 	}
 	
 	@Override
@@ -64,7 +59,7 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess(){
-		/*FIXME createFileService = (CreateFileService) permissionsService; //From Upper class
+		/*FIXME createFileService = (CreateFileService) abstractClassService; //From Upper class
 		assertNotNull(createFileService.result());*/
 	}
 	

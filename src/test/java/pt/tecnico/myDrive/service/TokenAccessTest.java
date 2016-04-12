@@ -2,19 +2,70 @@ package pt.tecnico.myDrive.service;
 
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
+import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.TestSetupException;
+
 public abstract class TokenAccessTest extends AbstractServiceTest{
+	
 	
 	protected abstract void populate(); 
 
-	protected abstract MyDriveService createTokenService(long token);
+	protected abstract MyDriveService createService(long token, String nameOfFileItOPerates);
+	protected abstract void assertServiceExecutedWithSuccess();
 
-	@Test
-	//tokenAccessClass: Mock example, not Implemented FIXME:TODO:XXX
-	public void test1(){
-		System.out.println("\u001B[32;1m" + "TEST1"	+ "\u001B[0m");
-		long token = 0;
-		MyDriveService service = createTokenService(token);
-		assert false;
+	protected MyDriveService abstractClassService;
+
+	private void setUpTokenTest(long usedToken, boolean useInputToken){
+	
+		String username			= "TokenUser"; 
+		String folder 			= "TokenTestFolder";
+		String testBaseFolder 	= "/home/" + username + "/" + folder;
+		MyDrive md = MyDriveService.getMyDrive();
+		try{
+			md.addUser(username,username,username,"rwxdrwxd");
+			User user = md.getUserByUsername(username);
+			md.addDirectory("/home/" + username, folder, user);
+			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
+		} catch(MyDriveException E){
+			throw new TestSetupException("buliding permissions test");
+		}
+		long token = md.getValidToken(username,testBaseFolder, new StrictlyTestObject());;
+		if(useInputToken){
+			if (token == usedToken) //Make sure the token we are going to use is invalid
+				token++;
+			else
+				token = usedToken;
+		}
+		abstractClassService = createService(token,"testedFile");
 	}
-	//More TESTS tokenAccessClass: FIXME:TODO:XXX
+	
+	 @Test(expected = InvalidTokenException.class)
+	 public void TokenZero() throws MyDriveException{
+		 setUpTokenTest(0,true);
+		 abstractClassService.execute();
+	 }
+	
+	 @Test
+	 public void ValidToken() throws MyDriveException{
+		 setUpTokenTest(0,false);
+		 abstractClassService.execute();
+		 assertServiceExecutedWithSuccess();
+	 }
+	
+	 @Test(expected = InvalidTokenException.class)
+	 public void InvalidNumberToken() throws MyDriveException{
+		 setUpTokenTest(1,true);	
+		 abstractClassService.execute();
+	 }
+	 
+//	 compiler does not acept null..	 
+//	 @Test(expected = InvalidTokenException.class)
+//	 public void InvalidNullToken() throws MyDriveException{
+//		 setUpTokenTest(null,true);	
+//		 abstractClassService.execute();
+//	 }
 }

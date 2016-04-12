@@ -9,6 +9,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
 public class DeleteFileTest extends AbstractServiceTest {
 
@@ -46,6 +47,7 @@ public class DeleteFileTest extends AbstractServiceTest {
 
 		} catch (Exception e) {
 			log.debug("This should never occur. Clean use.");
+			throw new TestSetupException("DeleteFileTest: Populate");
 		}
 	}
 

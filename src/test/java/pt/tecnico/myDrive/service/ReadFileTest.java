@@ -41,12 +41,7 @@ public class ReadFileTest extends PermissionsTest {
 	}
 
 	@Override
-	protected MyDriveService createTokenService(long token) {
-		return new ReadFileService(token, null);
-	}
-
-	@Override
-	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new ReadFileService(token, nameOfFileItOPerates);
 	}
 
@@ -57,7 +52,7 @@ public class ReadFileTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		readFileService = (ReadFileService) permissionsService;
+		readFileService = (ReadFileService) abstractClassService;
 		assertNotNull(readFileService);
 	}
 

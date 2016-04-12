@@ -49,15 +49,12 @@ public class ListDirectoryTest extends PermissionsTest {
 		listDirService = new ListDirectoryService(token);
 	}
 
-	@Override
-	protected MyDriveService createTokenService(long token) {
-		return new ListDirectoryService(token);
-	}
+	
 
 	/* ---------------------------------------------------------------------- */
 	/* ------------------------ Permissions Related ------------------------- */
 	@Override
-	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new ListDirectoryService(token);
 	}
 	
@@ -68,7 +65,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess(){
-		listDirService = (ListDirectoryService) permissionsService; //From Upper class
+		listDirService = (ListDirectoryService) abstractClassService; //From Upper class
 		assertNotNull(listDirService.result());
 	}
 	/* ------------------------ Permissions Related ------------------------- */

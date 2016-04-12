@@ -35,18 +35,14 @@ public class CreateFileTest extends PermissionsTest {
 			md.addDirectory("/home/test1", dirb, user1);
 			md.addDirectory("/home/test1", dirc, user1);
 		}
-		catch(Exception e){};
+		catch(Exception e){
+			throw new TestSetupException("CreateFileService: Populate");
+ 
+		};
 	}
 	
-	/*FIXME  Perguntem ao amaral que eu tmb nao sei*/
-	
 	@Override
-	protected MyDriveService createTokenService(long token) {
-		return new CreateFileService(token, "ola", "plainfile", "PlainFileTest1");
-	}
-
-	@Override
-	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new CreateFileService(token, "ola", "plainfile", "PlainFileTest1");
 	}
 	
@@ -58,7 +54,7 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess(){
-		/*FIXME createFileService = (CreateFileService) permissionsService; //From Upper class
+		/*FIXME createFileService = (CreateFileService) abstractClassService; //From Upper class
 		assertNotNull(createFileService.result());*/
 	}
 	
