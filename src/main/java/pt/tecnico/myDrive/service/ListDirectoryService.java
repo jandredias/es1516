@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 
@@ -47,19 +48,24 @@ public class ListDirectoryService extends MyDriveService {
 			List<String> thisResult = new ArrayList<String>();
 			if (file instanceof Application) {
 				thisResult.add("Application");
-				thisResult.add(file.getPermissions());
-
-				if (file instanceof Application) {
-					thisResult.add(String.valueOf(((Application) file).getContent().length()));
-				} else {
-					thisResult.add("0");
-				}
-				thisResult.add(file.getOwner().getUsername());
-				thisResult.add(String.valueOf(file.getId()));
-				thisResult.add(file.getModification().toString());
-				thisResult.add(file.getName());
-				list.add(thisResult);
+			}else if(file instanceof PlainFile){
+				thisResult.add("Plain File");
 			}
+			thisResult.add(file.getPermissions());
+
+			if (file instanceof Application) {
+				thisResult.add(String.valueOf(((Application) file).getContent().length()));
+			}else if(file instanceof PlainFile){
+				thisResult.add(String.valueOf(((PlainFile) file).getContent().length()));
+			} else {
+				thisResult.add("0");
+			}
+			
+			thisResult.add(file.getOwner().getUsername());
+			thisResult.add(String.valueOf(file.getId()));
+			thisResult.add(file.getModification().toString());
+			thisResult.add(file.getName());
+			list.add(thisResult);
 		}
 	}
 
