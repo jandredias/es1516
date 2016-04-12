@@ -3,6 +3,7 @@ package pt.tecnico.myDrive.domain;
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -27,7 +28,7 @@ public class Link extends Link_Base {
 	}
 
 	protected void importContent(Element xml) {
-		setContent(xml.getChild("value").getValue());
+		super.setContent(xml.getChild("value").getValue());
 	}
 
 	public ArrayList<Element> xmlExport() {
@@ -46,5 +47,13 @@ public class Link extends Link_Base {
 	@Override
 	public void setContent(String newContent) throws PrivateResourceException{
 		throw new PrivateResourceException("Link content cannot be changed");
+	}
+	
+	public File getFile() throws FileNotFoundException{
+		String content = this.getContent();
+		if(content.charAt(0) == '/')
+			return MyDrive.getInstance().getFile(content);
+		else
+			return this.getDir().getFile(content);
 	}
 }

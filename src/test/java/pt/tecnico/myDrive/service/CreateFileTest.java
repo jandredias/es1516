@@ -3,11 +3,17 @@ package pt.tecnico.myDrive.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
 import org.junit.Test;
 
-import pt.tecnico.myDrive.domain.*;
-import pt.tecnico.myDrive.exception.*;
+import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
+import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.ContentNotLinkException;
+import pt.tecnico.myDrive.exception.FileIsDirectoryException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
 public class CreateFileTest extends PermissionsTest {
 	

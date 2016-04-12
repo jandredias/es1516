@@ -125,8 +125,13 @@ public class Directory extends Directory_Base {
 	public File getInnerFile(String fileName)	throws FileNotFoundException {
 
 		for(File file: getFilesSet())
-			if(file.getName().equals(fileName))
+			if(file.getName().equals(fileName)){
+				if(file.getClass() == Link.class){
+					Link link = ( Link ) file;
+					file = link.getFile();
+				}
 				return file;
+			}
 		if (fileName.equals(".")) {
 			return this;
 		}
@@ -147,13 +152,17 @@ public class Directory extends Directory_Base {
 
 	public Directory getDirectory(String path)throws FileNotFoundException {
 
-		File directory = getFile(path);
-		if (directory.getClass() == Directory.class)
-			return (Directory) directory;
-		else
+		File file = getFile(path);
+		if(file.getClass() == Link.class) {
+			Link link = ( Link ) file;
+			file = link.getFile();
+		}
+		if (file.getClass() == Directory.class){
+			return (Directory) file;
+		} else
 			throw new FileNotFoundException("Directory: " + path + " not Found");
 	}
-	
+/*
 	public Directory getDirectory(String path, User user)throws FileNotFoundException, PermissionDeniedException {
 
 		File directory = getFile(path, user);
@@ -162,7 +171,7 @@ public class Directory extends Directory_Base {
 		else
 			throw new FileNotFoundException("Directory: " + path + " not Found");
 	}
-
+*/
 	public File getFile(String path) throws FileNotFoundException {
 
 		if( path.equals("") )
@@ -199,7 +208,6 @@ public class Directory extends Directory_Base {
 	DirectoryIsNotEmptyException, PermissionDeniedException{
 
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
-
 		if (pieces.size() == 1) {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
