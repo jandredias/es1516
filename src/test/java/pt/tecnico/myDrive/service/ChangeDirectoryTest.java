@@ -15,9 +15,11 @@ import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidPathException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 
@@ -43,12 +45,11 @@ public class ChangeDirectoryTest extends TokenAccessTest {
 
 			myDrive.addPlainFile("/home/teste1", "file", myDrive.getUserByUsername("teste1"), "File's content");
 
-			teste1Token = myDrive.getValidSession("teste1", "/home/teste1", new StrictlyTestObject());
-			teste2Token = myDrive.getValidSession("teste2", "/home/teste2", new StrictlyTestObject());
-			rootToken = myDrive.getValidSession("root", "/", new StrictlyTestObject());
+			teste1Token = myDrive.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
+			teste2Token = myDrive.getValidToken("teste2", "/home/teste2", new StrictlyTestObject());
+			rootToken = myDrive.getValidToken("root", "/", new StrictlyTestObject());
 		}catch(MyDriveException e){
-			e.printStackTrace();
-			//This won't happen
+			throw new TestSetupException("ChangeDirectory: Populate");
 		}
 	}
 
@@ -207,6 +208,24 @@ public class ChangeDirectoryTest extends TokenAccessTest {
 	public void relativePathIsFileTest() throws MyDriveException {
 		ChangeDirectoryService service = new ChangeDirectoryService(teste1Token, "file");
 		service.execute();
+	}
+
+	@Override
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
+		
+		try {
+			return new ChangeDirectoryService(teste1Token,nameOfFileItOPerates);
+		} catch (InvalidPathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return abstractClassService;
+	}
+
+	@Override
+	protected void assertServiceExecutedWithSuccess() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

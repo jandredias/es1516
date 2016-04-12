@@ -15,16 +15,17 @@ public class ChangeDirectoryService extends MyDriveService {
 	private String _path;
 	private String _returnpath;
 
-	public ChangeDirectoryService(long token, String path) throws InvalidPathException {
+	public ChangeDirectoryService(long token, String path){
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
-		if(path==null || path.equals(""))
-			throw new InvalidPathException();
+		
 		_path = path;
 	}
 
-	public final void dispatch() throws InvalidTokenException,
+	public final void dispatch() throws InvalidPathException, InvalidTokenException,
 			FileNotFoundException, PermissionDeniedException{
+		if(_path==null || _path.equals(""))
+			throw new InvalidPathException();
 		
 		Session session = _drive.validateToken(_token);
 		
