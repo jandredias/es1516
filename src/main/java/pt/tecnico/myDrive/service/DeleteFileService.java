@@ -33,12 +33,12 @@ public class DeleteFileService extends MyDriveService {
 	 * @throws InvalidTokenException
 	 */
 	public final void dispatch() throws InvalidTokenException,
-			FileNotFoundException, DirectoryIsNotEmptyException, MyDriveException{
+			FileNotFoundException, MyDriveException{
 
 		Session session = _drive.validateToken(_token);
 
 		Directory currentDir = session.getCurrentDirectory();
-		File targetFile = currentDir.getFile(_fileName);
+		File targetFile = currentDir.getInnerFile(_fileName);
 
 		targetFile.delete(session.getUser());
 	}
