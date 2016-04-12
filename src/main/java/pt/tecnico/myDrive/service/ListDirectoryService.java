@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -44,7 +45,21 @@ public class ListDirectoryService extends MyDriveService {
 
 		for (File file : files) {
 			List<String> thisResult = new ArrayList<String>();
-			// don't care right now
+			if (file instanceof Application) {
+				thisResult.add("Application");
+				thisResult.add(file.getPermissions());
+
+				if (file instanceof Application) {
+					thisResult.add(String.valueOf(((Application) file).getContent().length()));
+				} else {
+					thisResult.add("0");
+				}
+				thisResult.add(file.getOwner().getUsername());
+				thisResult.add(String.valueOf(file.getId()));
+				thisResult.add(file.getModification().toString());
+				thisResult.add(file.getName());
+				list.add(thisResult);
+			}
 		}
 	}
 
