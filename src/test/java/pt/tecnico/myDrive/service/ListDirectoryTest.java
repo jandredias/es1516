@@ -114,7 +114,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters COMPATIBILITY
 		String listedId = fileList.get(4);
-		assertEquals("id",listedId, file.getId());
+		assertEquals("id",listedId, file.getId().toString());
 
 		String listedDate = fileList.get(5);
 		assertEquals("date",listedDate, file.getModification().toString());
@@ -223,7 +223,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= applicationList.get(2);	
-		assertEquals("dimension",listedDimension, file.getContent().length());
+		assertEquals("dimension",listedDimension, String.valueOf(file.getContent().length()));
 	}
 
 	@Test
