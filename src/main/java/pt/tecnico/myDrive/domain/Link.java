@@ -4,6 +4,7 @@ import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
 
@@ -40,5 +41,10 @@ public class Link extends Link_Base {
 	}
 	public void accept(Visitor visitor) throws UnsupportedOperationException {
 		visitor.visitLink(this);
+	}
+	
+	@Override
+	public void setContent(String newContent) throws PrivateResourceException{
+		throw new PrivateResourceException("Link content cannot be changed");
 	}
 }

@@ -18,7 +18,7 @@ public class ChangeDirectoryService extends MyDriveService {
 	public ChangeDirectoryService(long token, String path) throws InvalidPathException {
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
-		if(path==null || path == "")
+		if(path==null || path.equals(""))
 			throw new InvalidPathException();
 		_path = path;
 	}
