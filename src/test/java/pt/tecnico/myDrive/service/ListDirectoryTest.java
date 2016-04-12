@@ -45,7 +45,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		}
 		
 		StrictlyTestObject dummyObject = new StrictlyTestObject(); 
-		long token = MyDriveService.getMyDrive().getValidSession(username,"/home/" + username + "/" + folder, dummyObject);
+		long token = MyDriveService.getMyDrive().getValidToken(username,"/home/" + username + "/" + folder, dummyObject);
 		listDirService = new ListDirectoryService(token);
 	}
 

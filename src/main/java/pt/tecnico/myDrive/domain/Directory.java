@@ -135,7 +135,15 @@ public class Directory extends Directory_Base {
 		}
 		throw new FileNotFoundException("File: " + fileName + " not Found");
 	}
+	
+	public File getInnerFile(String fileName, User user)	throws FileNotFoundException, PermissionDeniedException {
 
+		File file = getInnerFile(fileName);
+		
+		if(!user.hasExecutePermissions(file)) throw new PermissionDeniedException();
+		
+		return file;
+	}
 
 	public Directory getDirectory(String path)throws FileNotFoundException {
 
@@ -145,8 +153,15 @@ public class Directory extends Directory_Base {
 		else
 			throw new FileNotFoundException("Directory: " + path + " not Found");
 	}
+	
+	public Directory getDirectory(String path, User user)throws FileNotFoundException, PermissionDeniedException {
 
-
+		File directory = getFile(path, user);
+		if (directory.getClass() == Directory.class)
+			return (Directory) directory;
+		else
+			throw new FileNotFoundException("Directory: " + path + " not Found");
+	}
 
 	public File getFile(String path) throws FileNotFoundException {
 
@@ -165,6 +180,14 @@ public class Directory extends Directory_Base {
 		String newPath = MyDrive.arrayToString(pieces);
 		return nextDir.getFile(newPath);
 	}
+	
+	public File getFile(String path, User user) throws FileNotFoundException, PermissionDeniedException {
+		
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException();
+
+		return getFile(path);
+	}
+	
 	/**
 	 * Remove a file if it's a child or call a child element to do it for him
 	 *

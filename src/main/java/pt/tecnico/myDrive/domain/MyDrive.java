@@ -20,7 +20,6 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
@@ -547,7 +546,7 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 
-	public long getValidSession(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
+	public long getValidToken(String username, String currentDirectoryPath,StrictlyTestObject testsOnly){
 		if(testsOnly != null){
 			User user = getUserByUsername(username);
 			if(user == null)
