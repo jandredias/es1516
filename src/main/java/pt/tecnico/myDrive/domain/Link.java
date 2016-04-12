@@ -49,11 +49,11 @@ public class Link extends Link_Base {
 		throw new PrivateResourceException("Link content cannot be changed");
 	}
 	
-	public File getFile() throws FileNotFoundException{
+	public File getFile(User user) throws FileNotFoundException{
 		String content = this.getContent();
 		if(content.charAt(0) == '/')
-			return MyDrive.getInstance().getFile(content);
+			return MyDrive.getInstance().getFile(content,user);
 		else
-			return this.getDir().getFile(content);
+			return this.getDir().getFile(content, user);
 	}
 }

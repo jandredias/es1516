@@ -122,13 +122,36 @@ public class Directory extends Directory_Base {
 		return true;
 	}
 
+	/**OK*/
 	public File getInnerFile(String fileName)	throws FileNotFoundException {
+		try {
+			return getInnerFile(fileName, MyDrive.getInstance().getRootUser());
+		} catch (PermissionDeniedException e) {
+			//Root always have permissions
+			return null; //Compilation Required
+		}
+/*		for(File file: getFilesSet())
+			if(file.getName().equals(fileName)){
+				return file;
+			}
+		if (fileName.equals(".")) {
+			return this;
+		}
+		else if (fileName.equals("..")) {
+			return this.getDir();
+		}
+		throw new FileNotFoundException("File: " + fileName + " not Found");
+*/
+	}
+	
+	/**OK*/
+	public File getInnerFile(String fileName, User user)	throws FileNotFoundException, PermissionDeniedException {
 
 		for(File file: getFilesSet())
 			if(file.getName().equals(fileName)){
 				if(file.getClass() == Link.class){
 					Link link = ( Link ) file;
-					file = link.getFile();
+					file = link.getFile(user);
 				}
 				return file;
 			}
@@ -139,15 +162,6 @@ public class Directory extends Directory_Base {
 			return this.getDir();
 		}
 		throw new FileNotFoundException("File: " + fileName + " not Found");
-	}
-	
-	public File getInnerFile(String fileName, User user)	throws FileNotFoundException, PermissionDeniedException {
-
-		File file = getInnerFile(fileName);
-		
-		if(!user.hasExecutePermissions(file)) throw new PermissionDeniedException();
-		
-		return file;
 	}
 
 	public Directory getDirectory(String path)throws FileNotFoundException {
