@@ -32,7 +32,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	 * Method that runs before each @Test
 	 */
 	protected void populate() {
-		String username	= "Joao"; 
+		String username	= "joao";
 		String folder 	= "TestDir";
 		try{
 			MyDrive md = MyDriveService.getMyDrive();
