@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Root;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
@@ -63,6 +64,18 @@ public class DeleteFileTest extends AbstractServiceTest {
 		service.execute();
 	}
 
+	// @Test(expected = InvalidTokenException.class)
+	// public void NullToken(){
+	// DeleteFileService service = new DeleteFileService(null, "ola");
+	// service.execute();
+	// }
+	//
+	/*
+	 * @Test(expected = InvalidFileNameException.class) public void NullName()
+	 * throws MyDriveException { DeleteFileService service = new
+	 * DeleteFileService(14561, null); service.execute(); }
+	 */
+
 	//
 	// @Test(expected = InvalidTokenException.class)
 	// public void TokenZero(){
@@ -85,91 +98,121 @@ public class DeleteFileTest extends AbstractServiceTest {
 	// /*Delete /ola/ola/familia/pai*/
 	@Test(expected = FileNotFoundException.class)
 	public void FileNotExists() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(9999, "pai");
+		MyDrive md = MyDrive.getInstance();
+		long t9999 = md.getValidToken("teste", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t9999, "pai");
 		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteFileOwner() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(9999, "mae");
+		MyDrive md = MyDrive.getInstance();
+		long t9999 = md.getValidToken("teste", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t9999, "mae");
 		service.execute();
 
-		MyDrive md = MyDrive.getInstance();
 		md.getFile("/ola/ola/familia/mae");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteFileOwnerNoPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(9999, "irma");
+		MyDrive md = MyDrive.getInstance();
+		long t9999 = md.getValidToken("teste", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t9999, "irma");
 		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteFile() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(1111, "mae");
+		MyDrive md = MyDrive.getInstance();
+		long t1111 = md.getValidToken("teste2", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t1111, "mae");
 		service.execute();
 
-		MyDrive md = MyDrive.getInstance();
 		md.getFile("/ola/ola/familia/mae");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteFileNoPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(1111, "irma");
+		MyDrive md = MyDrive.getInstance();
+		long t1111 = md.getValidToken("teste2", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t1111, "irma");
 		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteFileRoot() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(2222, "irma");
+		MyDrive md = MyDrive.getInstance();
+		long t2222 = md.getValidToken("root", "/ola/ola/familia", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t2222, "irma");
 		service.execute();
 
-		MyDrive md = MyDrive.getInstance();
 		md.getFile("/ola/ola/familia/irma");
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteDirectoryOwnerWithPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(3333, "familia2");
+		MyDrive md = MyDrive.getInstance();
+		long t3333 = md.getValidToken("teste", "/ola/ola", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t3333, "familia2");
 		service.execute();
 
-		MyDrive md = MyDrive.getInstance();
 		md.getDirectory("/ola/ola/familia2");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteDirectoryOwnerWithoutPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(3333, "familia");
+		MyDrive md = MyDrive.getInstance();
+		long t3333 = md.getValidToken("teste", "/ola/ola", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t3333, "familia");
 		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteDirectoryWithPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(4444, "familia2");
+		MyDrive md = MyDrive.getInstance();
+		long t4444 = md.getValidToken("teste2", "/ola/ola", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t4444, "familia2");
 		service.execute();
 
-		MyDrive md = MyDrive.getInstance();
 		md.getDirectory("/ola/ola/familia2");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteDirectoryWithoutPermissions() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(4444, "familia");
+		MyDrive md = MyDrive.getInstance();
+		long t4444 = md.getValidToken("teste2", "/ola/ola", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t4444, "familia");
 		service.execute();
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteDirectoryRoot() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(5555, "familia");
-		service.execute();
-		
 		MyDrive md = MyDrive.getInstance();
+		long t5555 = md.getValidToken("root", "/ola/ola", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t5555, "familia");
+		service.execute();
+
 		md.getDirectory("/ola/ola/familia");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteRootDirectory() throws MyDriveException {
-		DeleteFileService service = new DeleteFileService(6666, "/");
+		MyDrive md = MyDrive.getInstance();
+		long t6666 = md.getValidToken("root", "/", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t6666, "/");
 		service.execute();
 	}
 }
