@@ -54,16 +54,16 @@ public class CreateFileService extends MyDriveService {
 		String _path    = session.getCurrentDirectory().getPath();
 
 		switch(_fileType) {
-		case "app":
+		case "App":
 			_drive.addApplication(_path, _fileName, user, _content);
 			break;
-		case "link":
+		case "Link":
 			_drive.addLink(_path, _fileName, user, _content);
 			break;
-		case "plainfile":
+		case "PlainFile":
 			_drive.addPlainFile(_path, _fileName, user, _content);
 			break;
-		case "dir":
+		case "Dir":
 			_drive.addDirectory(_path, _fileName,user);
 			break;
 		default:

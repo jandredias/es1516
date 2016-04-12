@@ -42,7 +42,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	}
 	
 	/**
-	 * Method that every subclass redefines and ensures a service as run
+	 * Method that every subclass redefines and ensures a service has run
 	 */
 	protected abstract void assertServiceExecutedWithSuccess();
 	

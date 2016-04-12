@@ -67,7 +67,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createFileOwnDirWithPermissionTest() throws Exception  {
 		/*FIXME*/
-		fail();
+		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
 		/*createFileService(token, name, type, content)*/
@@ -82,7 +82,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createFileOthersDirWithPermissionTest() throws Exception {
 		/*FIXME*/
-		fail();
+		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test1", "/home/test3", new StrictlyTestObject());
@@ -99,7 +99,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOwnDirWithoutPermissionTest() throws Exception  {
 		/*FIXME*/
-		fail();
+		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test3", "/home/test3", new StrictlyTestObject());
@@ -114,7 +114,6 @@ public class CreateFileTest extends PermissionsTest {
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOthersDirWithoutPermissionTest() throws Exception  {
 		/*FIXME*/
-		fail();
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test4", "/home/test3",new StrictlyTestObject());
@@ -268,7 +267,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createAppWithoutContent() throws Exception  {
 		/*FIXME*/
-		fail();
+		;
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
@@ -285,7 +284,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createPlainFileWithContent() throws Exception  {
 		/*FIXME*/
-		fail();
+		;
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
@@ -302,7 +301,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createPlainFileWithoutContent() throws Exception  {
 		/*FIXME*/
-		fail();
+		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidSession("test1", "/home/test1", new StrictlyTestObject());
