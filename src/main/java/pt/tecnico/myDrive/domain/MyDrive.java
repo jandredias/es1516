@@ -20,6 +20,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
@@ -81,7 +82,7 @@ public class MyDrive extends MyDrive_Base {
 
 
 	public void cleanup(){
-		/*try{
+		try{
 			Root root = getRootUser();
 
 			for (User user : getUsersSet()){
@@ -92,7 +93,8 @@ public class MyDrive extends MyDrive_Base {
 			//Cleaning up every File left
 			Directory rootDir = getRootDirectory();
 			for (File file : rootDir.getFilesSet()){
-				file.delete(root);
+				if(!file.getName().equals("/"))
+					file.delete(root);
 			}
 
 
@@ -105,7 +107,7 @@ public class MyDrive extends MyDrive_Base {
 			root.setUsersHome(home_root);
 		}catch(MyDriveException e){
 			//Won't happen... I hope so...
-		}*/
+		}
 	}
 	/* ********************************************************************** */
 	/* *************************** Static Methods *************************** */
