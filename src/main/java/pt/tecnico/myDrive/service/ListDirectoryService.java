@@ -48,19 +48,21 @@ public class ListDirectoryService extends MyDriveService {
 			List<String> thisResult = new ArrayList<String>();
 			if (file instanceof Application) {
 				thisResult.add("Application");
-			}else if(file instanceof PlainFile){
+			} else if (file instanceof PlainFile) {
 				thisResult.add("Plain File");
+			} else if (file instanceof Directory) {
+				thisResult.add("Directory");
 			}
 			thisResult.add(file.getPermissions());
 
 			if (file instanceof Application) {
 				thisResult.add(String.valueOf(((Application) file).getContent().length()));
-			}else if(file instanceof PlainFile){
+			} else if (file instanceof PlainFile) {
 				thisResult.add(String.valueOf(((PlainFile) file).getContent().length()));
 			} else {
 				thisResult.add("0");
 			}
-			
+
 			thisResult.add(file.getOwner().getUsername());
 			thisResult.add(String.valueOf(file.getId()));
 			thisResult.add(file.getModification().toString());
