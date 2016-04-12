@@ -14,50 +14,53 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 
 public class DeleteFileTest extends AbstractServiceTest {
 
+	private User teste1;
+	private User teste2;
+	
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
 		Root root = md.getRootUser();
 		try {
 			md.addUser("teste1", "teste1", "teste1", "rwxd----");
 			md.addUser("teste2", "teste2", "teste2", "rwxd----");
-			User teste = md.getUserByUsername("teste1");
-			User teste2 = md.getUserByUsername("teste2");
+			teste1 = md.getUserByUsername("teste1");
+			teste2 = md.getUserByUsername("teste2");
 
 
 			//md.addDirectory("/home/teste1", "Casa", teste);
 			md.getDirectory("/home").setPermissions("-w-d-w-d");
 			md.getDirectory("/home/teste1").setPermissions("-w-d-w-d");
 			
-			md.addDirectory("/home/teste1", "familia",teste /* , delete permissions */);
+			md.addDirectory("/home/teste1", "familia",teste1 /* , delete permissions */);
 			md.getDirectory("/home/teste1/familia").setPermissions("-w-d-w-d");
 			
-			//All delete permissions
-			md.addPlainFile("/home/teste1/familia", "mae", teste, "mae"/* , delete permissions */);
-			md.getFile("/home/teste1/familia/mae").setPermissions("-w-d-w-d");
+//			//All delete permissions
+//			md.addPlainFile("/home/teste1/familia", "mae", teste1, "mae"/* , delete permissions */);
+//			md.getFile("/home/teste1/familia/mae").setPermissions("-w-d-w-d");
 			
-			//None delete permissions
-			md.addPlainFile("/home/teste1/familia", "irma", teste,	"irma"/* , without delete permissions */);
-			md.getFile("/home/teste1/familia/irma").setPermissions("-w---w--");
+//			//None delete permissions
+//			md.addPlainFile("/home/teste1/familia", "irma", teste1,	"irma"/* , without delete permissions */);
+//			md.getFile("/home/teste1/familia/irma").setPermissions("-w---w--");
 			
-			//No owner permissions
-			md.addPlainFile("/home/teste1/familia", "irmao", teste,	"irmao"/* , without delete permissions */);
-			md.getFile("/home/teste1/familia/irmao").setPermissions("-w---w-d");
+//			//No owner permissions
+//			md.addPlainFile("/home/teste1/familia", "irmao", teste1,	"irmao"/* , without delete permissions */);
+//			md.getFile("/home/teste1/familia/irmao").setPermissions("-w---w-d");
 			
-			//Owner permissions
-			md.addPlainFile("/home/teste1/familia", "primo", teste,	"primo"/* , without delete permissions */);
-			md.getFile("/home/teste1/familia/primo").setPermissions("-w-d-w--");
+//			//Owner permissions
+//			md.addPlainFile("/home/teste1/familia", "primo", teste1,	"primo"/* , without delete permissions */);
+//			md.getFile("/home/teste1/familia/primo").setPermissions("-w-d-w--");
 
-			//Folder with write permissions and file with owner permissions
-			md.addDirectory("/home/teste1", "writePownerP",	teste /* , without delete permissions */);
-			md.getDirectory("/home/teste1/writePownerP").setPermissions("-w---w--");
-			md.addPlainFile("/home/teste1/writePownerP", "ownerP", teste,	"ownerP"/* , without delete permissions */);
-			md.getFile("/home/teste1/writePownerP/ownerP").setPermissions("-w-d-w--");
-			
-			//Folder with write permissions and file with no owner permissions
-			md.addDirectory("/home/teste1", "writePNoownerP",	teste /* , without delete permissions */);
-			md.getDirectory("/home/teste1/writePNoownerP").setPermissions("-w---w--");
-			md.addPlainFile("/home/teste1/writePNoownerP", "NoownerP", teste,	"NoownerP"/* , without delete permissions */);
-			md.getFile("/home/teste1/writePNoownerP/NoownerP").setPermissions("-w---w-d");
+//			//Folder with write permissions and file with owner permissions
+//			md.addDirectory("/home/teste1", "writePownerP",	teste1 /* , without delete permissions */);
+//			md.getDirectory("/home/teste1/writePownerP").setPermissions("-w-d-w--");
+//			md.addPlainFile("/home/teste1/writePownerP", "ownerP", teste1,	"ownerP"/* , without delete permissions */);
+//			md.getFile("/home/teste1/writePownerP/ownerP").setPermissions("-w-d-w--");
+//			
+//			//Folder with write permissions and file with no owner permissions
+//			md.addDirectory("/home/teste1", "writePNoownerP",	teste1 /* , without delete permissions */);
+//			md.getDirectory("/home/teste1/writePNoownerP").setPermissions("-w-d-w--");
+//			md.addPlainFile("/home/teste1/writePNoownerP", "NoownerP", teste1,	"NoownerP"/* , without delete permissions */);
+//			md.getFile("/home/teste1/writePNoownerP/NoownerP").setPermissions("-w---w-d");
 
 //			md.addPlainFile("/home/teste1/familia2", "mae", teste,
 //					"mae"/* , delete permissions */);
@@ -121,13 +124,13 @@ public class DeleteFileTest extends AbstractServiceTest {
 //	// service.execute();
 //	// }
 //	//
-	// /*Delete /home/teste1/familia/pai*/
+	 /*Delete /home/teste1/familia/pai*/
 	@Test(expected = FileNotFoundException.class)
 	public void FileNotExists() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t9999 = md.getValidToken("teste1", "/home/teste1/familia", new StrictlyTestObject());
 
-		DeleteFileService service = new DeleteFileService(t9999, "pai");
+		DeleteFileService service = new DeleteFileService(t9999, "file");
 		service.execute();
 	}
 
@@ -135,17 +138,23 @@ public class DeleteFileTest extends AbstractServiceTest {
 	public void DeleteFileOwner() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t9999 = md.getValidToken("teste1", "/home/teste1/familia", new StrictlyTestObject());
+		//Owner permissions
+		md.addPlainFile("/home/teste1/familia", "file", teste1,	"file"/* , without delete permissions */);
+		md.getFile("/home/teste1/familia/file").setPermissions("-w-d-w--");
 
-		DeleteFileService service = new DeleteFileService(t9999, "primo");
+		DeleteFileService service = new DeleteFileService(t9999, "file");
 		service.execute();
 
-		md.getFile("/home/teste1/familia/primo");
+		md.getFile("/home/teste1/familia/file");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteFileOwnerNoPermissions() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t9999 = md.getValidToken("teste1", "/home/teste1/familia", new StrictlyTestObject());
+		//None delete permissions
+		md.addPlainFile("/home/teste1/familia", "irma", teste1,	"irma"/* , without delete permissions */);
+		md.getFile("/home/teste1/familia/irma").setPermissions("-w---w--");
 
 		DeleteFileService service = new DeleteFileService(t9999, "irma");
 		service.execute();
@@ -155,19 +164,25 @@ public class DeleteFileTest extends AbstractServiceTest {
 	public void DeleteFile() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		//No owner permissions
+		md.addPlainFile("/home/teste1/familia", "file", teste1,	"file"/* , without delete permissions */);
+		md.getFile("/home/teste1/familia/file").setPermissions("-w---w-d");
 
-		DeleteFileService service = new DeleteFileService(t1111, "irmao");
+		DeleteFileService service = new DeleteFileService(t1111, "file");
 		service.execute();
 
-		md.getFile("/home/teste1/familia/irmao");
+		md.getFile("/home/teste1/familia/file");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void DeleteFileNoPermissions() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		//None delete permissions
+		md.addPlainFile("/home/teste1/familia", "file", teste1,	"file"/* , without delete permissions */);
+		md.getFile("/home/teste1/familia/file").setPermissions("-w---w--");
 
-		DeleteFileService service = new DeleteFileService(t1111, "irma");
+		DeleteFileService service = new DeleteFileService(t1111, "file");
 		service.execute();
 	}
 
@@ -175,70 +190,206 @@ public class DeleteFileTest extends AbstractServiceTest {
 	public void DeleteFileRoot() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t2222 = md.getValidToken("root", "/home/teste1/familia", new StrictlyTestObject());
+		//None delete permissions
+		md.addPlainFile("/home/teste1/familia", "file", teste1,	"file"/* , without delete permissions */);
+		md.getFile("/home/teste1/familia/file").setPermissions("-w---w--");
 
-		DeleteFileService service = new DeleteFileService(t2222, "irma");
+		DeleteFileService service = new DeleteFileService(t2222, "file");
 		service.execute();
 
-		md.getFile("/home/teste1/familia/irma");
+		md.getFile("/home/teste1/familia/file");
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void DeleteDirectoryOwnerWithPermissions() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t3333 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
+		
+		//Folder with owner delete permissions
+		md.addDirectory("/home/teste1", "file",	teste1 );
+		md.getDirectory("/home/teste1/file").setPermissions("---d----");
 
-		DeleteFileService service = new DeleteFileService(t3333, "writePownerP");
+		DeleteFileService service = new DeleteFileService(t3333, "file");
+		service.execute();
+
+		md.getDirectory("/home/teste1/file");
+	}
+
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteDirectoryOwnerWithoutPermissions() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		long t3333 = md.getValidToken("teste1", "/home/teste1/", new StrictlyTestObject());
+		//Folder with no owner delete permissions
+		md.addDirectory("/home/teste1", "file",	teste1);
+		md.getDirectory("/home/teste1/file").setPermissions("-------d");
+
+		DeleteFileService service = new DeleteFileService(t3333, "file");
+		service.execute();
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void DeleteDirectoryWithPermissions() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		long t4444 = md.getValidToken("teste2", "/home/teste1", new StrictlyTestObject());
+		//Folder with delete permissions
+		md.addDirectory("/home/teste1", "file",	teste1);
+		md.getDirectory("/home/teste1/file").setPermissions("-------d");
+
+		DeleteFileService service = new DeleteFileService(t4444, "file");
 		service.execute();
 
 		md.getDirectory("/home/teste1/writePownerP");
 	}
 
 	@Test(expected = PermissionDeniedException.class)
-	public void DeleteDirectoryOwnerWithoutPermissions() throws MyDriveException {
+	public void DeleteDirectoryWithoutPermissions() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
-		long t3333 = md.getValidToken("teste1", "/home/teste1/writePNoownerP", new StrictlyTestObject());
+		long t4444 = md.getValidToken("teste2", "/home/teste1", new StrictlyTestObject());
+		//Folder without delete permissions
+				md.addDirectory("/home/teste1", "file",	teste1 /* , without delete permissions */);
+				md.getDirectory("/home/teste1/file").setPermissions("---d----");
 
-		DeleteFileService service = new DeleteFileService(t3333, "NoownerP");
+		
+		DeleteFileService service = new DeleteFileService(t4444, "file");
 		service.execute();
 	}
 
-//	@Test(expected = FileNotFoundException.class)
-//	public void DeleteDirectoryWithPermissions() throws MyDriveException {
-//		MyDrive md = MyDrive.getInstance();
-//		long t4444 = md.getValidToken("teste2", "/home/teste1", new StrictlyTestObject());
-//
-//		DeleteFileService service = new DeleteFileService(t4444, "familia2");
-//		service.execute();
-//
-//		md.getDirectory("/home/teste1/familia2");
-//	}
-//
-//	@Test(expected = PermissionDeniedException.class)
-//	public void DeleteDirectoryWithoutPermissions() throws MyDriveException {
-//		MyDrive md = MyDrive.getInstance();
-//		long t4444 = md.getValidToken("teste2", "/home/teste1", new StrictlyTestObject());
-//
-//		DeleteFileService service = new DeleteFileService(t4444, "familia");
-//		service.execute();
-//	}
-//
-//	@Test(expected = FileNotFoundException.class)
-//	public void DeleteDirectoryRoot() throws MyDriveException {
-//		MyDrive md = MyDrive.getInstance();
-//		long t5555 = md.getValidToken("root", "/home/teste1", new StrictlyTestObject());
-//
-//		DeleteFileService service = new DeleteFileService(t5555, "familia");
-//		service.execute();
-//
-//		md.getDirectory("/home/teste1/familia");
-//	}
-//
-//	@Test(expected = PermissionDeniedException.class)
-//	public void DeleteRootDirectory() throws MyDriveException {
-//		MyDrive md = MyDrive.getInstance();
-//		long t6666 = md.getValidToken("root", "/", new StrictlyTestObject());
-//
-//		DeleteFileService service = new DeleteFileService(t6666, "/");
-//		service.execute();
-//	}
+	@Test(expected = FileNotFoundException.class)
+	public void DeleteDirectoryUserRoot() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		long t5555 = md.getValidToken("root", "/home/teste1", new StrictlyTestObject());
+		//Folder without delete permissions and root user
+		md.addDirectory("/home/teste1", "file",	teste1 /* , without delete permissions */);
+		md.getDirectory("/home/teste1/file").setPermissions("-------");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		md.getDirectory("/home/teste1/file");
+	}
+	
+	@Test(expected = FileNotFoundException.class)
+	public void DeleteDirectoryOwnerPermissionsWithExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.getDirectory("/home/teste1/dir").setPermissions("-w---w--");
+		
+		long t5555 = md.getValidToken("teste1", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		md.getFile("/home/teste1/dir/file").setPermissions("---d----");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		md.getDirectory("/home/teste1/dir/file");
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteDirectoryWithoutOwnerPermissionsWithExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.getDirectory("/home/teste1/dir").setPermissions("-w---w--");
+		
+		long t5555 = md.getValidToken("teste1", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		md.getFile("/home/teste1/dir/file").setPermissions("-------d");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		
+	}
+	
+	@Test(expected = FileNotFoundException.class)
+	public void DeleteDirectorywithPermissionsWithExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.getDirectory("/home/teste1/dir").setPermissions("-w---w--");
+		
+		long t5555 = md.getValidToken("teste2", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		md.getFile("/home/teste1/dir/file").setPermissions("-------d");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		md.getDirectory("/home/teste1/dir/file");
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteDirectoryWithoutPermissionsWithExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.getDirectory("/home/teste1/dir").setPermissions("-w---w--");
+		
+		long t5555 = md.getValidToken("teste2", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		md.getFile("/home/teste1/dir/file").setPermissions("---d----");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteDirectoryWithPermissionsWithoutOwnerExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		
+		
+		long t5555 = md.getValidToken("teste1", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.getDirectory("/home/teste1/dir").setPermissions("-----w--");
+		md.getFile("/home/teste1/dir/file").setPermissions("---d---d");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+		
+	}
+	
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteDirectoryWithPermissionsWithoutExecute() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		
+		//Folder with execute permissions and file with owner permissions
+		md.addDirectory("/home/teste1", "dir",	teste1 /* , without delete permissions */);
+		md.addPlainFile("/home/teste1/dir", "file", teste1,	"ownerP"/* , without delete permissions */);
+		
+		
+		long t5555 = md.getValidToken("teste2", "/home/teste1/dir", new StrictlyTestObject());
+		
+		md.getDirectory("/home/teste1/dir").setPermissions("-w------");
+		md.getFile("/home/teste1/dir/file").setPermissions("---d---d");
+
+		DeleteFileService service = new DeleteFileService(t5555, "file");
+		service.execute();
+
+	}
+	
+
+	@Test(expected = PermissionDeniedException.class)
+	public void DeleteRootDirectory() throws MyDriveException {
+		MyDrive md = MyDrive.getInstance();
+		long t6666 = md.getValidToken("root", "/", new StrictlyTestObject());
+
+		DeleteFileService service = new DeleteFileService(t6666, "/");
+		service.execute();
+	}
 }
