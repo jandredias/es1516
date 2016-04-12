@@ -31,6 +31,8 @@ public class ChangeDirectoryService extends MyDriveService {
 		Directory currentDir = session.getCurrentDirectory();
 		Directory targetDir = currentDir.getDirectory(_path, session.getUser());
 		
+		session.setCurrentDirectory(targetDir);
+		
 		_returnpath = targetDir.getPath();
 	}
 	
