@@ -18,7 +18,6 @@ public class ChangeDirectoryService extends MyDriveService {
 	public ChangeDirectoryService(long token, String path){
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
-		
 		_path = path;
 	}
 

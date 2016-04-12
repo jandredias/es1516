@@ -22,8 +22,6 @@ public class DeleteFileService extends MyDriveService {
 	public DeleteFileService(long token, String fileName) throws InvalidFileNameException {
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
-		if(fileName==null)
-			throw new InvalidFileNameException();
 		_fileName = fileName;
 	}
 
@@ -33,6 +31,9 @@ public class DeleteFileService extends MyDriveService {
 	 */
 	public final void dispatch() throws InvalidTokenException,
 			FileNotFoundException, MyDriveException{
+		
+		if(_fileName==null)
+			throw new InvalidFileNameException();
 
 		Session session = _drive.validateToken(_token);
 
