@@ -1,12 +1,16 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.ArrayList;
+
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import java.util.ArrayList;
 
 public class Link extends Link_Base {
 
@@ -14,7 +18,8 @@ public class Link extends Link_Base {
 
 	public Link(String name, User owner, String content) 
 			throws FileExistsException, InvalidFileNameException{
-
+		if(content.contains("\0"))
+			throw new InvalidContentException("Contains \0 char..");
 		init(name, owner, content);
 	}
 
@@ -27,7 +32,7 @@ public class Link extends Link_Base {
 	}
 
 	protected void importContent(Element xml) {
-		setContent(xml.getChild("value").getValue());
+		super.setContent(xml.getChild("value").getValue());
 	}
 
 	public ArrayList<Element> xmlExport() {
@@ -46,5 +51,13 @@ public class Link extends Link_Base {
 	@Override
 	public void setContent(String newContent) throws PrivateResourceException{
 		throw new PrivateResourceException("Link content cannot be changed");
+	}
+	
+	public File getFile(User user) throws FileNotFoundException, PermissionDeniedException{
+		String content = this.getContent();
+		if(content.charAt(0) == '/')
+			return MyDrive.getInstance().getFile(content,user);
+		else
+			return this.getDir().getFile(content, user);
 	}
 }

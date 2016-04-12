@@ -81,8 +81,6 @@ public class Directory extends Directory_Base {
 	public void delete(User deleter)
 			throws PermissionDeniedException {
 
-		if(!deleter.hasDeletePermissions(this)) throw new PermissionDeniedException();
-
 		for(File f : getFilesSet())
 			f.delete(deleter);
 
@@ -123,10 +121,23 @@ public class Directory extends Directory_Base {
 	}
 
 	public File getInnerFile(String fileName)	throws FileNotFoundException {
+		try {
+			return getInnerFile(fileName, MyDrive.getInstance().getRootUser());
+		} catch (PermissionDeniedException e) {
+			//Root always have permissions
+			return null; //Compilation Required
+		}
+	}
+	public File getInnerFile(String fileName, User user)	throws FileNotFoundException, PermissionDeniedException {
 
 		for(File file: getFilesSet())
-			if(file.getName().equals(fileName))
+			if(file.getName().equals(fileName)){
+				if(file.getClass() == Link.class){
+					Link link = ( Link ) file;
+					file = link.getFile(user);
+				}
 				return file;
+			}
 		if (fileName.equals(".")) {
 			return this;
 		}
@@ -135,39 +146,46 @@ public class Directory extends Directory_Base {
 		}
 		throw new FileNotFoundException("File: " + fileName + " not Found");
 	}
-	
-	public File getInnerFile(String fileName, User user)	throws FileNotFoundException, PermissionDeniedException {
 
-		File file = getInnerFile(fileName);
-		
-		if(!user.hasExecutePermissions(file)) throw new PermissionDeniedException();
-		
-		return file;
-	}
-
-	public Directory getDirectory(String path)throws FileNotFoundException {
-
-		File directory = getFile(path);
-		if (directory.getClass() == Directory.class)
-			return (Directory) directory;
-		else
-			throw new FileNotFoundException("Directory: " + path + " not Found");
-	}
-	
 	public Directory getDirectory(String path, User user)throws FileNotFoundException, PermissionDeniedException {
 
-		File directory = getFile(path, user);
-		if (directory.getClass() == Directory.class)
-			return (Directory) directory;
-		else
+		File file = getFile(path, user);
+		if(file.getClass() == Link.class) {
+			Link link = ( Link ) file;
+			file = link.getFile(user);
+		}
+		if (file.getClass() == Directory.class){
+			return (Directory) file;
+		} else
 			throw new FileNotFoundException("Directory: " + path + " not Found");
 	}
 
+	/* FIXME */
+	public Directory getDirectory(String path)throws FileNotFoundException {
+		try {
+			return getDirectory(path, MyDrive.getInstance().getRootUser());
+		} catch (PermissionDeniedException e) {
+			//Root always have permissions
+			return null; //Compilation Required
+		}
+	}
+	
+	/** FIXME*/
 	public File getFile(String path) throws FileNotFoundException {
-
+		try {
+			return getFile(path, MyDrive.getInstance().getRootUser());
+		} catch (PermissionDeniedException e) {
+			//Root always have permissions
+			return null; //Compilation Required
+		}
+	}
+	
+	public File getFile(String path, User user) throws FileNotFoundException, PermissionDeniedException {
+		
 		if( path.equals("") )
 			return this;
-
+		
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException();
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {
@@ -181,13 +199,6 @@ public class Directory extends Directory_Base {
 		return nextDir.getFile(newPath);
 	}
 	
-	public File getFile(String path, User user) throws FileNotFoundException, PermissionDeniedException {
-		
-		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException();
-
-		return getFile(path);
-	}
-	
 	/**
 	 * Remove a file if it's a child or call a child element to do it for him
 	 *
@@ -198,8 +209,11 @@ public class Directory extends Directory_Base {
 	public void removeFile(String path, User user) throws FileNotFoundException,
 	DirectoryIsNotEmptyException, PermissionDeniedException{
 
+		if(path.equals("/")){
+			throw new PermissionDeniedException("Cannot Delete Root Dir");
+		}
+		
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
-
 		if (pieces.size() == 1) {
 			File fileToBeDeleted = this.getInnerFile(pieces.get(0));
 			if (fileToBeDeleted == null)
