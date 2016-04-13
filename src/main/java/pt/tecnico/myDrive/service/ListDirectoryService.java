@@ -11,6 +11,7 @@ import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 
 public class ListDirectoryService extends MyDriveService {
@@ -36,6 +37,10 @@ public class ListDirectoryService extends MyDriveService {
 	@Override
 	public final void dispatch() throws InvalidTokenException {
 		myDrive.validateToken(token);
+		
+		User owner = directory.getOwner();
+		String permissions = directory.getPermissions();
+		
 		list = new ArrayList<List<String>>();
 		Set<File> files = directory.getFilesSet();
 
@@ -60,6 +65,9 @@ public class ListDirectoryService extends MyDriveService {
 
 			if (file instanceof PlainFile) {
 				thisResult.add(String.valueOf(((PlainFile) file).getContent().length()));
+			}else if(file instanceof Directory){
+				Set<File> contents = ((Directory) file).getFilesSet();
+				thisResult.add(String.valueOf(contents.size() + 2));
 			} else {
 				thisResult.add("0");
 			}
