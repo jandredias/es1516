@@ -256,7 +256,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		ArrayList<String> receivedNamesList = new ArrayList<String>();
 		for (List<String> fileList : serviceList ){
-			receivedNamesList.add(-1, fileList.get(6));
+			receivedNamesList.add(fileList.get(6));
 		}
 		
 		for (int index = 0 ; index < receivedNamesList.size(); index++){
