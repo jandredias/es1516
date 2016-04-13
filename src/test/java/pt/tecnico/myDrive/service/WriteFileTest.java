@@ -13,7 +13,7 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 
 public class WriteFileTest extends PermissionsTest {
-	private long token = 0; //FIXME
+	private long token = 0;
 	@Override
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
@@ -129,7 +129,7 @@ public class WriteFileTest extends PermissionsTest {
 		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
 	}
 	
-	@Test
+	@Test(expected=UnsupportedOperationException.class)
 	public void writeLink() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
@@ -138,19 +138,17 @@ public class WriteFileTest extends PermissionsTest {
 				"/home/test4/plainfile4");
 		service.execute();
 		
-		assertEquals("/home/test1/plainfile4",
-				md.getFileContents("/home/test1/link1"));
 	}
 	
-	@Test(expected = ContentNotLinkException.class)
-	public void writeInvalidLink() throws Exception  {
+	@Test(expected=UnsupportedOperationException.class)
+	public void writeDir() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "link1",
-				"olao\0laola");
+		token = md.getValidToken("test1", "/home", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "test1",
+				"ola123");
 		service.execute();
-				
+		
 	}
 	
 	public void writeApp() throws Exception{
