@@ -7,6 +7,7 @@ import java.util.Set;
 import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
@@ -48,6 +49,8 @@ public class ListDirectoryService extends MyDriveService {
 			List<String> thisResult = new ArrayList<String>();
 			if (file instanceof Application) {
 				thisResult.add("Application");
+			}else if(file instanceof Link){
+				thisResult.add("Link");
 			} else if (file instanceof PlainFile) {
 				thisResult.add("Plain File");
 			} else if (file instanceof Directory) {
@@ -55,9 +58,7 @@ public class ListDirectoryService extends MyDriveService {
 			}
 			thisResult.add(file.getPermissions());
 
-			if (file instanceof Application) {
-				thisResult.add(String.valueOf(((Application) file).getContent().length()));
-			} else if (file instanceof PlainFile) {
+			if (file instanceof PlainFile) {
 				thisResult.add(String.valueOf(((PlainFile) file).getContent().length()));
 			} else {
 				thisResult.add("0");
