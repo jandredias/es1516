@@ -316,16 +316,18 @@ public class ListDirectoryTest extends PermissionsTest {
 		
 		for(int i = 0; i < numberOfFiles ; i++ )
 			md.addPlainFile("/home/joao/TestDir", "PlainFile"+i, joao, "");
-		
+
+		long token = MyDriveService.getMyDrive().getValidSession("joao","/home/joao", new StrictlyTestObject());
+		listDirService = new ListDirectoryService(token);
 		listDirService.execute();
 
 		List<List<String>> serviceList = listDirService.result();
-		checkNotNullWithNFiles(serviceList, 2 + numberOfFiles);
+		checkNotNullWithNFiles(serviceList, 2 + 1);
 		
 		List<String> directoryList = serviceList.get(2);
 
 		String listedDimension	= directoryList.get(2);	
-		assertEquals("dimension", numberOfFiles + 2, listedDimension);
+		assertEquals("dimension", String.valueOf(numberOfFiles + 2), listedDimension);
 	}
 	
 	@Test
