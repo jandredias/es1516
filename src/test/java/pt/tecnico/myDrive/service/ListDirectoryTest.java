@@ -102,25 +102,25 @@ public class ListDirectoryTest extends PermissionsTest {
 	private void checkSingleFileStuff(File file, List<String> fileList, String FileType){
 
 		String listedFileType = fileList.get(0);
-		assertEquals("file type",listedFileType, FileType );
+		assertEquals("file type",FileType, listedFileType);
 
 		String listedPermissions = fileList.get(1);
-		assertEquals("permissions ",listedPermissions , file.getPermissions() );
+		assertEquals("permissions ",file.getPermissions(), listedPermissions);
 
 		//Dimension has its own special Tests;
 
 		String listedUsername = fileList.get(3);
-		assertEquals("username",listedUsername, file.getOwner().getUsername());
+		assertEquals("username",file.getOwner().getUsername(),listedUsername);
 
 		//TODO:: Check letters COMPATIBILITY
 		String listedId = fileList.get(4);
-		assertEquals("id",listedId, file.getId().toString());
+		assertEquals("id",file.getId().toString(),listedId);
 
 		String listedDate = fileList.get(5);
-		assertEquals("date",listedDate, file.getModification().toString());
+		assertEquals("date",file.getModification().toString(),listedDate);
 
 		String listedName = fileList.get(6);
-		assertEquals("name ",listedName, file.getName());
+		assertEquals("name ",file.getName(),listedName);
 	}
 
 	/* ---------------------------------------------------------------------- */
@@ -134,14 +134,14 @@ public class ListDirectoryTest extends PermissionsTest {
 		checkNotNullWithNFiles(resultList, 2);
 
 		String fileType = resultList.get(0).get(0);
-		assertEquals("Only Directorys on empty dir", fileType, "Directory");
+		assertEquals("Only Directorys on empty dir", "Directory", fileType);
 		fileType = resultList.get(1).get(0);
-		assertEquals("Only Directorys on empty dir", fileType, "Directory");
+		assertEquals("Only Directorys on empty dir", "Directory", fileType);
 
 		String name			= resultList.get(0).get(6);
-		assertEquals("second file must be named .", name, ".");
+		assertEquals("second file must be named .", ".", name);
 		name			= resultList.get(1).get(6);
-		assertEquals("second file must be named ..", name, "..");
+		assertEquals("second file must be named ..", "..", name);
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= plainFileList.get(2);	
-		assertEquals("dimension",listedDimension, String.valueOf(file.getContent().length()));
+		assertEquals("dimension",String.valueOf(file.getContent().length()), listedDimension);
 	}
 
 	@Test
@@ -202,7 +202,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= linkList.get(2);	
-		assertEquals("dimension",listedDimension, file.getContent().length());
+		assertEquals("dimension",file.getContent().length(), listedDimension);
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= applicationList.get(2);	
-		assertEquals("dimension",listedDimension, String.valueOf(file.getContent().length()));
+		assertEquals("dimension",String.valueOf(file.getContent().length()), listedDimension);
 	}
 
 	@Test
@@ -286,7 +286,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		List<String> plainFileList = serviceList.get(2);
 
 		String listedDimension	= plainFileList.get(2);	
-		assertEquals("dimension",listedDimension, contentSize);
+		assertEquals("dimension",String.valueOf(contentSize), listedDimension);
 	}
 	
 	@Test
@@ -325,7 +325,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		List<String> directoryList = serviceList.get(2);
 
 		String listedDimension	= directoryList.get(2);	
-		assertEquals("dimension",listedDimension, numberOfFiles + 2);
+		assertEquals("dimension", numberOfFiles + 2, listedDimension);
 	}
 	
 	@Test
