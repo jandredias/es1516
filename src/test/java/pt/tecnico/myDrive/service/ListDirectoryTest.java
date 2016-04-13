@@ -202,7 +202,7 @@ public class ListDirectoryTest extends PermissionsTest {
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= linkList.get(2);	
-		assertEquals("dimension",file.getContent().length(), listedDimension);
+		assertEquals("dimension",String.valueOf(file.getContent().length()), listedDimension);
 	}
 
 	@Test
