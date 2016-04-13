@@ -301,8 +301,6 @@ public class CreateFileTest extends PermissionsTest {
 	}
 	@Test
 	public void createPlainFileWithoutContent() throws Exception  {
-		/*FIXME*/
-
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());

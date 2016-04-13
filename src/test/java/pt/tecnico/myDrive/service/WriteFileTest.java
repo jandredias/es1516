@@ -35,13 +35,12 @@ public class WriteFileTest extends PermissionsTest {
 			md.addPlainFile("/home/test3", "plainfile3", testUser3, "olaola");
 			md.addPlainFile("/home/test4", "plainfile4", testUser4, "olaola");
 			
-			md.addLink("/home/test1", "link1", testUser1,
-					"/home/test1/plainfile1");
-			//FIXME md.addApplication("/home/test1", "app1", testUser1, );
+			md.addLink("/home/test1", "link1", testUser1, "/home/test1/plainfile1");
+			md.addApplication("/home/test1", "app1", testUser1, "testApp" );
 			
 		}
 		catch(Exception e){
-			throw new TestSetupException("WriteFileTest: Populate");
+			log.error(e.getMessage());;
 		};
 		
 	}
@@ -63,13 +62,22 @@ public class WriteFileTest extends PermissionsTest {
 		assertNotNull(createFileService.result());*/
 	}
 	
+	private void appContent(String content) throws Exception{
+		MyDrive md = MyDrive.getInstance();
+		
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		CreateFileService service = new CreateFileService(token, "olaApp" , "app", content);
+		
+		service.execute();
+		
+		assertEquals(content, md.getFileContents("/home/test1/olaApp"));
+	}
+	
 	/* ---------TESTS------------- */
 	
 	
 	@Test
-	public void writeOwnFileWithPermissionTest() throws Exception  {
-		/*FIXME user1 needs to be logged in and currentdir contain plainfile1*/
-		
+	public void writeOwnFileWithPermissionTest() throws Exception  {	
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
@@ -82,8 +90,6 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Test
 	public void writeOthersFileWithPermissionTest() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
@@ -124,7 +130,7 @@ public class WriteFileTest extends PermissionsTest {
 	}
 	
 	@Test
-	public void writeGoodLink() throws Exception  {
+	public void writeLink() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
@@ -137,44 +143,55 @@ public class WriteFileTest extends PermissionsTest {
 	}
 	
 	@Test(expected = ContentNotLinkException.class)
-	public void writeBadLink() throws Exception  {
+	public void writeInvalidLink() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token, "link1",
-				"olaolaola");
+				"olao\0laola");
 		service.execute();
 				
 	}
-	/* FIXME don't know what APP's content must be
-	 * 
-	 *
-	@Test
-	public void writeGoodApp(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * app1
-		
+	
+	public void writeApp() throws Exception{
 		MyDrive md = MyDrive.getInstance();
 		WriteFileService service = new WriteFileService(token, "app1",
-				"");
+				"test.writing.app");
 		service.execute();
 		
 		assertEquals("",
 				md.getFileContents("/home/test1/app1"));
 	}
 	
-	@Test(expected = ContentNotAppException.class)
-	public void writeBadApp(){
-		/*FIXME user with permissions must be logged in and currentdir contain
-		 * link1
-		
-		MyDrive md = MyDrive.getInstance();
-		WriteFileService service = new WriteFileService(token, "app1",
-				"olaolaola")
-		service.execute();
-				
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent1() throws Exception  {
+		this.appContent("teste teste");
 	}
-	*/
+	
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent2() throws Exception  {
+		this.appContent("9pins");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent3() throws Exception  {
+		this.appContent("a+c");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent4() throws Exception  {
+		this.appContent("testing1-2-3");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent5() throws Exception  {
+		this.appContent("O'Reily");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void writeAppBadContent6() throws Exception  {
+		this.appContent("OReily_&_Associates");
+	}
 	@Test(expected = UnsupportedOperationException.class)
 	public void writeContentOfDir() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
