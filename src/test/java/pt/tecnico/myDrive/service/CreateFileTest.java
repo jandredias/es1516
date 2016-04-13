@@ -9,6 +9,7 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.ContentNotAppException;
 import pt.tecnico.myDrive.exception.ContentNotLinkException;
 import pt.tecnico.myDrive.exception.FileIsDirectoryException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
@@ -35,8 +36,8 @@ public class CreateFileTest extends PermissionsTest {
 			
 			User user1 = md.getUserByUsername("test1");
 			
-			String dirb = new String(new char[1012]).replace('\0', 'b');
-			String dirc = new String(new char[1013]).replace('\0', 'c');
+			String dirb = new String(new char[1010]).replace('\0', 'b');
+			String dirc = new String(new char[1011]).replace('\0', 'c');
 
 			md.addDirectory("/home/test1", dirb, user1);
 			md.addDirectory("/home/test1", dirc, user1);
@@ -64,12 +65,22 @@ public class CreateFileTest extends PermissionsTest {
 		assertNotNull(createFileService.result());*/
 	}
 	
+	private void appContent(String content) throws Exception{
+		MyDrive md = MyDrive.getInstance();
+		
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		CreateFileService service = new CreateFileService(token, "olaApp" , "app", content);
+		
+		service.execute();
+		
+		assertEquals(content, md.getFileContents("/home/test1/olaApp"));
+	}
+	
+	
 	/* ---------TESTS------------- */
 	 
 	@Test
 	public void createFileOwnDirWithPermissionTest() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		/*createFileService(token, name, type, content)*/
@@ -83,8 +94,6 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test
 	public void createFileOthersDirWithPermissionTest() throws Exception {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
@@ -100,8 +109,6 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOwnDirWithoutPermissionTest() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
@@ -115,9 +122,7 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test(expected = PermissionDeniedException.class)
 	public void createFileOthersDirWithoutPermissionTest() throws Exception  {
-		/*FIXME*/
-		MyDrive md = MyDrive.getInstance();
-		
+		MyDrive md = MyDrive.getInstance();		
 		token = md.getValidToken("test4", "/home/test3",new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
@@ -170,9 +175,6 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test
 	public void createFilePath1024CharsTest() throws Exception  {
-		/* Currentdir = /b * 1021
-		 * FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		String pathb = "/home/test1/"+new String(new char[1010]).replace('\0', 'b');
@@ -193,8 +195,6 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test(expected=InvalidFileNameException.class)
 	public void createFilePath1025CharsTest() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		String pathc = "/home/test1/"+new String(new char[1011]).replace('\0', 'c');
@@ -211,8 +211,6 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test
 	public void createGoodLink() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
@@ -228,38 +226,50 @@ public class CreateFileTest extends PermissionsTest {
 	
 	@Test(expected = ContentNotLinkException.class)
 	public void createBadLink() throws Exception  {
-		/*FIXME*/
-		
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "testLink",
-				"link", "olaolaola");
+				"link", "ola\0ola");
 		service.execute();
 				
 	}
 	
-	@Test
-	public void createAppAnyContent() throws Exception  {
-		MyDrive md = MyDrive.getInstance();
-		
-		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
-		
-		/*createFileService(token, name, type, content)*/
-		CreateFileService service = new CreateFileService(token, "testApp",
-				"app", "olaolaola");
-		service.execute();
-		
-		assertEquals("olaolaola",
-				md.getFileContents("/home/test1/testApp"));
-				
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent1() throws Exception  {
+		this.appContent("teste teste");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent2() throws Exception  {
+		this.appContent("9pins");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent3() throws Exception  {
+		this.appContent("a+c");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent4() throws Exception  {
+		this.appContent("testing1-2-3");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent5() throws Exception  {
+		this.appContent("O'Reily");
+	}
+	
+	@Test(expected=ContentNotAppException.class)
+	public void createAppBadContent6() throws Exception  {
+		this.appContent("OReily_&_Associates");
 	}
 	
 	@Test
 	public void createAppWithoutContent() throws Exception  {
-		/*FIXME*/
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
@@ -273,9 +283,9 @@ public class CreateFileTest extends PermissionsTest {
 				md.getFileContents("/home/test1/testApp"));
 				
 	}
+	
 	@Test
 	public void createPlainFileWithContent() throws Exception  {
-		/*FIXME*/
 		MyDrive md = MyDrive.getInstance();
 		
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
