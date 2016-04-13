@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class DeleteFileService extends MyDriveService {
 
@@ -34,6 +35,9 @@ public class DeleteFileService extends MyDriveService {
 		
 		if(_fileName==null)
 			throw new InvalidFileNameException();
+		
+		if(_fileName.equals("/"))
+			throw new PermissionDeniedException();
 
 		Session session = _drive.validateToken(_token);
 
