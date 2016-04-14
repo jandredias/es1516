@@ -393,11 +393,16 @@ public class MyDrive extends MyDrive_Base {
 	/* ********************************************************************** */
 	/* ************************* Add Files Methods ************************** */
 	private void addFile(String path, File file, User creator) throws FileExistsException ,
-			FileNotFoundException, PermissionDeniedException {
+			FileNotFoundException, PermissionDeniedException, InvalidFileNameException {
 
 		log.trace("Creating new File: " + file.getName() + " on " + path);
 		try {
 			getRootDirectory().addFile(path, file, creator);
+			String big_path = file.getPath();
+			
+			if(big_path.length() > 1024){
+				throw new InvalidFileNameException("Path bigger than 1024");
+			}
 		} catch (FileExistsException | FileNotFoundException exception) {
 			try {
 				log.trace("Problems Creating File: " + file.getName());

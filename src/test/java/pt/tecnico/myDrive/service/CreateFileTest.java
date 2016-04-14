@@ -25,6 +25,7 @@ public class CreateFileTest extends PermissionsTest {
 	@Override
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
+		
 		try{
 			md.addUser("test1","ola123", "test", null);
 			
@@ -34,17 +35,13 @@ public class CreateFileTest extends PermissionsTest {
 			
 			md.addUser("test4","ola123", "test", "--------");
 			
-			User user1 = md.getUserByUsername("test1");
-			
-			String dirb = new String(new char[1010]).replace('\0', 'b');
-			String dirc = new String(new char[1011]).replace('\0', 'c');
 
-			md.addDirectory("/home/test1", dirb, user1);
-			md.addDirectory("/home/test1", dirc, user1);
+
+			/*md.addDirectory("/home/test1", dirb, user1);*/
 		}
 		catch(Exception e){
 			throw new TestSetupException("CreateFileService: Populate");
- 
+			
 		};
 	}
 	
@@ -176,13 +173,24 @@ public class CreateFileTest extends PermissionsTest {
 	@Test
 	public void createFilePath1024CharsTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
+		String dirb = new String(new char[1010]).replace('\0', 'b');
+		String pathb = "/home/test1/"+dirb;
+		try{
+			
+			User user1 = md.getUserByUsername("test1");
+	
+
+			md.addDirectory("/home/test1", dirb, user1);
+		}
+		catch(Exception e){
+			throw new TestSetupException("CreateFileService: 1025Chars");
+			
+		}
 		
-		String pathb = "/home/test1/"+new String(new char[1010]).replace('\0', 'b');
+		
 		//pathb = /home/test1/ + b*1010 = 1022 chars
 		token = md.getValidToken("test1", pathb, new StrictlyTestObject());
 		
-
-		pathb += "/b";
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "b", 
@@ -196,11 +204,24 @@ public class CreateFileTest extends PermissionsTest {
 	@Test(expected=InvalidFileNameException.class)
 	public void createFilePath1025CharsTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
-		
-		String pathc = "/home/test1/"+new String(new char[1011]).replace('\0', 'c');
-
+		String dirc = new String(new char[1011]).replace('\0', 'c');
+		String pathc = "/home/test1/"+dirc;
+		try{
+			
+			User user1 = md.getUserByUsername("test1");
+	
+			
+			md.addDirectory("/home/test1", dirc, user1);
+	
+			
+			
+		}
+		catch(Exception e){
+			throw new TestSetupException("CreateFileService: 1025Chars");
+			
+		}
 		token = md.getValidToken("test1", pathc, new StrictlyTestObject());
-		pathc +="/c";
+		//pathc +="/c";
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "c", 
