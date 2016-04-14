@@ -11,8 +11,8 @@ import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
-import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class ListDirectoryService extends MyDriveService {
 
@@ -21,6 +21,8 @@ public class ListDirectoryService extends MyDriveService {
 	private MyDrive myDrive;
 	private Session session;
 	private Directory directory;
+
+	private String myUsername;
 
 	/**
 	 * Default Constructor
@@ -32,15 +34,26 @@ public class ListDirectoryService extends MyDriveService {
 		myDrive = MyDriveService.getMyDrive();
 		session = myDrive.getSessionByToken(token);
 		directory = session.getCurrentDirectory();
+		myUsername = session.getUser().getUsername();
 	}
 
 	@Override
-	public final void dispatch() throws InvalidTokenException {
+	public final void dispatch() throws InvalidTokenException, PermissionDeniedException {
 		myDrive.validateToken(token);
-		
-		User owner = directory.getOwner();
-		String permissions = directory.getPermissions();
-		
+
+		String dirOwner = directory.getOwner().getUsername();
+		String dirPermissions = directory.getPermissions();
+
+		if (dirOwner.equals(myUsername)) {
+			if (!dirPermissions.startsWith("r")) {
+				throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
+			}
+		} else {
+			if (dirPermissions.charAt(4) != 'r') {
+				throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
+			}
+		}
+
 		list = new ArrayList<List<String>>();
 		Set<File> files = directory.getFilesSet();
 
@@ -54,7 +67,7 @@ public class ListDirectoryService extends MyDriveService {
 			List<String> thisResult = new ArrayList<String>();
 			if (file instanceof Application) {
 				thisResult.add("Application");
-			}else if(file instanceof Link){
+			} else if (file instanceof Link) {
 				thisResult.add("Link");
 			} else if (file instanceof PlainFile) {
 				thisResult.add("Plain File");
@@ -65,7 +78,7 @@ public class ListDirectoryService extends MyDriveService {
 
 			if (file instanceof PlainFile) {
 				thisResult.add(String.valueOf(((PlainFile) file).getContent().length()));
-			}else if(file instanceof Directory){
+			} else if (file instanceof Directory) {
 				Set<File> contents = ((Directory) file).getFilesSet();
 				thisResult.add(String.valueOf(contents.size() + 2));
 			} else {
