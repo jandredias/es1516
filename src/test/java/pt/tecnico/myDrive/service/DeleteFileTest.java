@@ -1,25 +1,33 @@
 package pt.tecnico.myDrive.service;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Root;
+import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
-public class DeleteFileTest extends AbstractServiceTest {
+public class DeleteFileTest extends TokenAccessTest {
 
 	private User teste1;
 	private User teste2;
+	String tokenFile;
 	
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
 		Root root = md.getRootUser();
+		
 		try {
 			md.addUser("teste1", "teste1", "teste1", "rwxd----");
 			md.addUser("teste2", "teste2", "teste2", "rwxd----");
@@ -81,6 +89,37 @@ public class DeleteFileTest extends AbstractServiceTest {
 		}
 	}
 
+	@Override
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
+		MyDrive md = MyDrive.getInstance();
+		Session session;
+		try {
+			session = md.validateToken(token);
+			Directory currentDir = session.getCurrentDirectory();
+			tokenFile = currentDir.getPath() + "/" + nameOfFileItOPerates;
+			System.out.println("\n1n1n" +tokenFile);
+		} catch (InvalidTokenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.debug("Should never occur...");
+		}
+		
+		
+		return new ReadFileService(token, nameOfFileItOPerates);
+	}
+	
+	@Override
+	protected void assertServiceExecutedWithSuccess() {
+		MyDrive md = MyDrive.getInstance();
+
+		try {
+			md.getFile("/home/teste1/familia/file");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assert false;
+	}
 	// @Test(expected = InvalidTokenException.class)
 	// public void NullToken(){
 	// DeleteFileService service = new DeleteFileService(null, "ola");
