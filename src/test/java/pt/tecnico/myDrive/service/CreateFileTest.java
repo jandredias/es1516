@@ -28,11 +28,11 @@ public class CreateFileTest extends PermissionsTest {
 		try{
 			md.addUser("test1","ola123", "test", null);
 			
-			md.addUser("test2", "ola123", "test", null);
+			md.addUser("test2", "ola123", "test", "rwxdrwxd");
 			
-			md.addUser("test3", "ola123", "test", "badperms");
+			md.addUser("test3", "ola123", "test", "--------");
 			
-			md.addUser("test4","ola123", "test", "badperms");
+			md.addUser("test4","ola123", "test", "--------");
 			
 			User user1 = md.getUserByUsername("test1");
 			
@@ -96,7 +96,7 @@ public class CreateFileTest extends PermissionsTest {
 	public void createFileOthersDirWithPermissionTest() throws Exception {
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test2", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
@@ -104,7 +104,7 @@ public class CreateFileTest extends PermissionsTest {
 		service.execute();
 		
 		assertEquals("PlainFileTest",
-				md.getFileContents("/home/test3/test"));
+				md.getFileContents("/home/test2/test"));
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
@@ -136,14 +136,14 @@ public class CreateFileTest extends PermissionsTest {
 		
 		MyDrive md = MyDrive.getInstance();
 		
-		token = md.getValidToken("root", "/home/test1", new StrictlyTestObject());
+		token = md.getValidToken("root", "/home/test3", new StrictlyTestObject());
 		
 		/*createFileService(token, name, type, content)*/
 		CreateFileService service = new CreateFileService(token, "test", 
 				"plainfile", "PlainFileTest");
 		service.execute();
 		
-		assertEquals("PlainFileTest", md.getFileContents("/home/test1/test"));
+		assertEquals("PlainFileTest", md.getFileContents("/home/test3/test"));
 	}
 	
 	@Test(expected=InvalidFileNameException.class)
