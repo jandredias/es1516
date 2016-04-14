@@ -228,6 +228,11 @@ public class Directory extends Directory_Base {
 			nextDir.removeFile(newPath, user);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return getPath();
+	}
 
 	/**
 	 * 	 * Adds a file if it's a child or call a child element to do it for him
