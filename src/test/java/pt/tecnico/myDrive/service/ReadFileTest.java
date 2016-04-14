@@ -8,7 +8,9 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -84,7 +86,8 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
 		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("----r---");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "theirFile.txt");
 
 		readFileService.execute();
@@ -96,7 +99,8 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
 		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("--------");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "theirFile.txt");
 
 		readFileService.execute();
@@ -140,7 +144,8 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "/myFile.txt");
 		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("----r---");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "theirLink");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
@@ -153,7 +158,8 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "myFile.txt");
 		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("--------");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "theirLink");
 		readFileService.execute();
 	}
@@ -182,7 +188,8 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
 		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("r-x-r-x-");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
@@ -193,9 +200,14 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
 		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("--x-----");
 
-		long token = myDrive.getValidToken("me", theirHomeDirPath, new StrictlyTestObject());
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
 		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
+	}
+
+	private void changeCurrentSessionDirectory(String directory) throws FileNotFoundException, NotDirectoryException {
+		myDrive.getSessionByToken(token).setCurrentDirectory(myDrive.getDirectory(directory));
 	}
 
 }
