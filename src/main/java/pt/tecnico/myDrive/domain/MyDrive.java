@@ -602,17 +602,17 @@ public class MyDrive extends MyDrive_Base {
 		return super.getSessionSet();
 	}
 
-
-	/* **************************** Tokens Related ************************** */
-	/* ********************************************************************** */
-
-
 	/**
- 	* This method cleans old sessions of any user in the system
- 	*/
+	 * This method cleans old sessions of any user in the system
+	 */
 	public void cleanSessions(){
 		for(Session s : getDriveSessions())
 			if(!s.valid())
 				removeSession(s);
 	}
+
+	/* **************************** Tokens Related ************************** */
+	/* ********************************************************************** */
+
+
 }

@@ -81,6 +81,10 @@ public class Directory extends Directory_Base {
 	public void delete(User deleter)
 			throws PermissionDeniedException {
 
+		if(this.getName().equals("/")){
+			throw new PermissionDeniedException("Cannot Delete Root Dir");
+		}
+		
 		for(File f : getFilesSet())
 			f.delete(deleter);
 
@@ -209,9 +213,6 @@ public class Directory extends Directory_Base {
 	public void removeFile(String path, User user) throws FileNotFoundException,
 	DirectoryIsNotEmptyException, PermissionDeniedException{
 
-		if(path.equals("/")){
-			throw new PermissionDeniedException("Cannot Delete Root Dir");
-		}
 		
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 		if (pieces.size() == 1) {
