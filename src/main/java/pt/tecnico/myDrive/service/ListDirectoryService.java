@@ -35,8 +35,13 @@ public class ListDirectoryService extends MyDriveService {
 		this.token = token;
 		myDrive = MyDriveService.getMyDrive();
 		session = myDrive.getSessionByToken(token);
-		directory = session.getCurrentDirectory();
-		myUsername = session.getUser().getUsername();
+		if (session != null) {
+			directory = session.getCurrentDirectory();
+			myUsername = session.getUser().getUsername();
+		} else {
+			directory = null;
+			myUsername = null;
+		}
 	}
 
 	@Override

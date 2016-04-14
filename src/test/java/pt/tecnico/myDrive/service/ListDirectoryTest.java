@@ -314,7 +314,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		for(int i = 0; i < numberOfFiles ; i++ )
 			md.addPlainFile("/home/joao/TestDir", "PlainFile"+i, joao, "");
 
-		long token = MyDriveService.getMyDrive().getValidSession("joao","/home/joao", new StrictlyTestObject());
+		long token = MyDriveService.getMyDrive().getValidToken("joao","/home/joao", new StrictlyTestObject());
 		listDirService = new ListDirectoryService(token);
 		listDirService.execute();
 
