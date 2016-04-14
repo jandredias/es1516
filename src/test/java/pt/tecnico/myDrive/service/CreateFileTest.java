@@ -9,10 +9,10 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.ContentNotAppException;
-import pt.tecnico.myDrive.exception.ContentNotLinkException;
 import pt.tecnico.myDrive.exception.FileIsDirectoryException;
+import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidLinkContentException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
@@ -245,7 +245,7 @@ public class CreateFileTest extends PermissionsTest {
 				md.getFileContents("/home/test1/testLink"));
 	}
 	
-	@Test(expected = ContentNotLinkException.class)
+	@Test(expected = InvalidLinkContentException.class)
 	public void createBadLink() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		
@@ -259,32 +259,32 @@ public class CreateFileTest extends PermissionsTest {
 	}
 	
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent1() throws Exception  {
 		this.appContent("teste teste");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent2() throws Exception  {
 		this.appContent("9pins");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent3() throws Exception  {
 		this.appContent("a+c");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent4() throws Exception  {
 		this.appContent("testing1-2-3");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent5() throws Exception  {
 		this.appContent("O'Reily");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void createAppBadContent6() throws Exception  {
 		this.appContent("OReily_&_Associates");
 	}

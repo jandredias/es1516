@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidLinkContentException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -17,9 +18,9 @@ public class Link extends Link_Base {
 	public Link(){ super(); }
 
 	public Link(String name, User owner, String content) 
-			throws FileExistsException, InvalidFileNameException{
+			throws FileExistsException, InvalidFileNameException, InvalidLinkContentException{
 		if(content.contains("\0"))
-			throw new InvalidContentException("Contains \0 char..");
+			throw new InvalidLinkContentException("Contains \0 char..");
 		init(name, owner, content);
 	}
 

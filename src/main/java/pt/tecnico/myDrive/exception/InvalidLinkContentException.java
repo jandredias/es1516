@@ -1,16 +1,16 @@
 package pt.tecnico.myDrive.exception;
 
-public class ContentNotLinkException extends MyDriveException {
+public class InvalidLinkContentException extends MyDriveException {
 
 	/**
 	 * Thrown when content written to a Link file is invalid
 	 */
 	private static final long serialVersionUID = -7079697101411229552L;
-	public ContentNotLinkException() {
+	public InvalidLinkContentException() {
 		super();
 	}
 	
-	public ContentNotLinkException(String reason) {
+	public InvalidLinkContentException(String reason) {
 		super(reason);
 	}
 }

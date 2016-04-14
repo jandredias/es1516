@@ -17,7 +17,9 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidLinkContentException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -401,6 +403,7 @@ public class MyDrive extends MyDrive_Base {
 			String big_path = file.getPath();
 			
 			if(big_path.length() > 1024){
+				
 				throw new InvalidFileNameException("Path bigger than 1024");
 			}
 		} catch (FileExistsException | FileNotFoundException exception) {
@@ -417,7 +420,7 @@ public class MyDrive extends MyDrive_Base {
 
 	public void addApplication(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
-			FileNotFoundException, PermissionDeniedException {
+			FileNotFoundException, PermissionDeniedException, InvalidAppContentException {
 
 		Application file = new Application(name, owner, content);
 		this.addFile(path, file, owner);
@@ -433,7 +436,7 @@ public class MyDrive extends MyDrive_Base {
 
 	public void addLink(String path, String name, User owner,
 			String content)throws FileExistsException, InvalidFileNameException,
-			FileNotFoundException, PermissionDeniedException {
+			FileNotFoundException, PermissionDeniedException, InvalidLinkContentException {
 
 		Link file = new Link(name, owner, content);
 		this.addFile(path, file, owner);
