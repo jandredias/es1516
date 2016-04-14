@@ -11,12 +11,9 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 
 public abstract class PermissionsTest extends TokenAccessTest{
 	
-	protected MyDriveService permissionsService;
 	protected abstract void populate(); 
 
-	protected abstract MyDriveService createTokenService(long token);
-	
-	protected abstract MyDriveService createPermissionsService(long token, String nameOfFileItOPerates);
+	protected abstract MyDriveService createService(long token, String nameOfFileItOPerates);
 	
 	/**
 	 * Method that is meant to be define by derivated classes
@@ -42,15 +39,14 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	}
 	
 	/**
-	 * Method that every subclass redefines and ensures a service as run
+	 * Method that every subclass redefines and ensures a service has run
 	 */
 	protected abstract void assertServiceExecutedWithSuccess();
 	
 	/* ********************************************************************** */
 	/* ********************************************************************** */
 	/* ********************************************************************** */
-	private void setUpPermissionsTest(String permissions, String userBeingTested) 
-				throws MyDriveException{
+	private void setUpPermissionsTest(String permissions, String userBeingTested){
 		
 		permissions = restrictPermissions(permissions);
 		String username			= "PermissionsUser"; 
@@ -62,8 +58,10 @@ public abstract class PermissionsTest extends TokenAccessTest{
 			User user = md.getUserByUsername(username);
 			md.addDirectory("/home/" + username, folder, user);
 			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
-			md.getFile("/home/" + username + "/" + folder + "/testedFile").setPermissions(permissions);
-			md.getFile("/home/" + username + "/" + folder).setPermissions(permissions);
+			md.addDirectory(testBaseFolder, "changeDir",user);
+			md.getFile(testBaseFolder + "/testedFile").setPermissions(permissions);
+			md.getFile(testBaseFolder + "/changeDir" ).setPermissions(permissions);
+			md.getFile(testBaseFolder).setPermissions(permissions);
 		} catch(MyDriveException E){
 			throw new TestSetupException("buliding permissions test");
 		}
@@ -71,8 +69,8 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		if(userBeingTested.equals("OWNER"))
 			userBeingTested = username;
 		
-		long token = md.getValidSession(userBeingTested,testBaseFolder, new StrictlyTestObject());
-		permissionsService = createPermissionsService(token, "testedFile");
+		long token = md.getValidToken(userBeingTested,testBaseFolder, new StrictlyTestObject());
+		abstractClassService = createService(token, "testedFile");
 		System.out.println("\u001B[32;1m" + token +" \u001B[0m");
 	}
 	/* ********************************************************************** */
@@ -81,7 +79,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	@Test
 	public void ownUserHasPermissions() throws MyDriveException{
 		setUpPermissionsTest("rwxd----","OWNER");
-		permissionsService.execute();
+		abstractClassService.execute();
 		assertServiceExecutedWithSuccess();
 	}
 
@@ -90,7 +88,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		MyDrive md = MyDriveService.getMyDrive();
 		md.addUser("otherPermissionUser","...","...","--------");
 		setUpPermissionsTest("----rwxd","otherPermissionUser");		
-		permissionsService.execute();
+		abstractClassService.execute();
 		assertServiceExecutedWithSuccess();
 //		assertNotNull(service.result());
 	}
@@ -98,7 +96,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	@Test(expected = PermissionDeniedException.class)
 	public void ownUserHasNoPermissions() throws MyDriveException{
 		setUpPermissionsTest("----rwxd","OWNER");
-		permissionsService.execute();
+		abstractClassService.execute();
 	}
 
 	@Test(expected = PermissionDeniedException.class)
@@ -106,13 +104,13 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		MyDrive md = MyDriveService.getMyDrive();
 		md.addUser("otherPermissionUser","...","...","----rwxd");
 		setUpPermissionsTest("rwxd----","otherPermissionUser");
-		permissionsService.execute();
+		abstractClassService.execute();
 	}
 
 	@Test
 	public void rootUserHasNoPermissions() throws MyDriveException{
 		setUpPermissionsTest("--------","root");
-		permissionsService.execute();
+		abstractClassService.execute();
 		assertServiceExecutedWithSuccess();
 	}
 }

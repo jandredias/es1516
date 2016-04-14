@@ -91,8 +91,8 @@ public class File extends File_Base {
 	public void delete(User user)
 			throws PermissionDeniedException {
 
-		if(!user.hasWritePermissions(this.getDir())) throw new PermissionDeniedException();
-		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException();
+		if(!user.hasWritePermissions(this.getDir())) throw new PermissionDeniedException("write on father dir");
+		if(!user.hasDeletePermissions(this)) throw new PermissionDeniedException("delete on file");
 		this.setDir(null);
 		this.setOwner(null);
 

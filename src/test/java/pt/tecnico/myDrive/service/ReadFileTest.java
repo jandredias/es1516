@@ -8,7 +8,9 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
@@ -20,6 +22,9 @@ public class ReadFileTest extends PermissionsTest {
 	private User me, someone;
 	private ReadFileService readFileService;
 
+	private String myHomeDirPath = "/home/me";
+	private String theirHomeDirPath = "/home/someone";
+
 	private long token = 0;
 
 	protected void populate() {
@@ -27,26 +32,22 @@ public class ReadFileTest extends PermissionsTest {
 
 		myUsername = "me";
 		theirUsername = "someone";
-		
+
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
 			myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
 		}
-		token = MyDriveService.getMyDrive().getValidSession(myUsername, "/home/" + myUsername, new StrictlyTestObject());
+		token = MyDriveService.getMyDrive().getValidToken(myUsername, myHomeDirPath, new StrictlyTestObject());
 
 		me = myDrive.getUserByUsername(myUsername);
 		someone = myDrive.getUserByUsername(theirUsername);
+
 	}
 
 	@Override
-	protected MyDriveService createTokenService(long token) {
-		return new ReadFileService(token, null);
-	}
-
-	@Override
-	protected MyDriveService createPermissionsService(long token, String nameOfFileItOPerates) {
+	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new ReadFileService(token, nameOfFileItOPerates);
 	}
 
@@ -54,148 +55,159 @@ public class ReadFileTest extends PermissionsTest {
 	protected char getPermissionChar() {
 		return 'r';
 	}
-	
+
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		readFileService = (ReadFileService) permissionsService;
+		readFileService = (ReadFileService) abstractClassService;
 		assertNotNull(readFileService);
 	}
 
 	@Test
 	public void readOwnFileWithPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
 
-		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "myFile.txt");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOwnFileWithoutPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("--------");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("--------");
 
-		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "myFile.txt");
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOtherFileWithPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
-		myDrive.getFile("/home/someone/theirFile.txt").setPermissions("----r---");
+		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
+		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("----r---");
 
-		readFileService = new ReadFileService(token, "/home/someone/theirFile.txt");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "theirFile.txt");
+
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOtherFileWithoutPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
-		myDrive.getFile("/home/someone/theirFile.txt").setPermissions("--------");
+		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
+		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("--------");
 
-		readFileService = new ReadFileService(token, "/home/someone/theirFile.txt");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "theirFile.txt");
+
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void readDirectoryTest() throws MyDriveException {
-		myDrive.addDirectory("/home/me", "durr", me);
+		myDrive.addDirectory(myHomeDirPath, "durr", me);
 
-		readFileService = new ReadFileService(token, "/home/me/durr");
+		readFileService = new ReadFileService(token, "durr");
 		readFileService.execute();
-		// no asserts because UnsupportedOperationException is expected
 	}
 
 	@Test
 	public void readOwnLinkWithPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-		myDrive.getFile("/home/me/myLink").setPermissions("r-------");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
+		myDrive.addLink(myHomeDirPath, "myLink", me, myHomeDirPath + "/myFile.txt");
+		myDrive.getFile(myHomeDirPath + "/myLink").setPermissions("r-------");
 
-		readFileService = new ReadFileService(token, "/home/me/myLink");
+		readFileService = new ReadFileService(token, "myLink");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOwnLinkWithoutPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-		myDrive.addLink("/home/me", "myLink", me, "/home/me/myFile.txt");
-		myDrive.getFile("/home/me/myLink").setPermissions("--------");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
+		myDrive.addLink(myHomeDirPath, "myLink", me, myHomeDirPath + "/myFile.txt");
+		myDrive.getFile(myHomeDirPath + "/myLink").setPermissions("--------");
 
-		readFileService = new ReadFileService(token, "/home/me/myLink");
+		readFileService = new ReadFileService(token, "myLink");
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOtherLinkWithPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
-		myDrive.getFile("/home/someone/theirLink").setPermissions("----r---");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
+		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "/myFile.txt");
+		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("----r---");
 
-		readFileService = new ReadFileService(token, "/home/someone/theirLink");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "theirLink");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOtherLinkWithoutPermissionTest() throws MyDriveException {
-		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
-		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
-		myDrive.addLink("/home/someone", "theirLink", someone, "/home/me/myFile.txt");
-		myDrive.getFile("/home/someone/theirLink").setPermissions("--------");
+		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
+		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "myFile.txt");
+		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("--------");
 
-		readFileService = new ReadFileService(token, "/home/someone/theirLink");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "theirLink");
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOwnAppWithPermissionTest() throws MyDriveException {
-		myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
-		myDrive.getFile("/home/me/application.apk").setPermissions("r-x-----");
+		myDrive.addApplication(myHomeDirPath, "application.apk", me, "java.lang.NullPointerException");
+		myDrive.getFile(myHomeDirPath + "/application.apk").setPermissions("r-x-----");
 
-		readFileService = new ReadFileService(token, "/home/me/application.apk");
+		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOwnAppWithoutPermissionTest() throws MyDriveException {
-		myDrive.addApplication("/home/me", "application.apk", me, "java.lang.NullPointerException");
-		myDrive.getFile("/home/me/application.apk").setPermissions("--x-----");
+		myDrive.addApplication(myHomeDirPath, "application.apk", me, "java.lang.NullPointerException");
+		myDrive.getFile(myHomeDirPath + "/application.apk").setPermissions("--x-----");
 
-		readFileService = new ReadFileService(token, "/home/me/application.apk");
+		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
 	}
 
 	@Test
 	public void readOtherAppWithPermissionTest() throws MyDriveException {
-		myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
-		myDrive.getFile("/home/someone/application.apk").setPermissions("r-x-r-x-");
+		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
+		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("r-x-r-x-");
 
-		readFileService = new ReadFileService(token, "/home/someone/application.apk");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
 		assertEquals("java.lang.NullPointerException", readFileService.results());
 	}
 
 	@Test(expected = PermissionDeniedException.class)
 	public void readOtherAppWithoutPermissionTest() throws MyDriveException {
-		myDrive.addApplication("/home/someone", "application.apk", someone, "java.lang.NullPointerException");
-		myDrive.getFile("/home/someone/application.apk").setPermissions("--x-----");
+		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
+		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("--x-----");
 
-		readFileService = new ReadFileService(token, "/home/someone/application.apk");
+		changeCurrentSessionDirectory(theirHomeDirPath);
+
+		readFileService = new ReadFileService(token, "application.apk");
 		readFileService.execute();
-		// no asserts because PermissionDeniedException is expected
+	}
+
+	private void changeCurrentSessionDirectory(String directory) throws FileNotFoundException, NotDirectoryException {
+		myDrive.getSessionByToken(token).setCurrentDirectory(myDrive.getDirectory(directory));
 	}
 
 }

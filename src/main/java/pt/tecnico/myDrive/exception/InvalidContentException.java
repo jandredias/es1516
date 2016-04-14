@@ -6,12 +6,12 @@ package pt.tecnico.myDrive.exception;
  * @author miguel
  *
  */
-public class TestSetupException extends RuntimeException {
+public class InvalidContentException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public TestSetupException(String reason) {
-		super("\u001B[31;1m"+"TEST SETUP ERROR : " +reason+ "\u001B[0m");
+	public InvalidContentException(String reason) {
+		super(reason);
 	}
 	
 }
