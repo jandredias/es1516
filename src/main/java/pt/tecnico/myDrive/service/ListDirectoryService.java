@@ -1,6 +1,8 @@
 package pt.tecnico.myDrive.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -91,6 +93,12 @@ public class ListDirectoryService extends MyDriveService {
 			thisResult.add(file.getName());
 			list.add(thisResult);
 		}
+
+		Collections.sort(list, new Comparator<List<String>>() {
+			public int compare(List<String> o1, List<String> o2) {
+				return o1.get(6).compareTo(o2.get(6));
+			}
+		});
 	}
 
 	public final List<List<String>> result() {
