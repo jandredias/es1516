@@ -46,13 +46,15 @@ public class ListDirectoryService extends MyDriveService {
 		String dirOwner = directory.getOwner().getUsername();
 		String dirPermissions = directory.getPermissions();
 
-		if (dirOwner.equals(myUsername)) {
-			if (!dirPermissions.startsWith("r")) {
-				throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
-			}
-		} else {
-			if (dirPermissions.charAt(4) != 'r') {
-				throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
+		if (!myUsername.equals("root")) {
+			if (dirOwner.equals(myUsername)) {
+				if (!dirPermissions.startsWith("r")) {
+					throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
+				}
+			} else {
+				if (dirPermissions.charAt(4) != 'r') {
+					throw new PermissionDeniedException("You don't have permission to access " + directory.getPath());
+				}
 			}
 		}
 
