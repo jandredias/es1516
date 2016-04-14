@@ -2,10 +2,13 @@ package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -19,6 +22,8 @@ public class ReadFileTest extends PermissionsTest {
 	private String myUsername, theirUsername;
 	private User me, someone;
 	private ReadFileService readFileService;
+	
+	private Directory myHomeDir, theirHomeDir;
 
 	private long token = 0;
 
@@ -38,6 +43,13 @@ public class ReadFileTest extends PermissionsTest {
 
 		me = myDrive.getUserByUsername(myUsername);
 		someone = myDrive.getUserByUsername(theirUsername);
+		
+		try {
+			myHomeDir = myDrive.getDirectory("/home/me");
+			theirHomeDir = myDrive.getDirectory("/home/someone");
+		} catch (MyDriveException e) {
+			fail("Something went wrong on populate()!");
+		}
 	}
 
 	@Override
@@ -61,7 +73,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("r-------");
 
-		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "myFile.txt");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
@@ -71,7 +83,7 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/me", "myFile.txt", me, "qwerty");
 		myDrive.getFile("/home/me/myFile.txt").setPermissions("--------");
 
-		readFileService = new ReadFileService(token, "/home/me/myFile.txt");
+		readFileService = new ReadFileService(token, "myFile.txt");
 		readFileService.execute();
 		// no asserts because PermissionDeniedException is expected
 	}
@@ -81,7 +93,10 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive.addPlainFile("/home/someone", "theirFile.txt", someone, "qwerty");
 		myDrive.getFile("/home/someone/theirFile.txt").setPermissions("----r---");
 
-		readFileService = new ReadFileService(token, "/home/someone/theirFile.txt");
+		Session session = new Session(me, token);
+		session.setCurrentDirectory(theirHomeDir);
+		
+		readFileService = new ReadFileService(token, "theirFile.txt");
 		readFileService.execute();
 		assertEquals("qwerty", readFileService.results());
 	}
