@@ -21,13 +21,13 @@ public class WriteFileTest extends PermissionsTest {
 			md.addUser("test1","ola123", "test", null);
 			User testUser1 = md.getUserByUsername("test1");
 			
-			md.addUser("test2", "ola123", "test", null);
+			md.addUser("test2", "ola123", "test", "rwxdrwxd");
 			User testUser2 = md.getUserByUsername("test2");
 			
-			md.addUser("test3", "ola123", "test", "badperms");
+			md.addUser("test3", "ola123", "test", "--------");
 			User testUser3 = md.getUserByUsername("test3");
 			
-			md.addUser("test4","ola123", "test", "badperms");
+			md.addUser("test4","ola123", "test", "--------");
 			User testUser4 = md.getUserByUsername("test4");
 			
 			md.addPlainFile("/home/test1" , "plainfile1", testUser1, "olaola");
@@ -36,6 +36,11 @@ public class WriteFileTest extends PermissionsTest {
 			md.addPlainFile("/home/test4", "plainfile4", testUser4, "olaola");
 			
 			md.addLink("/home/test1", "link1", testUser1, "/home/test1/plainfile1");
+			md.addLink("/home/test1", "link2", testUser1, "/home/test1/link1");
+			md.addLink("/home/test1", "link3", testUser1, "/home/test1/app1");
+			md.addLink("/home/test1", "link4", testUser1, "/home/test1");
+			md.addLink("/home/test1", "link5", testUser1, "brokenLink");
+			
 			md.addApplication("/home/test1", "app1", testUser1, "testApp" );
 			
 		}
@@ -54,7 +59,6 @@ public class WriteFileTest extends PermissionsTest {
 	protected char getPermissionChar() {
 		return 'w';
 	}
-	
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess(){
@@ -91,12 +95,12 @@ public class WriteFileTest extends PermissionsTest {
 	@Test
 	public void writeOthersFileWithPermissionTest() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home/test3", new StrictlyTestObject());
+		token = md.getValidToken("test1", "/home/test2", new StrictlyTestObject());
 		WriteFileService service = new WriteFileService(token,
-				"plainfile3", "teste");
+				"plainfile2", "teste");
 		service.execute();
 		
-		assertEquals("teste", md.getFileContents("/home/test3/plainfile3"));
+		assertEquals("teste", md.getFileContents("/home/test2/plainfile2"));
 	}
 	
 	@Test(expected = PermissionDeniedException.class)
@@ -118,29 +122,19 @@ public class WriteFileTest extends PermissionsTest {
 		service.execute();
 
 	}
+	
 	@Test
 	public void rootWriteFileTest() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("root", "/home/test1", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "plainfile1", "teste");
+		token = md.getValidToken("root", "/home/test3", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
 		service.execute();
 		
-		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
+		assertEquals("teste", md.getFileContents("/home/test3/plainfile3"));
 	}
 	
-	@Test(expected=UnsupportedOperationException.class)
-	public void writeLink() throws Exception  {
-		
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "link1",
-				"/home/test4/plainfile4");
-		service.execute();
-		
-	}
-	
-	@Test(expected=UnsupportedOperationException.class)
+	@Test(expected=NotPlainFileException.class)
 	public void writeDir() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
@@ -149,6 +143,60 @@ public class WriteFileTest extends PermissionsTest {
 				"ola123");
 		service.execute();
 		
+	}
+	
+	@Test(expected=FileNotFoundException.class)
+	public void writeToBrokenLink() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "link5",
+				"doesntmatter");
+		service.execute();
+	}
+	
+	@Test(expected=NotPlainFileException.class)
+	public void writeToDirectoryLink() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "link4",
+				"doesntmatter");
+		service.execute();
+	}
+	
+	@Test
+	public void writeToPlainFileLink() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "link1",
+				"doesntmatter");
+		service.execute();
+		
+		assertEquals("doesntmatter",
+				md.getFileContents("/home/test1/plainfile1"));
+	}
+	
+	@Test
+	public void writeToAppFileLink() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "link3",
+				"doesntmatter");
+		service.execute();
+		
+		assertEquals("doesntmatter",
+				md.getFileContents("/home/test1/app1"));
+	}
+	
+	@Test
+	public void writeToLinkFileLink() throws Exception  {
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+		WriteFileService service = new WriteFileService(token, "link2",
+				"doesntmatter");
+		service.execute();
+		
+		assertEquals("doesntmatter",
+				md.getFileContents("/home/test1/"));
 	}
 	
 	public void writeApp() throws Exception{
@@ -189,15 +237,6 @@ public class WriteFileTest extends PermissionsTest {
 	@Test(expected=ContentNotAppException.class)
 	public void writeAppBadContent6() throws Exception  {
 		this.appContent("OReily_&_Associates");
-	}
-	@Test(expected = UnsupportedOperationException.class)
-	public void writeContentOfDir() throws Exception  {
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "test1",
-				"olaolaola");
-		service.execute();
-				
 	}
 	
 	
