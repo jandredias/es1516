@@ -24,7 +24,6 @@ public class ListDirectoryService extends MyDriveService {
 	private Session session;
 	private Directory directory;
 
-
 	/**
 	 * Default Constructor
 	 * 
@@ -45,7 +44,8 @@ public class ListDirectoryService extends MyDriveService {
 	public final void dispatch() throws InvalidTokenException, PermissionDeniedException {
 		myDrive.validateToken(token);
 
-		if(!session.getUser().hasReadPermissions(directory)) throw new PermissionDeniedException();
+		if (!session.getUser().hasReadPermissions(directory))
+			throw new PermissionDeniedException();
 
 		list = new ArrayList<List<String>>();
 		Set<File> files = directory.getFilesSet();
@@ -55,7 +55,7 @@ public class ListDirectoryService extends MyDriveService {
 
 		list.add(currentDir);
 		list.add(parentDir);
-		
+
 		for (File file : files) {
 			boolean link = false;
 			List<String> thisResult = new ArrayList<String>();
@@ -83,11 +83,11 @@ public class ListDirectoryService extends MyDriveService {
 			thisResult.add(file.getOwner().getUsername());
 			thisResult.add(String.valueOf(file.getId()));
 			thisResult.add(file.getModification().toString());
-			if(link)
+			if (link)
 				thisResult.add(file.getName() + " -> " + ((PlainFile) file).getContent());
 			else
 				thisResult.add(file.getName());
-			
+
 			list.add(thisResult);
 		}
 
