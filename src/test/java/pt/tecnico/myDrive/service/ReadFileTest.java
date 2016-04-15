@@ -30,17 +30,17 @@ public class ReadFileTest extends PermissionsTest {
 
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
-			//myDrive.addUser("someone", "qwerty123", "Sarah", null);
+			// myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
 		}
-		token = MyDriveService.getMyDrive().getValidToken(myUsername, myHomeDirPath, new StrictlyTestObject());	
+		token = MyDriveService.getMyDrive().getValidToken(myUsername, myHomeDirPath, new StrictlyTestObject());
 
 		me = myDrive.getUserByUsername(myUsername);
-		//someone = myDrive.getUserByUsername(theirUsername);
+		// someone = myDrive.getUserByUsername(theirUsername);
 
 	}
-		
+
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new ReadFileService(token, nameOfFileItOPerates);
@@ -57,49 +57,56 @@ public class ReadFileTest extends PermissionsTest {
 		assertNotNull(readFileService.result());
 	}
 
-//	@Test
-//	public void readOwnFileWithPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
-//		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
-//
-//		readFileService = new ReadFileService(token, "myFile.txt");
-//		readFileService.execute();
-//		assertEquals("qwerty", readFileService.results());
-//	}
-//
-//	@Test(expected = PermissionDeniedException.class)
-//	public void readOwnFileWithoutPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
-//		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("--------");
-//
-//		readFileService = new ReadFileService(token, "myFile.txt");
-//		readFileService.execute();
-//	}
-//
-//	@Test
-//	public void readOtherFileWithPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
-//		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("----r---");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "theirFile.txt");
-//
-//		readFileService.execute();
-//		assertEquals("qwerty", readFileService.results());
-//	}
-//
-//	@Test(expected = PermissionDeniedException.class)
-//	public void readOtherFileWithoutPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone, "qwerty");
-//		myDrive.getFile(theirHomeDirPath + "/theirFile.txt").setPermissions("--------");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "theirFile.txt");
-//
-//		readFileService.execute();
-//	}
+	// @Test
+	// public void readOwnFileWithPermissionTest() throws MyDriveException {
+	// myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+	// myDrive.getFile(myHomeDirPath +
+	// "/myFile.txt").setPermissions("r-------");
+	//
+	// readFileService = new ReadFileService(token, "myFile.txt");
+	// readFileService.execute();
+	// assertEquals("qwerty", readFileService.results());
+	// }
+	//
+	// @Test(expected = PermissionDeniedException.class)
+	// public void readOwnFileWithoutPermissionTest() throws MyDriveException {
+	// myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+	// myDrive.getFile(myHomeDirPath +
+	// "/myFile.txt").setPermissions("--------");
+	//
+	// readFileService = new ReadFileService(token, "myFile.txt");
+	// readFileService.execute();
+	// }
+	//
+	// @Test
+	// public void readOtherFileWithPermissionTest() throws MyDriveException {
+	// myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone,
+	// "qwerty");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/theirFile.txt").setPermissions("----r---");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "theirFile.txt");
+	//
+	// readFileService.execute();
+	// assertEquals("qwerty", readFileService.results());
+	// }
+	//
+	// @Test(expected = PermissionDeniedException.class)
+	// public void readOtherFileWithoutPermissionTest() throws MyDriveException
+	// {
+	// myDrive.addPlainFile(theirHomeDirPath, "theirFile.txt", someone,
+	// "qwerty");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/theirFile.txt").setPermissions("--------");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "theirFile.txt");
+	//
+	// readFileService.execute();
+	// }
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void readDirectoryTest() throws MyDriveException {
@@ -121,42 +128,51 @@ public class ReadFileTest extends PermissionsTest {
 		assertEquals("qwerty", readFileService.result());
 	}
 
-//	public void readLinkTest() throws MyDriveException {
-//		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
-//		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
-//		myDrive.addLink(myHomeDirPath, "myLink", me, myHomeDirPath + "/myFile.txt");
-//		myDrive.getFile(myHomeDirPath + "/myLink").setPermissions("rwxdrwxd");
-//
-//		readFileService = new ReadFileService(token, "myLink");
-//		readFileService.execute();
-//	}
+	// public void readLinkTest() throws MyDriveException {
+	// myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+	// myDrive.getFile(myHomeDirPath +
+	// "/myFile.txt").setPermissions("r-------");
+	// myDrive.addLink(myHomeDirPath, "myLink", me, myHomeDirPath +
+	// "/myFile.txt");
+	// myDrive.getFile(myHomeDirPath + "/myLink").setPermissions("rwxdrwxd");
+	//
+	// readFileService = new ReadFileService(token, "myLink");
+	// readFileService.execute();
+	// }
 
-//	@Test
-//	public void readOtherLinkWithPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
-//		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
-//		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "/myFile.txt");
-//		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("----r---");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "theirLink");
-//		readFileService.execute();
-//		assertEquals("qwerty", readFileService.results());
-//	}
+	// @Test
+	// public void readOtherLinkWithPermissionTest() throws MyDriveException {
+	// myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+	// myDrive.getFile(myHomeDirPath +
+	// "/myFile.txt").setPermissions("r-------");
+	// myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath +
+	// "/myFile.txt");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/theirLink").setPermissions("----r---");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "theirLink");
+	// readFileService.execute();
+	// assertEquals("qwerty", readFileService.results());
+	// }
 
-//	@Test(expected = PermissionDeniedException.class)
-//	public void readOtherLinkWithoutPermissionTest() throws MyDriveException {
-//		myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
-//		myDrive.getFile(myHomeDirPath + "/myFile.txt").setPermissions("r-------");
-//		myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath + "myFile.txt");
-//		myDrive.getFile(theirHomeDirPath + "/theirLink").setPermissions("--------");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "theirLink");
-//		readFileService.execute();
-//	}
+	// @Test(expected = PermissionDeniedException.class)
+	// public void readOtherLinkWithoutPermissionTest() throws MyDriveException
+	// {
+	// myDrive.addPlainFile(myHomeDirPath, "myFile.txt", me, "qwerty");
+	// myDrive.getFile(myHomeDirPath +
+	// "/myFile.txt").setPermissions("r-------");
+	// myDrive.addLink(theirHomeDirPath, "theirLink", someone, myHomeDirPath +
+	// "myFile.txt");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/theirLink").setPermissions("--------");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "theirLink");
+	// readFileService.execute();
+	// }
 
 	@Test
 	public void readAppTest() throws MyDriveException {
@@ -168,37 +184,43 @@ public class ReadFileTest extends PermissionsTest {
 		assertEquals("java.lang.NullPointerException", readFileService.result());
 	}
 
-//	@Test(expected = PermissionDeniedException.class)
-//	public void readOwnAppWithoutPermissionTest() throws MyDriveException {
-//		myDrive.addApplication(myHomeDirPath, "application.apk", me, "java.lang.NullPointerException");
-//		myDrive.getFile(myHomeDirPath + "/application.apk").setPermissions("--x-----");
-//
-//		readFileService = new ReadFileService(token, "application.apk");
-//		readFileService.execute();
-//	}
-//
-//	@Test
-//	public void readOtherAppWithPermissionTest() throws MyDriveException {
-//		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
-//		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("r-x-r-x-");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "application.apk");
-//		readFileService.execute();
-//		assertEquals("java.lang.NullPointerException", readFileService.results());
-//	}
-//
-//	@Test(expected = PermissionDeniedException.class)
-//	public void readOtherAppWithoutPermissionTest() throws MyDriveException {
-//		myDrive.addApplication(theirHomeDirPath, "application.apk", someone, "java.lang.NullPointerException");
-//		myDrive.getFile(theirHomeDirPath + "/application.apk").setPermissions("--x-----");
-//
-//		changeCurrentSessionDirectory(theirHomeDirPath);
-//
-//		readFileService = new ReadFileService(token, "application.apk");
-//		readFileService.execute();
-//	}
-
+	// @Test(expected = PermissionDeniedException.class)
+	// public void readOwnAppWithoutPermissionTest() throws MyDriveException {
+	// myDrive.addApplication(myHomeDirPath, "application.apk", me,
+	// "java.lang.NullPointerException");
+	// myDrive.getFile(myHomeDirPath +
+	// "/application.apk").setPermissions("--x-----");
+	//
+	// readFileService = new ReadFileService(token, "application.apk");
+	// readFileService.execute();
+	// }
+	//
+	// @Test
+	// public void readOtherAppWithPermissionTest() throws MyDriveException {
+	// myDrive.addApplication(theirHomeDirPath, "application.apk", someone,
+	// "java.lang.NullPointerException");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/application.apk").setPermissions("r-x-r-x-");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "application.apk");
+	// readFileService.execute();
+	// assertEquals("java.lang.NullPointerException",
+	// readFileService.results());
+	// }
+	//
+	// @Test(expected = PermissionDeniedException.class)
+	// public void readOtherAppWithoutPermissionTest() throws MyDriveException {
+	// myDrive.addApplication(theirHomeDirPath, "application.apk", someone,
+	// "java.lang.NullPointerException");
+	// myDrive.getFile(theirHomeDirPath +
+	// "/application.apk").setPermissions("--x-----");
+	//
+	// changeCurrentSessionDirectory(theirHomeDirPath);
+	//
+	// readFileService = new ReadFileService(token, "application.apk");
+	// readFileService.execute();
+	// }
 
 }
