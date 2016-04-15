@@ -194,12 +194,25 @@ public class ListDirectoryTest extends PermissionsTest {
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> linkList = serviceList.get(2); 
-		Link  file = ( Link ) md.getFile("/home/joao/TestDir/Link");
-		checkSingleFileStuff(file, linkList , "Link"); 
+		//checkSingleFileStuff(file, linkList , "Link"); 
 
 		//TODO:: Check letters dont crash
 		String listedDimension	= linkList.get(2);	
-		assertEquals("dimension",String.valueOf(file.getContent().length()), listedDimension);
+		assertEquals("dimension",String.valueOf("linkContent".length()), listedDimension);
+		
+		String listedFileType = linkList.get(0);
+		assertEquals("file type","Link", listedFileType);
+
+		String listedPermissions = linkList.get(1);
+		assertEquals("permissions ","rwxdrwxd", listedPermissions);
+		//Dimension has its own special Tests;
+
+		String listedUsername = linkList.get(3);
+		assertEquals("username","joao",listedUsername);
+
+		String listedName = linkList.get(6);
+		assertEquals("name ","Link -> linkContent",listedName);
+		
 	}
 
 	@Test
@@ -230,20 +243,20 @@ public class ListDirectoryTest extends PermissionsTest {
 		User joao = md.getUserByUsername("joao");
 		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "AppCOntent"); 
 		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
-		md.addLink("/home/joao/TestDir", "Link", joao, "AppCOntent"); 
+		md.addPlainFile("/home/joao/TestDir", "PlainFile2", joao, "AppCOntent"); 
 		md.addDirectory("/home/joao/TestDir", "Dir2", joao); 
 		md.addDirectory("/home/joao/TestDir", "Dir1", joao); 
-		md.addApplication("/home/joao/TestDir", ".App534", joao, "AppCOntent"); 
+		md.addApplication("/home/joao/TestDir", "App.534", joao, "AppCOntent"); 
 		
 		ArrayList<String> createdNamesList = new ArrayList<String>();
 		createdNamesList.add(0, ".");
 		createdNamesList.add(1, "..");
 		createdNamesList.add(2, "PlainFile");
 		createdNamesList.add(3, "App");
-		createdNamesList.add(4, "Link");
+		createdNamesList.add(4, "PlainFile2");
 		createdNamesList.add(5, "Dir2");
 		createdNamesList.add(6, "Dir1");
-		createdNamesList.add(7, ".App534");
+		createdNamesList.add(7, "App.534");
 		
 		Collections.sort(createdNamesList);
 		listDirService.execute();
