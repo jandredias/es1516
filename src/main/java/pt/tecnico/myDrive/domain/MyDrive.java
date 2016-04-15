@@ -290,26 +290,7 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 
-	/**
-	 * gets a session by token
-	 *
-	 * @param long token
-	 * @return Session
-	 */
-	public Session getSessionByToken(long token) {
-		for(Session session : getDriveSessions())
-			if(session.getToken().equals(token)) return session;
-		return null;
-	}
 
-	public Long getNewToken(){
-		while(true){
-			Long token = ThreadLocalRandom.current().nextLong();
-			for(Session session : getDriveSessions())
-				if(session.getToken().equals(token)) continue;
-			return token;
-		}
-	}
 
 	/**
 	 * interface that adds a user to the file system
@@ -545,7 +526,26 @@ public class MyDrive extends MyDrive_Base {
 
 	/* ********************************************************************** */
 	/* **************************** Tokens Related ************************** */
+	/**
+	 * gets a session by token
+	 *
+	 * @param long token
+	 * @return Session
+	 */
+	public Session getSessionByToken(long token) {
+		for(Session session : getDriveSessions())
+			if(session.getToken().equals(token)) return session;
+		return null;
+	}
 
+	public Long getNewToken(){
+		while(true){
+			Long token = ThreadLocalRandom.current().nextLong();
+			for(Session session : getDriveSessions())
+				if(session.getToken().equals(token)) continue;
+			return token;
+		}
+	}
 	/**
 	 * return the corresponding Session if the token is valid
 	 * @param token
@@ -589,9 +589,9 @@ public class MyDrive extends MyDrive_Base {
 			} catch (FileNotFoundException | NotDirectoryException e) {
 				throw new TestSetupException("GetValidSessionError: Invalid directory: " + currentDirectoryPath);
 			}
-			//As it is only run on tests context the database is clean,
-			//	so 666 can be used
-			long token = 666;
+
+			
+			long token = this.getNewToken();
 			Session session = new Session(user, token);
 			session.setCurrentDirectory(directory);
 			return token;
