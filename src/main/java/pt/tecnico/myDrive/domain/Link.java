@@ -21,6 +21,8 @@ public class Link extends Link_Base {
 			throws FileExistsException, InvalidFileNameException, InvalidLinkContentException{
 		if(content.contains("\0"))
 			throw new InvalidLinkContentException("Contains \0 char..");
+		if(content.equals(""))
+			throw new InvalidLinkContentException("empty content in link invalid");
 		init(name, owner, content);
 	}
 

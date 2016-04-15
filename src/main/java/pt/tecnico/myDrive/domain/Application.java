@@ -11,18 +11,23 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 /* HERDA DE PLAINFILE*/
 public class Application extends Application_Base {
-
+	
 	public Application() { super(); }
 
 	public Application(String name, User owner, String content) 
 			throws FileExistsException, InvalidFileNameException, InvalidAppContentException{
 		
+		if(content.equals("")){
+			throw new InvalidAppContentException();
+		}
 		String[] allPaths = content.split("\\.");
 		for (String s : allPaths){
 			if(s.equals(""))
 				throw new InvalidAppContentException();
+			if(s.charAt(0) >= '0' && s.charAt(0) <= '9' )
+				throw new InvalidAppContentException("starts with number");
 			int size = s.length();
-			for(int index = 0; index < size; index++){
+			for(int index = 1; index < size; index++){
 				if(!Character.isJavaIdentifierPart(s.charAt(index)))
 					throw new InvalidAppContentException();
 			}
