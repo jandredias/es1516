@@ -71,7 +71,6 @@ public abstract class PermissionsTest extends TokenAccessTest{
 		
 		long token = md.getValidToken(userBeingTested,testBaseFolder, new StrictlyTestObject());
 		abstractClassService = createService(token, "testedFile");
-		System.out.println("\u001B[32;1m" + token +" \u001B[0m");
 	}
 	/* ********************************************************************** */
 	/* ********************************************************************** */

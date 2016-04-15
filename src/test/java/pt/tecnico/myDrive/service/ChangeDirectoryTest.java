@@ -217,7 +217,8 @@ public class ChangeDirectoryTest extends PermissionsTest{
 			md.addLink("/home/zecarlos", "LINK_N_PERMISSIVE", ze , ".");
 			md.addLink("/home/zecarlos", "LINK_ROOT", ze , "/");
 			md.addLink("/home/zecarlos", "LINK_TO_LINK", ze , "/home/zecarlos/LINK_SELF_OK");
-	 		md.addLink("/home/zecarlos", "LINK_FAILS_MIDDLE", ze , "./FAIL_ZeCarlos_DIR/../../");
+			md.addLink("/home/zecarlos", "LINK_FAILS_MIDDLE", ze , "./FAIL_ZeCarlos_DIR/../../");
+	 		md.addLink("/home/zecarlos", "END_DOES_NOT_EXIST", ze , "./OLA/OLA/OLA/../../");
 	 		
 	 		md.getFile("/home/zecarlos/FAIL_ZeCarlos_DIR").setPermissions("------x-");
 	 		md.getFile("/home/zecarlos/FAIL_OTHER_DIR").setPermissions("--x-----");
@@ -268,6 +269,7 @@ public class ChangeDirectoryTest extends PermissionsTest{
 		service.execute();
 //		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
 	}
+
 	public void changeToLinkToRoot() throws MyDriveException {
 		addZeCarlos();
 		MyDrive md = MyDriveService.getMyDrive();
@@ -276,7 +278,15 @@ public class ChangeDirectoryTest extends PermissionsTest{
 		service.execute();
 		assertEquals("/", service.result());
 	}
-	
+	@Test(expected = FileNotFoundException.class)
+	public void changeToLinkThatDoesNotExists () throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "END_DOES_NOT_EXIST");
+		service.execute();
+//		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
+	}
 	
 	private String pwd;
 	@Override
