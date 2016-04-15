@@ -29,8 +29,8 @@ public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();
 
 	public static void main(String[] args) throws IOException {
-		if(helloWorld())
-			return;
+		//if(helloWorld())
+			//return;
 		try {
 			init();
 
