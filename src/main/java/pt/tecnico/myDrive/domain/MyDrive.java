@@ -178,23 +178,6 @@ public class MyDrive extends MyDrive_Base {
 	/* *************************** Static Methods *************************** */
 	/* ********************************************************************** */
 
-	/**
-	 * Removes a last file in path (absolute Only)
-	 *
-	 * @param String path that includes the file to delete
-	 * @throws DirectoryIsNotEmptyException
-	 */
-	public void removeFile(String path, User user)
-		throws FileNotFoundException, DirectoryIsNotEmptyException, PermissionDeniedException{
-			getRootDirectory().removeFile(path, user);
-	}
-	
-	/**FIXME should not be public only curr Dir; upper too ^ !**/
-	public void deleteFile (String path, User user) throws FileNotFoundException,
-			DirectoryIsNotEmptyException, PermissionDeniedException {
-
-		this.getRootDirectory().removeFile(path, user);
-	}
 	
 	/**
 	 * Get File from a directory
@@ -342,18 +325,6 @@ public class MyDrive extends MyDrive_Base {
 			}
 			throw new UsernameAlreadyInUseException(name);
 		}
-	}
-
-	
-	/**FIXME should not be public only curr Dir !**/
-	public ArrayList<String> listDir(String path)
-			throws UnsupportedOperationException, FileNotFoundException,
-			NotDirectoryException {
-
-		File file = getFile(path);
-		ListDirVisitor visitor = new ListDirVisitor();
-		file.accept(visitor);
-		return visitor.getFileNames();
 	}
 
 	/**FIXME should not be public only curr Dir !**/

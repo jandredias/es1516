@@ -2,6 +2,7 @@ package pt.tecnico.myDrive.service;
 
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.FileContentsVisitor;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
@@ -30,7 +31,9 @@ public class ReadFileService extends MyDriveService {
 		Directory currentDir = session.getCurrentDirectory();
 		File file = currentDir.getInnerFile(_fileName);
 		if(!session.getUser().hasReadPermissions(file)) throw new PermissionDeniedException();
-		_content = _drive.getFileContents(file.getPath());
+		FileContentsVisitor visitor = new FileContentsVisitor();
+		file.accept(visitor);
+		_content = visitor.getFileContents();
 		
 	}
 	
