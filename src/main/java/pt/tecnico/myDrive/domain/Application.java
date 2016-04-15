@@ -1,20 +1,37 @@
 package pt.tecnico.myDrive.domain;
 
+import java.util.ArrayList;
+
 import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
-import java.util.ArrayList;
-
 /* HERDA DE PLAINFILE*/
 public class Application extends Application_Base {
-
+	
 	public Application() { super(); }
 
 	public Application(String name, User owner, String content) 
-			throws FileExistsException, InvalidFileNameException{
+			throws FileExistsException, InvalidFileNameException, InvalidAppContentException{
+		
+		if(content.equals("")){
+			throw new InvalidAppContentException();
+		}
+		String[] allPaths = content.split("\\.");
+		for (String s : allPaths){
+			if(s.equals(""))
+				throw new InvalidAppContentException();
+			if(s.charAt(0) >= '0' && s.charAt(0) <= '9' )
+				throw new InvalidAppContentException("starts with number");
+			int size = s.length();
+			for(int index = 1; index < size; index++){
+				if(!Character.isJavaIdentifierPart(s.charAt(index)))
+					throw new InvalidAppContentException();
+			}
+		}
 		
 		init(name, owner, content);
 	}

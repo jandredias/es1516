@@ -3,9 +3,12 @@ package pt.tecnico.myDrive.service;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.CantCreatDirWithContentException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.InvalidLinkContentException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnknowFileTypeException;
@@ -32,7 +35,6 @@ public class CreateFileService extends MyDriveService {
 		_token = token;
 	}
 
-
 	/**
 	 * Implementation of the service
 	 * @throws FileNotFoundException 
@@ -42,12 +44,15 @@ public class CreateFileService extends MyDriveService {
 	 * @throws UserDoesNotExistsException 
 	 * @throws InvalidTokenException 
 	 * @throws PermissionDeniedException 
+	 * @throws InvalidAppContentException 
+	 * @throws InvalidLinkContentException 
+	 * @throws CantCreatDirWithContentException 
 	 */
 	@Override
 	public final void dispatch() throws FileExistsException, 
 			InvalidFileNameException, FileNotFoundException, 
-			UnknowFileTypeException, UserDoesNotExistsException, 
-			InvalidTokenException, PermissionDeniedException{
+			 UserDoesNotExistsException, UnknowFileTypeException,
+			InvalidTokenException, PermissionDeniedException, InvalidAppContentException, InvalidLinkContentException, CantCreatDirWithContentException {
 
 		Session session = _drive.validateToken(_token);
 		User    user    = session.getUser();
@@ -64,11 +69,15 @@ public class CreateFileService extends MyDriveService {
 			_drive.addPlainFile(_path, _fileName, user, _content);
 			break;
 		case "dir":
-			_drive.addDirectory(_path, _fileName,user);
+			if(_content.equals("")){
+				_drive.addDirectory(_path, _fileName,user);
+			}
+			else 
+				throw new CantCreatDirWithContentException();
 			break;
 		default:
 			log.error("Unknown Type File");
-			throw new UnknowFileTypeException(_fileType);
+			throw new UnknowFileTypeException("");
 		}
 	}
 }

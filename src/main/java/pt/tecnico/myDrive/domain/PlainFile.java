@@ -22,7 +22,7 @@ public class PlainFile extends PlainFile_Base {
 			throws FileExistsException, InvalidFileNameException {
 
 		super.init(name, owner); //File Init
-		this.setContent(content);
+		super.setContent(content);
 	}
 	public PlainFile(Element xml) {
 		this.xmlImport(xml);

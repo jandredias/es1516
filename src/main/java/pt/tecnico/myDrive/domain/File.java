@@ -67,7 +67,7 @@ public class File extends File_Base {
 	protected void init(String name, Integer id , DateTime modification,
 			String permissions, User owner) throws FileExistsException,
 				InvalidFileNameException{
-
+		
 		if( name.contains("/") || name.contains("\0")){
 			this.deleteDomainObject();
 			throw new InvalidFileNameException(name);

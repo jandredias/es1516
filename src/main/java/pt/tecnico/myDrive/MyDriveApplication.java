@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,8 @@ public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();
 
 	public static void main(String[] args) throws IOException {
+		if(helloWorld())
+			return;
 		try {
 			init();
 
@@ -45,6 +48,8 @@ public class MyDriveApplication {
 
 	public static boolean helloWorld(){
 
+				
+		
 		return true;
 	}
 

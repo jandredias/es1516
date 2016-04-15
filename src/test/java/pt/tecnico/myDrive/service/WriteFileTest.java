@@ -209,32 +209,32 @@ public class WriteFileTest extends PermissionsTest {
 				md.getFileContents("/home/test1/app1"));
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent1() throws Exception  {
 		this.appContent("teste teste");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent2() throws Exception  {
 		this.appContent("9pins");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent3() throws Exception  {
 		this.appContent("a+c");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent4() throws Exception  {
 		this.appContent("testing1-2-3");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent5() throws Exception  {
 		this.appContent("O'Reily");
 	}
 	
-	@Test(expected=ContentNotAppException.class)
+	@Test(expected=InvalidAppContentException.class)
 	public void writeAppBadContent6() throws Exception  {
 		this.appContent("OReily_&_Associates");
 	}

@@ -36,9 +36,6 @@ public class DeleteFileService extends MyDriveService {
 		if(_fileName==null)
 			throw new InvalidFileNameException();
 		
-		if(_fileName.equals("/"))
-			throw new PermissionDeniedException();
-
 		Session session = _drive.validateToken(_token);
 
 		Directory currentDir = session.getCurrentDirectory();
