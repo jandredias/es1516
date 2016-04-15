@@ -24,19 +24,19 @@ public class ReadFileService extends MyDriveService {
 	}
 	
 	@Override
-	protected void dispatch() throws FileNotFoundException, 
-		InvalidTokenException, PermissionDeniedException,
-		UnsupportedOperationException, NotDirectoryException{
+	protected void dispatch() throws InvalidTokenException, PermissionDeniedException, FileNotFoundException, NotDirectoryException, UnsupportedOperationException {
 		
 		Session session = _drive.validateToken(_token);
 		Directory currentDir = session.getCurrentDirectory();
 		File file = currentDir.getInnerFile(_fileName);
+		if(!session.getUser().hasReadPermissions(file)) throw new PermissionDeniedException();
 		_content = _drive.getFileContents(file.getPath());
 		
 	}
 	
-	public String results(){
+	public String result(){
 		return _content;
 	}
 
 }
+	

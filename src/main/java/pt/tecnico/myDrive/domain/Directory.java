@@ -232,7 +232,6 @@ public class Directory extends Directory_Base {
 		}
 	}
 	
-	@Override
 	public String toString() {
 		return getPath();
 	}
