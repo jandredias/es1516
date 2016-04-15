@@ -1,6 +1,8 @@
 package pt.tecnico.myDrive.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -9,14 +11,12 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.InvalidPasswordException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
-import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.WrongPasswordException;
 
-public class LoginUserServiceTest extends AbstractServiceTest {
+public class LoginUserTest extends AbstractServiceTest {
 
 	protected void populate() {
 		MyDrive mD = MyDriveService.getMyDrive();
@@ -27,36 +27,36 @@ public class LoginUserServiceTest extends AbstractServiceTest {
 			mD.addUser("Ricardo","slb1904", null, null);
 			mD.addUser("Xila", "qwerty", null, null);
 			mD.addUser("Joao", "654321", null, null);
-		} catch (InvalidUsernameException | UsernameAlreadyInUseException e) {
-			assert false;
+		}catch(MyDriveException e){
+			throw new TestSetupException("LoginUserTest: Populate");
 		}
 	}
 	
-	@Test(expected = InvalidUsernameException.class)
+	@Test(expected = UserDoesNotExistsException.class)
 	public void nullUsername() throws MyDriveException{
 		LoginUserService service = new LoginUserService(null, "123456");
 		service.execute();
 	}
 	
-	@Test(expected = InvalidPasswordException.class)
+	@Test(expected = WrongPasswordException.class)
 	public void nullPassword() throws MyDriveException{
 		LoginUserService service = new LoginUserService("Nuno", null);
 		service.execute();
 	}
 	
-	@Test(expected = InvalidUsernameException.class)
+	@Test(expected = UserDoesNotExistsException.class)
 	public void emptyUsername() throws MyDriveException{
 		LoginUserService service = new LoginUserService("", "123456");
 		service.execute();
 	}
 	
-	@Test(expected = InvalidUsernameException.class)
+	@Test(expected = UserDoesNotExistsException.class)
 	public void usernameTooShort() throws MyDriveException{
 		LoginUserService service = new LoginUserService("Ab", "123456");
 		service.execute();
 	}
 	
-	@Test(expected = InvalidUsernameException.class)
+	@Test(expected = UserDoesNotExistsException.class)
 	public void usernameWithInvalidSymbols() throws MyDriveException{
 		LoginUserService service = new LoginUserService("Ze*;", "123456");
 		service.execute();
