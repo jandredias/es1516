@@ -54,8 +54,11 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
-		pwd = MyDriveService.getMyDrive().getSessionByToken(token).getCurrentDirectory().getPath();
-		pwd+="/" + nameOfFileItOPerates;
+		Session s = MyDriveService.getMyDrive().getSessionByToken(token); 
+		if (s != null){
+			pwd = s.getCurrentDirectory().getPath();
+			pwd+="/" + nameOfFileItOPerates;
+		}
 		return new WriteFileService(token, nameOfFileItOPerates, "ola");
 	}
 	
@@ -73,8 +76,6 @@ public class WriteFileTest extends PermissionsTest {
 			throw new TestSetupException(pwd + " does not exsts");
 		}
 		assertEquals("ola",plain.getContent());
-		/*FIXME createFileService = (CreateFileService) abstractClassService; //From Upper class
-		assertNotNull(createFileService.result());*/
 	}
 	
 	private void appContent(String content) throws Exception{
@@ -207,7 +208,7 @@ public class WriteFileTest extends PermissionsTest {
 		service.execute();
 		
 		assertEquals("doesntmatter",
-				md.getFileContents("/home/test1/"));
+				md.getFileContents("/home/test1/plainfile1"));
 	}
 	
 	public void writeApp() throws Exception{
