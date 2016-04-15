@@ -91,34 +91,25 @@ public class DeleteFileTest extends TokenAccessTest {
 
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
-		MyDrive md = MyDrive.getInstance();
-		Session session;
-		try {
-			session = md.validateToken(token);
-			Directory currentDir = session.getCurrentDirectory();
-			tokenFile = currentDir.getPath() + "/" + nameOfFileItOPerates;
-			System.out.println("\n1n1n" +tokenFile);
-		} catch (InvalidTokenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.debug("Should never occur...");
-		}
+		MyDrive md = MyDriveService.getMyDrive();
+		Session session= md.getSessionByToken(token);
+		if (session != null)
+			tokenFile = session.getCurrentDirectory().getPath() + "/" + nameOfFileItOPerates;
 		
-		
-		return new ReadFileService(token, nameOfFileItOPerates);
+		return new DeleteFileService(token, nameOfFileItOPerates);
 	}
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		MyDrive md = MyDrive.getInstance();
+		
 
 		try {
-			md.getFile("/home/teste1/familia/file");
+			MyDriveService.getMyDrive().getFile(tokenFile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assert false;
 		}
-		assert false;
+		
 	}
 	// @Test(expected = InvalidTokenException.class)
 	// public void NullToken(){

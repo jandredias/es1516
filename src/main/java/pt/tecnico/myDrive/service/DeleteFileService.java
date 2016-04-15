@@ -20,7 +20,7 @@ public class DeleteFileService extends MyDriveService {
 	 * Default Constructor
 	 * @throws InvalidFileNameException
 	 */
-	public DeleteFileService(long token, String fileName) throws InvalidFileNameException {
+	public DeleteFileService(long token, String fileName)  {
 		_drive = MyDriveService.getMyDrive();
 		_token = token;
 		_fileName = fileName;
