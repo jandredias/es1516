@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.service;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.domain.Root;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
@@ -15,18 +14,15 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 public class DeleteFileTest extends TokenAccessTest {
 
 	private User teste1;
-	private User teste2;
 	String tokenFile;
 
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
-		Root root = md.getRootUser();
 
 		try {
 			md.addUser("teste1", "teste1", "teste1", "rwxd----");
 			md.addUser("teste2", "teste2", "teste2", "rwxd----");
 			teste1 = md.getUserByUsername("teste1");
-			teste2 = md.getUserByUsername("teste2");
 
 			// md.addDirectory("/home/teste1", "Casa", teste);
 			md.getDirectory("/home").setPermissions("-w-d-w-d");

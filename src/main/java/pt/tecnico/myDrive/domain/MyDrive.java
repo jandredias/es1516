@@ -14,7 +14,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
@@ -92,7 +91,6 @@ public class MyDrive extends MyDrive_Base {
 				if( user != root )
 					user.delete(root);
 			}
-			System.out.println("\u001B[33;1mDeleted Users\u001B[0m");
 			//Cleaning up every File left
 			Directory rootDir = getRootDirectory();
 			for (File file : rootDir.getFilesSet()){

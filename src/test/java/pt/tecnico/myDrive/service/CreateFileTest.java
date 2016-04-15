@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
-import pt.tecnico.myDrive.domain.ListDirVisitor;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
@@ -17,7 +17,6 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidLinkContentException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
 public class CreateFileTest extends PermissionsTest {
@@ -254,12 +253,12 @@ public class CreateFileTest extends PermissionsTest {
 				"link",	"/home/test4/plainfile4");
 		service.execute();
 		
-		boolean link = false;
 		Directory dir = md.getDirectory("/home/test1");
-		for(File f : dir.getFilesSet())
+		for(File f : dir.getFilesSet()){
 			if(f.getName().equals("testLink")){
-				link = true;
+				assertEquals("/home/test4/plainfile4", ((PlainFile) f).getContent());
 			}
+		}
 	}
 	
 	@Test(expected = InvalidLinkContentException.class)

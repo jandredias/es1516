@@ -1,15 +1,18 @@
 package pt.tecnico.myDrive.service;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
-import pt.tecnico.myDrive.domain.*;
-import pt.tecnico.myDrive.exception.*;
-import pt.tecnico.myDrive.exception.UnsupportedOperationException;
+import org.junit.Test;
+
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.domain.StrictlyTestObject;
+import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidAppContentException;
+import pt.tecnico.myDrive.exception.NotPlainFileException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
 
 public class WriteFileTest extends PermissionsTest {

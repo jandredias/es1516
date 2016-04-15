@@ -8,21 +8,18 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class ReadFileTest extends PermissionsTest {
 
 	private MyDrive myDrive;
-	private String myUsername, theirUsername;
-	private User me, someone;
+	private String myUsername;
+	private User me;
 	private ReadFileService readFileService;
 
 	private String myHomeDirPath = "/home/me";
-	private String theirHomeDirPath = "/home/someone";
 
 	private long token = 0;
 
@@ -30,23 +27,20 @@ public class ReadFileTest extends PermissionsTest {
 		myDrive = MyDriveService.getMyDrive();
 
 		myUsername = "me";
-		theirUsername = "someone";
 
 		try {
 			myDrive.addUser("me", "qwerty123", "Jimmy", null);
-			myDrive.addUser("someone", "qwerty123", "Sarah", null);
+			//myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
 		}
-		token = MyDriveService.getMyDrive().getValidToken(myUsername, myHomeDirPath, new StrictlyTestObject());
+		token = MyDriveService.getMyDrive().getValidToken(myUsername, myHomeDirPath, new StrictlyTestObject());	
 
 		me = myDrive.getUserByUsername(myUsername);
-		someone = myDrive.getUserByUsername(theirUsername);
+		//someone = myDrive.getUserByUsername(theirUsername);
 
 	}
-	
-	private String content;
-	
+		
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
 		return new ReadFileService(token, nameOfFileItOPerates);
@@ -206,8 +200,5 @@ public class ReadFileTest extends PermissionsTest {
 //		readFileService.execute();
 //	}
 
-	private void changeCurrentSessionDirectory(String directory) throws FileNotFoundException, NotDirectoryException {
-		myDrive.getSessionByToken(token).setCurrentDirectory(myDrive.getDirectory(directory));
-	}
 
 }

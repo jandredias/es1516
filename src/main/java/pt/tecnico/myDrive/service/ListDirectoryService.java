@@ -24,7 +24,6 @@ public class ListDirectoryService extends MyDriveService {
 	private Session session;
 	private Directory directory;
 
-	private String myUsername;
 
 	/**
 	 * Default Constructor
@@ -37,10 +36,8 @@ public class ListDirectoryService extends MyDriveService {
 		session = myDrive.getSessionByToken(token);
 		if (session != null) {
 			directory = session.getCurrentDirectory();
-			myUsername = session.getUser().getUsername();
 		} else {
 			directory = null;
-			myUsername = null;
 		}
 	}
 

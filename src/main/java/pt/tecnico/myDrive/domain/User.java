@@ -1,10 +1,9 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
-
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
+
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class User extends User_Base implements Comparable<User> {
 

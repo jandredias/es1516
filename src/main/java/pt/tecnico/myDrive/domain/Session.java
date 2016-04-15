@@ -1,7 +1,6 @@
 package pt.tecnico.myDrive.domain;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.joda.time.Duration;
 
 import pt.tecnico.myDrive.exception.PrivateResourceException;
@@ -24,18 +23,7 @@ public class Session extends Session_Base {
 		super.setMyDrive(user.getMyDrive());
 	}
 
-	/**FIXME REPEATED METHOD */
 	public boolean valid(){
-		Period p = new Period(getLastUsed(),new DateTime());
-		if(p.getHours() >= 2) return false;
-		return true;
-	}
-
-	/**
-	 * Method that returns true when a Session is still valid
-	 * @return
-	 */
-	protected boolean validateSession() {
 		DateTime currentTime = new DateTime();
 		DateTime limitTime = getLastUsed();
 
@@ -44,7 +32,16 @@ public class Session extends Session_Base {
 
 		long miliSeconds = interval.getMillis();
 
-		boolean valid = miliSeconds > 0;
+		boolean valid = (miliSeconds > 0);
+		return valid;
+	}
+
+	/**
+	 * Method that returns true when a Session is still valid
+	 * @return
+	 */
+	protected boolean validateSession() {
+		boolean valid = valid(); 
 		if (valid)
 			extendTime();
 
