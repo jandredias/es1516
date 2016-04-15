@@ -542,6 +542,7 @@ public class MyDrive extends MyDrive_Base {
 	public Long getNewToken(){
 		while(true){
 			Long token = ThreadLocalRandom.current().nextLong();
+			if(token == 0) continue;
 			for(Session session : getDriveSessions())
 				if(session.getToken().equals(token)) continue;
 			return token;

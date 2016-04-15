@@ -21,16 +21,24 @@ public class ChangeDirectoryService extends MyDriveService {
 		_path = path;
 	}
 
-	public final void dispatch() throws InvalidPathException, InvalidTokenException,
-			FileNotFoundException, PermissionDeniedException{
-		if(_path==null || _path.equals(""))
-			throw new InvalidPathException();
+	public final void dispatch() throws FileNotFoundException, InvalidTokenException, PermissionDeniedException {
 		
 		Session session = _drive.validateToken(_token);
 		
-		Directory currentDir = session.getCurrentDirectory();
-		Directory targetDir = currentDir.getDirectory(_path, session.getUser());
+		if(_path==null || _path.equals(""))
+			throw new FileNotFoundException();
 		
+		
+		Directory currentDir = session.getCurrentDirectory();
+		
+		Directory targetDir;
+		if(_path.charAt(0) == '/'){
+			System.out.println("Going for root");
+			targetDir = _drive.getRootDirectory().getDirectory(_path,session.getUser());
+		}
+		else
+			targetDir = currentDir.getDirectory(_path, session.getUser());
+		if(!session.getUser().hasExecutePermissions(targetDir)) throw new PermissionDeniedException();
 		session.setCurrentDirectory(targetDir);
 		
 		_returnpath = targetDir.getPath();

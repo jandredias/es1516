@@ -152,7 +152,7 @@ public class Directory extends Directory_Base {
 	}
 
 	public Directory getDirectory(String path, User user)throws FileNotFoundException, PermissionDeniedException {
-
+		
 		File file = getFile(path, user);
 		if(file.getClass() == Link.class) {
 			Link link = ( Link ) file;
@@ -185,22 +185,24 @@ public class Directory extends Directory_Base {
 	}
 	
 	public File getFile(String path, User user) throws FileNotFoundException, PermissionDeniedException {
-		
+		if(path.contains("//"))
+			throw new FileNotFoundException();
+			
 		if( path.equals("") )
 			return this;
 		
-		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException();
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("On " + this.getName());
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {
-			return getInnerFile(pieces.get(0));
+			return getInnerFile(pieces.get(0),user);
 		}
 
-		Directory nextDir = getDirectory(pieces.get(0));
+		Directory nextDir = getDirectory(pieces.get(0),user);
 		pieces.remove(0);
 
 		String newPath = MyDrive.arrayToString(pieces);
-		return nextDir.getFile(newPath);
+		return nextDir.getFile(newPath, user);
 	}
 	
 	/**
