@@ -32,7 +32,6 @@ public class ChangeDirectoryService extends MyDriveService {
 		
 		Directory targetDir;
 		if(_path.charAt(0) == '/'){
-			System.out.println("Going for root");
 			targetDir = _drive.getRootDirectory().getDirectory(_path,session.getUser());
 		}
 		else
