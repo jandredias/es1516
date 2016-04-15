@@ -49,9 +49,13 @@ public class WriteFileTest extends PermissionsTest {
 		};
 		
 	}
+
+	String pwd;
 	
 	@Override
 	protected MyDriveService createService(long token, String nameOfFileItOPerates) {
+		pwd = MyDriveService.getMyDrive().getSessionByToken(token).getCurrentDirectory().getPath();
+		pwd+="/" + nameOfFileItOPerates;
 		return new WriteFileService(token, nameOfFileItOPerates, "ola");
 	}
 	
@@ -62,6 +66,13 @@ public class WriteFileTest extends PermissionsTest {
 	
 	@Override
 	protected void assertServiceExecutedWithSuccess(){
+		PlainFile plain;
+		try {
+			plain = (PlainFile) MyDriveService.getMyDrive().getFile(pwd);
+		} catch (FileNotFoundException e) {
+			throw new TestSetupException(pwd + " does not exsts");
+		}
+		assertEquals("ola",plain.getContent());
 		/*FIXME createFileService = (CreateFileService) abstractClassService; //From Upper class
 		assertNotNull(createFileService.result());*/
 	}
@@ -80,48 +91,48 @@ public class WriteFileTest extends PermissionsTest {
 	/* ---------TESTS------------- */
 	
 	
-	@Test
-	public void writeOwnFileWithPermissionTest() throws Exception  {	
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token,
-				"plainfile1", "teste");
-		service.execute();
-		
-		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
-	
-	}
-	
-	@Test
-	public void writeOthersFileWithPermissionTest() throws Exception  {
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test1", "/home/test2", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token,
-				"plainfile2", "teste");
-		service.execute();
-		
-		assertEquals("teste", md.getFileContents("/home/test2/plainfile2"));
-	}
-	
-	@Test(expected = PermissionDeniedException.class)
-	public void writeOwnFileWithoutPermissionTest() throws Exception  {
-		
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
-		service.execute();
-
-	}
-	
-	@Test(expected = PermissionDeniedException.class)
-	public void writeOthersFileWithoutPermissionTest() throws Exception  {
-		
-		MyDrive md = MyDrive.getInstance();
-		token = md.getValidToken("test4", "/home/test3", new StrictlyTestObject());
-		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
-		service.execute();
-
-	}
+//	@Test
+//	public void writeOwnFileWithPermissionTest() throws Exception  {	
+//		MyDrive md = MyDrive.getInstance();
+//		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
+//		WriteFileService service = new WriteFileService(token,
+//				"plainfile1", "teste");
+//		service.execute();
+//		
+//		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
+//	
+//	}
+//	
+//	@Test
+//	public void writeOthersFileWithPermissionTest() throws Exception  {
+//		MyDrive md = MyDrive.getInstance();
+//		token = md.getValidToken("test1", "/home/test2", new StrictlyTestObject());
+//		WriteFileService service = new WriteFileService(token,
+//				"plainfile2", "teste");
+//		service.execute();
+//		
+//		assertEquals("teste", md.getFileContents("/home/test2/plainfile2"));
+//	}
+//	
+//	@Test(expected = PermissionDeniedException.class)
+//	public void writeOwnFileWithoutPermissionTest() throws Exception  {
+//		
+//		MyDrive md = MyDrive.getInstance();
+//		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
+//		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
+//		service.execute();
+//
+//	}
+//	
+//	@Test(expected = PermissionDeniedException.class)
+//	public void writeOthersFileWithoutPermissionTest() throws Exception  {
+//		
+//		MyDrive md = MyDrive.getInstance();
+//		token = md.getValidToken("test4", "/home/test3", new StrictlyTestObject());
+//		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
+//		service.execute();
+//
+//	}
 	
 	@Test
 	public void rootWriteFileTest() throws Exception  {
