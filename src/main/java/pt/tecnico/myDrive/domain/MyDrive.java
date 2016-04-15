@@ -296,6 +296,7 @@ public class MyDrive extends MyDrive_Base {
 			reallyGetDirectory("/home", this.getRootUser()); //Making sure there is a /home directory
 			usersHome = reallyGetDirectory("/home/" + username, this.getRootUser());
 			usersHome.setOwner(newUser);
+			//usersHome.setPermissions(mask);
 		} catch (InvalidFileNameException | NotDirectoryException e) {
 			//Should Never Happen ; File had just been Created;
 			log.error("CRIT ERROR: File that is not a Direcotry is already created, aborting");

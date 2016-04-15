@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
+import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
@@ -200,6 +203,81 @@ public class ChangeDirectoryTest extends PermissionsTest{
 		service.execute();
 	}
 
+	private void addZeCarlos(){
+		try{
+			MyDrive md = MyDriveService.getMyDrive();
+			md.addUser("zecarlos", "zecarlos", "zecarlos", "rwxdrwxd");
+			User ze = md.getUserByUsername("zecarlos");
+			
+			//Create Files
+			md.addDirectory("/home/zecarlos", "FAIL_ZeCarlos_DIR", ze);
+			md.addDirectory("/home/zecarlos", "FAIL_OTHER_DIR", ze);
+			md.addDirectory("/home/zecarlos", "ALL_OK_1", ze);
+			md.addLink("/home/zecarlos", "LINK_SELF_OK", ze , "././ALL_OK_1");
+			md.addLink("/home/zecarlos", "LINK_N_PERMISSIVE", ze , ".");
+			md.addLink("/home/zecarlos", "LINK_ROOT", ze , "/");
+			md.addLink("/home/zecarlos", "LINK_TO_LINK", ze , "/home/zecarlos/LINK_SELF_OK");
+	 		md.addLink("/home/zecarlos", "LINK_FAILS_MIDDLE", ze , "./FAIL_ZeCarlos_DIR/../../");
+	 		
+	 		md.getFile("/home/zecarlos/FAIL_ZeCarlos_DIR").setPermissions("------x-");
+	 		md.getFile("/home/zecarlos/FAIL_OTHER_DIR").setPermissions("--x-----");
+	 		Directory dir = md.getDirectory("/home/zecarlos/");
+	 		
+	 		for(File file : dir.getFilesSet()){
+	 			if(file.getName().equals("LINK_N_PERMISSIVE"))
+	 				file.setPermissions("--------");
+	 		}
+		} catch (Exception e) {
+			throw new TestSetupException("Change Dir: Add Ze Carlos");
+		}
+	}
+
+	@Test
+	public void changeToLinkSimple() throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "LINK_SELF_OK");
+		service.execute();
+		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
+	}
+	@Test
+	public void changeToLinkToLink() throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "LINK_TO_LINK");
+		service.execute();
+		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
+	}
+
+	@Test(expected = PermissionDeniedException.class)
+	public void changeToLinkWithOutPermissions() throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "LINK_N_PERMISSIVE");
+		service.execute();
+	}
+	@Test(expected = PermissionDeniedException.class)
+	public void changeToLinkFailsInTheMiddle() throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "LINK_FAILS_MIDDLE");
+		service.execute();
+//		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
+	}
+	public void changeToLinkToRoot() throws MyDriveException {
+		addZeCarlos();
+		MyDrive md = MyDriveService.getMyDrive();
+		long new_token = md.getValidToken("zecarlos", "/home/zecarlos", new StrictlyTestObject());
+		ChangeDirectoryService service = new ChangeDirectoryService(new_token , "LINK_ROOT");
+		service.execute();
+		assertEquals("/", service.result());
+	}
+	
+	
 	private String pwd;
 	@Override
 	protected MyDriveService createService(long token, String ignore) {

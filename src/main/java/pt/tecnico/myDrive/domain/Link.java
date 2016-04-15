@@ -56,6 +56,7 @@ public class Link extends Link_Base {
 	}
 	
 	public File getFile(User user) throws FileNotFoundException, PermissionDeniedException{
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("On link " + this.getName());
 		String content = this.getContent();
 		if(content.charAt(0) == '/')
 			return MyDrive.getInstance().getFile(content,user);
