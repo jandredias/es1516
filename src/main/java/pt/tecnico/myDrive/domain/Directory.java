@@ -1,19 +1,17 @@
 package pt.tecnico.myDrive.domain;
-import pt.tecnico.myDrive.exception.UnsupportedOperationException;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
-import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 import org.joda.time.DateTime;
 
+import pt.tecnico.myDrive.exception.FileExistsException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
-import pt.tecnico.myDrive.exception.DirectoryIsNotEmptyException;
-import pt.tecnico.myDrive.exception.FileExistsException;
-
-import java.util.ArrayList;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class Directory extends Directory_Base {
 
@@ -212,8 +210,7 @@ public class Directory extends Directory_Base {
 	 * @throws FileNotFoundException
 	 * @throws DirectoryIsNotEmptyException
 	 */
-	public void removeFile(String path, User user) throws FileNotFoundException,
-	DirectoryIsNotEmptyException, PermissionDeniedException{
+	public void removeFile(String path, User user) throws FileNotFoundException, PermissionDeniedException{
 
 		
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
