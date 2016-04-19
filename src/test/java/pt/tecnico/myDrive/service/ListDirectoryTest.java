@@ -241,7 +241,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		MyDrive md = MyDriveService.getMyDrive(); 
 		User joao = md.getUserByUsername("joao");
 		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "AppCOntent"); 
-		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
+		md.addLink("/home/joao/TestDir", "Link", joao, "LinkCOntent"); 
 		md.addPlainFile("/home/joao/TestDir", "PlainFile2", joao, "AppCOntent"); 
 		md.addDirectory("/home/joao/TestDir", "Dir2", joao); 
 		md.addDirectory("/home/joao/TestDir", "Dir1", joao); 
@@ -251,7 +251,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		createdNamesList.add(0, ".");
 		createdNamesList.add(1, "..");
 		createdNamesList.add(2, "PlainFile");
-		createdNamesList.add(3, "App");
+		createdNamesList.add(3, "Link -> LinkCOntent");
 		createdNamesList.add(4, "PlainFile2");
 		createdNamesList.add(5, "Dir2");
 		createdNamesList.add(6, "Dir1");
