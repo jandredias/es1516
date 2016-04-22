@@ -46,6 +46,7 @@ public class Link extends Link_Base {
 
 		return array;
 	}
+	
 	public void accept(Visitor visitor) throws UnsupportedOperationException {
 		visitor.visitLink(this);
 	}

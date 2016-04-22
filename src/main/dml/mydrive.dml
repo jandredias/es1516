@@ -12,6 +12,7 @@ class User{
 }
 
 class Root extends User;
+class Guest extends User;
 
 class File {
 	String name;
