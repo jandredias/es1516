@@ -12,5 +12,11 @@ The project should be able to support the maven command:
 
     mvn clean test cobertura:cobertura site
     
-[Project Website](http://bucho.pt/es)
+----------
 
+##Third sprint
+The project should be able to support the maven command:
+
+    mvn clean install site exec:java -Dexec.args=drive.xml
+
+[Project Website](http://bucho.pt/es)

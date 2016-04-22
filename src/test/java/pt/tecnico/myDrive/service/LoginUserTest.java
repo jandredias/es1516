@@ -22,11 +22,12 @@ public class LoginUserTest extends AbstractServiceTest {
 		MyDrive mD = MyDriveService.getMyDrive();
 
 		try {
-			mD.addUser("Nuno", "123456", null, null);
-			mD.addUser("Abe", "asdfgh", null, null);
-			mD.addUser("Ricardo","slb1904", null, null);
-			mD.addUser("Xila", "qwerty", null, null);
-			mD.addUser("Joao", "654321", null, null);
+			mD.addUser("Nuno", "123456789", null, null);
+			mD.addUser("Abe", "asdfghjkl123", null, null);
+			mD.addUser("Braga", "password", null, null);
+			mD.addUser("Ricardo","benfica1904", null, null);
+			mD.addUser("Xila", "qwertyuiop", null, null);
+			mD.addUser("Joao", "987654321", null, null);
 		}catch(MyDriveException e){
 			throw new TestSetupException("LoginUserTest: Populate");
 		}
@@ -34,7 +35,7 @@ public class LoginUserTest extends AbstractServiceTest {
 	
 	@Test(expected = UserDoesNotExistsException.class)
 	public void nullUsername() throws MyDriveException{
-		LoginUserService service = new LoginUserService(null, "123456");
+		LoginUserService service = new LoginUserService(null, "123456789");
 		service.execute();
 	}
 	
@@ -44,39 +45,45 @@ public class LoginUserTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
+	@Test(expected = WrongPasswordException.class)
+	public void passwordTooShort() throws MyDriveException{
+		LoginUserService service = new LoginUserService("Nuno", "12345");
+		service.execute();
+	}
+	
 	@Test(expected = UserDoesNotExistsException.class)
 	public void emptyUsername() throws MyDriveException{
-		LoginUserService service = new LoginUserService("", "123456");
+		LoginUserService service = new LoginUserService("", "123456789");
 		service.execute();
 	}
 	
 	@Test(expected = UserDoesNotExistsException.class)
 	public void usernameTooShort() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Ab", "123456");
+		LoginUserService service = new LoginUserService("Ab", "123456789");
 		service.execute();
 	}
 	
 	@Test(expected = UserDoesNotExistsException.class)
 	public void usernameWithInvalidSymbols() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Ze*;", "123456");
+		LoginUserService service = new LoginUserService("Ze*;", "123456789");
 		service.execute();
 	}
 	
 	@Test(expected = UserDoesNotExistsException.class)
 	public void nonExistingUsername() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Nuninho", "123456");
+		LoginUserService service = new LoginUserService("Nuninho", "123456789");
 		service.execute();
 	}
 	
 	@Test(expected = WrongPasswordException.class)
 	public void invalidPasswordForUser() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Nuno", "12346");
+		LoginUserService service = new LoginUserService("Nuno", "123467890");
 		service.execute();
 	}
 	
 	@Test
 	public void sucess() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Nuno", "123456");
+		LoginUserService service = new LoginUserService("Nuno", "123456789");
 		service.execute();
 		long token = service.result();
 		
@@ -94,7 +101,7 @@ public class LoginUserTest extends AbstractServiceTest {
 	
 	@Test
 	public void sucessWithUsernameSize3() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Abe", "asdfgh");
+		LoginUserService service = new LoginUserService("Abe", "asdfghjkl123");
 		service.execute();
 		long token = service.result();
 		
@@ -110,9 +117,26 @@ public class LoginUserTest extends AbstractServiceTest {
 	}
 	
 	@Test
+	public void sucessWithPasswordSize8() throws MyDriveException{
+		LoginUserService service = new LoginUserService("Braga", "password");
+		service.execute();
+		long token = service.result();
+		
+		Session s = MyDrive.getInstance().getSessionByToken(token);
+		
+		assertNotNull("Session was not created", s);
+		
+		User user = s.getUser();
+		String username = user.getUsername();
+		Directory d = user.getUsersHome();
+        assertEquals("Invalid session username", "Braga", username);
+        assertEquals("Invalid session current directory", d.getPath(), s.getCurrentDirectory().getPath());
+	}
+	
+	@Test
 	public void sucessWithInvalidSessionsDeleted() throws MyDriveException{
-		//Create expired session ("Ricardo","slb1904")
-		LoginUserService serv = new LoginUserService("Ricardo","slb1904");
+		//Create expired session ("Ricardo","benfica1904")
+		LoginUserService serv = new LoginUserService("Ricardo","benfica1904");
 		serv.execute();
 		long token = serv.result();
 		
@@ -123,7 +147,7 @@ public class LoginUserTest extends AbstractServiceTest {
 		time = time.minusHours(2);
 		s.setLastUsed(time);
 		
-		LoginUserService service = new LoginUserService("Xila", "qwerty");
+		LoginUserService service = new LoginUserService("Xila", "qwertyuiop");
 		service.execute();
 		
 		//Confirm if the invalid session was deleted
@@ -132,10 +156,10 @@ public class LoginUserTest extends AbstractServiceTest {
 	
 	@Test
 	public void sucessWithTwoSessionsSameUser() throws MyDriveException{
-		LoginUserService serv = new LoginUserService("Joao", "654321");
+		LoginUserService serv = new LoginUserService("Joao", "987654321");
 		serv.execute();
 		
-		LoginUserService service = new LoginUserService("Joao", "654321");
+		LoginUserService service = new LoginUserService("Joao", "987654321");
 		service.execute();
 		long token = service.result();
 		
