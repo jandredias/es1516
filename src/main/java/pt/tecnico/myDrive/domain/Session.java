@@ -26,16 +26,6 @@ public class Session extends Session_Base {
 	public boolean valid(){
 		
 		return this.getUser().validateAccessTime(this.getLastUsed());
-//		DateTime currentTime = new DateTime();
-//		DateTime limitTime = this.getLastUsed();
-//		
-//		//represents the amount of time between currentTime and limitTime
-//		Duration interval = new Duration(currentTime, limitTime);
-//
-//		long miliSeconds = interval.getStandardMinutes();
-//
-//		boolean valid = (miliSeconds > .);
-//		return valid;
 	}
 
 	/**
