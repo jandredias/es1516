@@ -1,8 +1,10 @@
 package pt.tecnico.myDrive.service;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
@@ -61,6 +63,20 @@ public abstract class TokenAccessTest extends AbstractServiceTest{
 	 public void InvalidNumberToken() throws MyDriveException{
 		 setUpTokenTest(1,true);	
 		 abstractClassService.execute();
+	 }
+	 
+	 @Test(expected = InvalidTokenException.class)
+	 public void ExpiredToken() throws MyDriveException{
+		MyDrive md = MyDriveService.getMyDrive();
+		setUpTokenTest(0,false);
+		
+		long token = md.getValidToken("TokenUser","/home/TokenUser/TokenTestFolder", new StrictlyTestObject());;
+		Session session = md.getSessionByToken(token);
+		session.setLastUsed(new DateTime().minusHours(3));
+		
+		
+		abstractClassService = createService(token,"testedFile");
+		abstractClassService.execute();
 	 }
 	 
 //	 compiler does not acept null..	 
