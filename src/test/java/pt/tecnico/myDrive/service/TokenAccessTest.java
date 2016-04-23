@@ -72,7 +72,7 @@ public abstract class TokenAccessTest extends AbstractServiceTest{
 		
 		long token = md.getValidToken("TokenUser","/home/TokenUser/TokenTestFolder", new StrictlyTestObject());;
 		Session session = md.getSessionByToken(token);
-		session.setLastUsed(new DateTime().minusHours(3));
+		session.setLastUsed(new DateTime().minusHours(2));
 		
 		
 		abstractClassService = createService(token,"testedFile");
