@@ -79,6 +79,19 @@ public abstract class TokenAccessTest extends AbstractServiceTest{
 		abstractClassService.execute();
 	 }
 	 
+	 @Test(expected = InvalidTokenException.class)
+	 public void ExpiredRootToken() throws MyDriveException{
+		MyDrive md = MyDriveService.getMyDrive();
+		
+		long token = md.getValidToken("root","/home/root", new StrictlyTestObject());;
+		Session session = md.getSessionByToken(token);
+		session.setLastUsed(new DateTime().minusMinutes(10));
+		
+		
+		abstractClassService = createService(token,"testedFile");
+		abstractClassService.execute();
+	 }
+	 
 //	 compiler does not acept null..	 
 //	 @Test(expected = InvalidTokenException.class)
 //	 public void InvalidNullToken() throws MyDriveException{
