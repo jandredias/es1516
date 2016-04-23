@@ -24,16 +24,18 @@ public class Session extends Session_Base {
 	}
 
 	public boolean valid(){
-		DateTime currentTime = new DateTime();
-		DateTime limitTime = getLastUsed();
-
-		//represents the amount of time between currentTime and limitTime
-		Duration interval = new Duration(currentTime, limitTime);
-
-		long miliSeconds = interval.getMillis();
-
-		boolean valid = (miliSeconds > 0);
-		return valid;
+		
+		return this.getUser().validateAccessTime(this.getLastUsed());
+//		DateTime currentTime = new DateTime();
+//		DateTime limitTime = this.getLastUsed();
+//		
+//		//represents the amount of time between currentTime and limitTime
+//		Duration interval = new Duration(currentTime, limitTime);
+//
+//		long miliSeconds = interval.getStandardMinutes();
+//
+//		boolean valid = (miliSeconds > .);
+//		return valid;
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class Session extends Session_Base {
 
 	private void extendTime() {
 		DateTime currTime = new DateTime();
-		currTime = currTime.plusHours(2);
+		//currTime = currTime.plusHours(2);
 		super.setLastUsed(currTime);
 	}
 

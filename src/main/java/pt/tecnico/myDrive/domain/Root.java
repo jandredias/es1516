@@ -41,4 +41,9 @@ public class Root extends Root_Base {
 	public void delete(User deleter) throws PrivateResourceException{
 		throw new PrivateResourceException("Tring to delete root user");
 	}
+
+	@Override
+	protected long minutesSessionExpires(){
+		return 10;
+	}
 }

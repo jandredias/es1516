@@ -1,6 +1,8 @@
 package pt.tecnico.myDrive.domain;
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
@@ -140,5 +142,22 @@ public class User extends User_Base implements Comparable<User> {
 	}
 	public boolean hasDeletePermissions(File file){
 		return hasPermissions(file,3,"d");
+	}
+
+	protected long minutesSessionExpires(){
+		return 120;
+	}
+	
+	public boolean validateAccessTime(DateTime lastUsed){
+		
+		DateTime currentTime = new DateTime();
+	
+		//represents the amount of time between currentTime and limitTime
+		Duration interval = new Duration(lastUsed, currentTime );
+
+		long minutesGoneBy = interval.getStandardMinutes();
+
+		boolean valid = (minutesGoneBy < this.minutesSessionExpires());
+		return valid;
 	}
 }

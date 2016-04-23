@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
+import org.joda.time.DateTime;
 
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 
@@ -46,5 +47,10 @@ public class Guest extends Guest_Base {
 	@Override
 	public void setPassword(String newPass) throws PrivateResourceException{
 		throw new PrivateResourceException("Tring to change guest password");
+	}
+
+	@Override
+	public boolean validateAccessTime(DateTime lastUsed){
+		return true;
 	}
 }
