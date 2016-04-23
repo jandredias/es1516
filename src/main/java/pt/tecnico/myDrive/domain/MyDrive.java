@@ -527,8 +527,9 @@ public class MyDrive extends MyDrive_Base {
 	public Session validateToken(long token) throws InvalidTokenException{
 		Session session = getSessionByTokenNr(token);
 		if(session != null){
-			if(session.validateSession());
+			if(session.validateSession()){
 				return session;
+			}
 		}
 		log.warn("Non Active Token was used");
 		throw new InvalidTokenException();
