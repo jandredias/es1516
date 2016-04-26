@@ -30,13 +30,13 @@ public class CreateFileTest extends PermissionsTest {
 		MyDrive md = MyDrive.getInstance();
 		
 		try{
-			md.addUser("test1","ola123", "test", null);
+			md.addUser("test1","ola123456", "test", null);
 			
-			md.addUser("test2", "ola123", "test", "rwxdrwxd");
+			md.addUser("test2", "ola123456", "test", "rwxdrwxd");
 			
-			md.addUser("test3", "ola123", "test", "--------");
+			md.addUser("test3", "ola123456", "test", "--------");
 			
-			md.addUser("test4","ola123", "test", "--------");
+			md.addUser("test4","ola123456", "test", "--------");
 			
 
 
