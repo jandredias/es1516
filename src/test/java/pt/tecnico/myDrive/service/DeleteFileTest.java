@@ -20,8 +20,8 @@ public class DeleteFileTest extends TokenAccessTest {
 		MyDrive md = MyDrive.getInstance();
 
 		try {
-			md.addUser("teste1", "teste1", "teste1", "rwxd----");
-			md.addUser("teste2", "teste2", "teste2", "rwxd----");
+			md.addUser("teste1", "teste1234", "teste1", "rwxd----");
+			md.addUser("teste2", "teste1234", "teste2", "rwxd----");
 			teste1 = md.getUserByUsername("teste1");
 
 			// md.addDirectory("/home/teste1", "Casa", teste);
