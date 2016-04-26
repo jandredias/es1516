@@ -25,8 +25,8 @@ public class ChangeDirectoryTest extends PermissionsTest{
 	protected void populate(){
 		myDrive = MyDriveService.getMyDrive();
 		try{
-			myDrive.addUser("teste1", "teste1teste1", "teste1teste1", "rwxd----");
-			myDrive.addUser("teste2", "teste2teste2", "teste2teste2", "rwxd----");
+			myDrive.addUser("teste1", "teste1teste1", "teste1", "rwxd----");
+			myDrive.addUser("teste2", "teste2teste2", "teste2", "rwxd----");
 
 			myDrive.addDirectory("/home/teste1", "everyoneReadsThis", myDrive.getUserByUsername("teste1"));
 			myDrive.addDirectory("/home/teste2", "abc", myDrive.getUserByUsername("teste2"));
