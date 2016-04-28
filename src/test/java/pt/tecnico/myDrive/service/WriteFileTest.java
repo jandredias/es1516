@@ -21,16 +21,16 @@ public class WriteFileTest extends PermissionsTest {
 	protected void populate() {
 		MyDrive md = MyDrive.getInstance();
 		try{
-			md.addUser("test1","ola123", "test", null);
+			md.addUser("test1","ola123456", "test", null);
 			User testUser1 = md.getUserByUsername("test1");
 			
-			md.addUser("test2", "ola123", "test", "rwxdrwxd");
+			md.addUser("test2", "ola123456", "test", "rwxdrwxd");
 			User testUser2 = md.getUserByUsername("test2");
 			
-			md.addUser("test3", "ola123", "test", "--------");
+			md.addUser("test3", "ola123456", "test", "--------");
 			User testUser3 = md.getUserByUsername("test3");
 			
-			md.addUser("test4","ola123", "test", "--------");
+			md.addUser("test4","ola123456", "test", "--------");
 			User testUser4 = md.getUserByUsername("test4");
 			
 			md.addPlainFile("/home/test1" , "plainfile1", testUser1, "olaola");

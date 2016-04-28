@@ -11,6 +11,8 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.InvalidPasswordException;
+import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
@@ -45,28 +47,28 @@ public class LoginUserTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
-	@Test(expected = WrongPasswordException.class)
+	@Test(expected = InvalidPasswordException.class)
 	public void passwordTooShort() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Nuno", "12345");
-		service.execute();
+		MyDrive mD = MyDriveService.getMyDrive();
+		mD.addUser("Nuno68gt", "123456", null, null);
 	}
 	
-	@Test(expected = UserDoesNotExistsException.class)
+	@Test(expected = InvalidUsernameException.class)
 	public void emptyUsername() throws MyDriveException{
-		LoginUserService service = new LoginUserService("", "123456789");
-		service.execute();
+		MyDrive mD = MyDriveService.getMyDrive();
+		mD.addUser("", "123456789", null, null);
 	}
 	
-	@Test(expected = UserDoesNotExistsException.class)
+	@Test(expected = InvalidUsernameException.class)
 	public void usernameTooShort() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Ab", "123456789");
-		service.execute();
+		MyDrive mD = MyDriveService.getMyDrive();
+		mD.addUser("Ab", "123456789", null, null);
 	}
 	
-	@Test(expected = UserDoesNotExistsException.class)
+	@Test(expected = InvalidUsernameException.class)
 	public void usernameWithInvalidSymbols() throws MyDriveException{
-		LoginUserService service = new LoginUserService("Ze*;", "123456789");
-		service.execute();
+		MyDrive mD = MyDriveService.getMyDrive();
+		mD.addUser("Zezinho*", "123456789", null, null);
 	}
 	
 	@Test(expected = UserDoesNotExistsException.class)
