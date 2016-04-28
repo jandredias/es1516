@@ -85,7 +85,8 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	@Test
 	public void otherUserHasPermissions() throws MyDriveException{
 		MyDrive md = MyDriveService.getMyDrive();
-		md.addUser("otherPermissionUser","...","...","--------");
+		String username = "otherPermissionUser";
+		md.addUser(username,username,username,"--------");
 		setUpPermissionsTest("----rwxd","otherPermissionUser");		
 		abstractClassService.execute();
 		assertServiceExecutedWithSuccess();
@@ -101,7 +102,8 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	@Test(expected = PermissionDeniedException.class)
 	public void otherUserHasNoPermissions() throws MyDriveException{
 		MyDrive md = MyDriveService.getMyDrive();
-		md.addUser("otherPermissionUser","...","...","----rwxd");
+		String username = "otherPermissionUser";
+		md.addUser(username,username,username,"----rwxd");
 		setUpPermissionsTest("rwxd----","otherPermissionUser");
 		abstractClassService.execute();
 	}

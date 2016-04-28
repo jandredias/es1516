@@ -31,7 +31,7 @@ public class ListDirectoryTest extends PermissionsTest {
 	 * Method that runs before each @Test
 	 */
 	protected void populate() {
-		String username	= "joao";
+		String username	= "joaoGrande";
 		String folder 	= "TestDir";
 		try{
 			MyDrive md = MyDriveService.getMyDrive();
@@ -144,8 +144,8 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void listDirectoryWithPlainFile() throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "content");
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addPlainFile("/home/joaoGrande/TestDir", "PlainFile", joao, "content");
 
 		listDirService.execute();
 
@@ -153,7 +153,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> plainFileList = serviceList.get(2);
-		PlainFile file = ( PlainFile ) md.getFile("/home/joao/TestDir/PlainFile");
+		PlainFile file = ( PlainFile ) md.getFile("/home/joaoGrande/TestDir/PlainFile");
 		checkSingleFileStuff(file, plainFileList, "Plain File");
 
 		//TODO:: Check letters dont crash
@@ -165,8 +165,8 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void listDirectoryWithDirectory() throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addDirectory("/home/joao/TestDir", "Directory", joao);
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addDirectory("/home/joaoGrande/TestDir", "Directory", joao);
 
 		listDirService.execute();
 
@@ -174,7 +174,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> directoryList = serviceList.get(2);
-		Directory file = ( Directory ) md.getFile("/home/joao/TestDir/Directory");
+		Directory file = ( Directory ) md.getFile("/home/joaoGrande/TestDir/Directory");
 		checkSingleFileStuff(file, directoryList , "Directory");
 
 		//Dimension has its own special tests
@@ -184,8 +184,8 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void listDirectoryWithlink() throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addLink("/home/joao/TestDir", "Link", joao, "linkContent");
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addLink("/home/joaoGrande/TestDir", "Link", joao, "linkContent");
 
 		listDirService.execute();
 
@@ -207,7 +207,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		//Dimension has its own special Tests;
 
 		String listedUsername = linkList.get(3);
-		assertEquals("username","joao",listedUsername);
+		assertEquals("username","joaoGrande",listedUsername);
 
 		String listedName = linkList.get(6);
 		assertEquals("name ","Link -> linkContent",listedName);
@@ -218,8 +218,8 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void listDirectoryWithApp() throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addApplication("/home/joao/TestDir", "App", joao, "AppCOntent"); 
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addApplication("/home/joaoGrande/TestDir", "App", joao, "AppCOntent"); 
 
 		listDirService.execute();
 
@@ -227,7 +227,7 @@ public class ListDirectoryTest extends PermissionsTest {
 		checkNotNullWithNFiles(serviceList, 3);
 
 		List<String> applicationList = serviceList.get(2);
-		Application file = ( Application ) md.getFile("/home/joao/TestDir/App");
+		Application file = ( Application ) md.getFile("/home/joaoGrande/TestDir/App");
 		checkSingleFileStuff(file, applicationList , "Application");
 
 		//TODO:: Check letters dont crash
@@ -239,13 +239,13 @@ public class ListDirectoryTest extends PermissionsTest {
 	public void listDirectoryWith6FilesAlphabeticly() throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addPlainFile("/home/joao/TestDir", "PlainFile", joao, "AppCOntent"); 
-		md.addLink("/home/joao/TestDir", "Link", joao, "LinkCOntent"); 
-		md.addPlainFile("/home/joao/TestDir", "PlainFile2", joao, "AppCOntent"); 
-		md.addDirectory("/home/joao/TestDir", "Dir2", joao); 
-		md.addDirectory("/home/joao/TestDir", "Dir1", joao); 
-		md.addApplication("/home/joao/TestDir", "App.534", joao, "AppCOntent"); 
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addPlainFile("/home/joaoGrande/TestDir", "PlainFile", joao, "AppCOntent"); 
+		md.addLink("/home/joaoGrande/TestDir", "Link", joao, "LinkCOntent"); 
+		md.addPlainFile("/home/joaoGrande/TestDir", "PlainFile2", joao, "AppCOntent"); 
+		md.addDirectory("/home/joaoGrande/TestDir", "Dir2", joao); 
+		md.addDirectory("/home/joaoGrande/TestDir", "Dir1", joao); 
+		md.addApplication("/home/joaoGrande/TestDir", "App.534", joao, "AppCOntent"); 
 		
 		ArrayList<String> createdNamesList = new ArrayList<String>();
 		createdNamesList.add(0, ".");
@@ -284,8 +284,8 @@ public class ListDirectoryTest extends PermissionsTest {
 		String content = StringUtils.repeat("t", contentSize);
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
-		md.addPlainFile("/home/joao/TestDir", "Plain", joao, content);
+		User joao = md.getUserByUsername("joaoGrande");
+		md.addPlainFile("/home/joaoGrande/TestDir", "Plain", joao, content);
 		
 		listDirService.execute();
 
@@ -321,12 +321,12 @@ public class ListDirectoryTest extends PermissionsTest {
 	private void directoryDimension(int numberOfFiles) throws MyDriveException{
 
 		MyDrive md = MyDriveService.getMyDrive(); 
-		User joao = md.getUserByUsername("joao");
+		User joao = md.getUserByUsername("joaoGrande");
 		
 		for(int i = 0; i < numberOfFiles ; i++ )
-			md.addPlainFile("/home/joao/TestDir", "PlainFile"+i, joao, "");
+			md.addPlainFile("/home/joaoGrande/TestDir", "PlainFile"+i, joao, "");
 
-		long token = MyDriveService.getMyDrive().getValidToken("joao","/home/joao", new StrictlyTestObject());
+		long token = MyDriveService.getMyDrive().getValidToken("joaoGrande","/home/joaoGrande", new StrictlyTestObject());
 		listDirService = new ListDirectoryService(token);
 		listDirService.execute();
 
