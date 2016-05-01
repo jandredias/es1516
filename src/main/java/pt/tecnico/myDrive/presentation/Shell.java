@@ -18,12 +18,13 @@ public abstract class Shell {
 		name = n;
 		out = new PrintWriter(w, flush);
 
-		/*new Command(this, "quit", "Quit the command interpreter") {
+		new Command(this, "quit", "Quit the command interpreter") {
 			void execute(String[] args) {
 				System.out.println(name+" quit");
 				System.exit(0);
 			}
 		};
+		/*
 		new Command(this, "exec", "execute an external command") {
 			void execute(String[] args) { 
 				try {
@@ -40,7 +41,7 @@ public abstract class Shell {
 					else throw new Exception("Nothing to run!");
 				} catch (Exception e) { throw new RuntimeException(""+e); }
 			}
-		};
+		};*/
 		new Command(this, "help", "this command help") {
 			void execute(String[] args) { 
 				if (args.length == 0) {
@@ -52,7 +53,7 @@ public abstract class Shell {
 							System.out.println(shell().get(s).help()); 
 				}
 			}
-		};*/
+		};
 	}
 
 	public void print(String s) { out.print(s); }
