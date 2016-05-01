@@ -11,9 +11,9 @@ import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.InvalidPasswordException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.PasswordTooShortException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.WrongPasswordException;
@@ -47,7 +47,7 @@ public class LoginUserTest extends AbstractServiceTest {
 		service.execute();
 	}
 	
-	@Test(expected = InvalidPasswordException.class)
+	@Test(expected = PasswordTooShortException.class)
 	public void passwordTooShort() throws MyDriveException{
 		MyDrive mD = MyDriveService.getMyDrive();
 		mD.addUser("Nuno68gt", "123456", null, null);

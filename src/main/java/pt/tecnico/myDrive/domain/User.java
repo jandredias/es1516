@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
+import pt.tecnico.myDrive.exception.PasswordTooShortException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class User extends User_Base implements Comparable<User> {
@@ -40,9 +41,17 @@ public class User extends User_Base implements Comparable<User> {
 			permissions = DEFAULT_PERMISSION;
 
 		setUsername(username);
-		setPassword(pwd);
+		this.setPassword(pwd);
 		setName(name);
 		setPermissions(permissions);
+	}
+	
+	@Override
+	public void setPassword(String newPass) throws PasswordTooShortException{
+		if(newPass.length() < 8)
+			throw new PasswordTooShortException("Desired Pass: " + newPass);
+		else
+			super.setPassword(newPass);
 	}
 
 
