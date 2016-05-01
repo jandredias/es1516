@@ -47,6 +47,14 @@ public class User extends User_Base implements Comparable<User> {
 	}
 	
 	@Override
+	public void setUsername(String username) throws InvalidUsernameException{
+		if(username.length() < 3)
+			throw new InvalidUsernameException();
+		else
+			super.setUsername(username);
+	}
+	
+	@Override
 	public void setPassword(String newPass) throws PasswordTooShortException{
 		if(newPass.length() < 8)
 			throw new PasswordTooShortException("Desired Pass: " + newPass);

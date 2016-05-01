@@ -19,17 +19,17 @@ public class ReadFileTest extends PermissionsTest {
 	private User me;
 	private ReadFileService readFileService;
 
-	private String myHomeDirPath = "/home/me";
+	private String myHomeDirPath;
 
 	private long token = 0;
 
 	protected void populate() {
 		myDrive = MyDriveService.getMyDrive();
 
-		myUsername = "me";
-
+		myUsername = "meuNome";
+		myHomeDirPath = "/home/"+myUsername;
 		try {
-			myDrive.addUser("me", "qwerty123", "Jimmy", null);
+			myDrive.addUser(myUsername, "qwerty123", "Jimmy", null);
 			// myDrive.addUser("someone", "qwerty123", "Sarah", null);
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ReadFileTest failed on setup");
