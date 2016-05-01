@@ -11,9 +11,10 @@ public class LoginUser extends MyDriveCommand {
 	public LoginUser(Shell sh){ super(sh, "login", "login a user"); }
 	public void execute(String[] args){
 		//TODO
-		if (!(args.length == 3))
+		if (args.length > 2 || args.length == 0)
 			throw new RuntimeException("USAGE: "+name()+ " <username> [<password>]");
 		else{
+			//TODO args[1] : exceotuion out of bounds thrown 
 			LoginUserService lus = new LoginUserService(args[0], args[1]);
 			try {
 				lus.execute();
@@ -24,9 +25,9 @@ public class LoginUser extends MyDriveCommand {
 				// TODO Auto-generated catch block
 				System.out.println("Wrong Password");
 			}
+			//FIXME: Tagarito two more catches
 			catch (MyDriveException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Should not happen");
+				System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 			}
 			System.out.println("Your token is: " + lus.result());
 		}

@@ -15,7 +15,7 @@ public class LoginUserService extends MyDriveService {
 	}
 
 	@Override
-	public final void dispatch() throws UserDoesNotExistsException, WrongPasswordException   {
+	public final void dispatch() throws UserDoesNotExistsException, WrongPasswordException{
 
 		this._token = MyDriveService.getMyDrive().login(_username,_password);
 	}

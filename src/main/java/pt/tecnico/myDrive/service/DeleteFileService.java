@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class DeleteFileService extends MyDriveService {
 
@@ -28,9 +29,12 @@ public class DeleteFileService extends MyDriveService {
 	/**
 	 * Implementation of the service
 	 * @throws InvalidTokenException
+	 * @throws InvalidFileNameException 
+	 * @throws PermissionDeniedException 
 	 */
+	@Override
 	public final void dispatch() throws InvalidTokenException,
-			FileNotFoundException, MyDriveException{
+			FileNotFoundException, InvalidFileNameException, PermissionDeniedException{
 		
 		if(_fileName==null)
 			throw new InvalidFileNameException();

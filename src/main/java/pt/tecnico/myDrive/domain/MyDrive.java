@@ -78,6 +78,7 @@ public class MyDrive extends MyDrive_Base {
 			homeFolder.addFile("", home_root , root);
 			root.setUsersHome(home_root);
 		} catch (FileNotFoundException | FileExistsException | PermissionDeniedException | InvalidFileNameException e){
+			e.printStackTrace();
 			//Wont Happen. When EMPTY Database;
 		}
 	}
