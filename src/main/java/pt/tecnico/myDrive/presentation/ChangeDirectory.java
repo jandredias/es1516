@@ -21,7 +21,7 @@ public class ChangeDirectory extends MyDriveCommand {
 			cdService.execute();
 			System.out.println("Current directory: " + args[0]);
 		} catch (MyDriveException e) {
-			System.err.println("Could not change directory");
+			System.out.println("Could not change directory");
 		}
 		
 	}
