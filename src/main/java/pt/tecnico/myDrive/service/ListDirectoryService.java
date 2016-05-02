@@ -13,7 +13,9 @@ import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
+import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class ListDirectoryService extends MyDriveService {
@@ -35,6 +37,17 @@ public class ListDirectoryService extends MyDriveService {
 		session = myDrive.getSessionByToken(token);
 		if (session != null) {
 			directory = session.getCurrentDirectory();
+		} else {
+			directory = null;
+		}
+	}
+	
+	public ListDirectoryService(long token, String path) throws FileNotFoundException, NotDirectoryException {
+		this.token = token;
+		myDrive = MyDriveService.getMyDrive();
+		session = myDrive.getSessionByToken(token);
+		if (session != null) {
+			directory = myDrive.getDirectory(path, session.getUser());
 		} else {
 			directory = null;
 		}
