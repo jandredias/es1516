@@ -1,7 +1,9 @@
 package pt.tecnico.myDrive.presentation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import pt.tecnico.myDrive.exception.AppExecutionException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -16,22 +18,17 @@ public class Execute extends MyDriveCommand {
 			throw new RuntimeException("USAGE: "+name()+ " <path> [<args>]");
 		else{
 
-			ArrayList<String> functionArgs = new ArrayList<String>();
-			
-			int i = 1;
-			while(i < args.length){
-				functionArgs.add(args[i]);
-				i++;
-			}
 			long current_token = shell().getCurrentToken();			
-			ExecuteFileService service = new ExecuteFileService(current_token, args[0], functionArgs);
+			ExecuteFileService service = new ExecuteFileService(current_token, args[0], Arrays.copyOfRange(args, 1, args.length));
 			try{
 				service.execute();
-			//FIXME: miguel-amaral: catch the others exceptions after pBucho finish everything 
+			//FIXME: @miguel-amaral: catch the others exceptions after pBucho finish everything 
 			}catch (InvalidTokenException e){
 				System.out.println("Session Expired");
 			}catch (FileNotFoundException e){
 				System.out.println("Error: File"+ args[0] + " Does Not Exists..");
+			}catch (AppExecutionException e){
+				System.out.println(e.getMessage());
 			}catch (MyDriveException e) {
 				System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 			}
