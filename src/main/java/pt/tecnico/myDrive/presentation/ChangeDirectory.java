@@ -15,7 +15,8 @@ public class ChangeDirectory extends MyDriveCommand {
 			throw new RuntimeException("Invalid syntax. Usage: cwd [path]");
 		}
 
-		ChangeDirectoryService cdService = new ChangeDirectoryService(0, args[0]);
+		long currentToken = shell().getCurrentToken();
+		ChangeDirectoryService cdService = new ChangeDirectoryService(currentToken, args[0]);
 
 		try {
 			cdService.execute();
