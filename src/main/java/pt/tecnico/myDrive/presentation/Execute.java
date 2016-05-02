@@ -15,7 +15,7 @@ public class Execute extends MyDriveCommand {
 		if (args.length < 1)
 			throw new RuntimeException("USAGE: "+name()+ " <path> [<args>]");
 		else{
-			long current_token = 0;
+
 			ArrayList<String> functionArgs = new ArrayList<String>();
 			
 			int i = 1;
@@ -23,7 +23,7 @@ public class Execute extends MyDriveCommand {
 				functionArgs.add(args[i]);
 				i++;
 			}
-			
+			long current_token = shell().getCurrentToken();			
 			ExecuteFileService service = new ExecuteFileService(current_token, args[0], functionArgs);
 			try{
 				service.execute();

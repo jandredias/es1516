@@ -11,7 +11,25 @@ public abstract class Shell {
 	private Map<String,Command> coms = new TreeMap<String,Command>();
 	private PrintWriter out;
 	private String name;
+	
+	private Map<String,Long> userTokens = new TreeMap<String,Long>(); //Map Used to store logged users and their tokens
+	private long currentToken = 0;
 
+	public long getCurrentToken(){
+		return currentToken; 
+	}
+	public void setCurrentToken(long newToken){
+		currentToken = newToken ; 
+	}
+	
+	public long getTokenByUsername(String username){
+		return userTokens.get(username); 
+	}
+	
+	public void addUserToken(String username, long token){
+		userTokens.put(username, token); 
+	}
+	
 	public Shell(String n) { this(n, new PrintWriter(System.out, true), true); }
 	public Shell(String n, Writer w) { this(n, w, true); }
 	public Shell(String n, Writer w, boolean flush) {
