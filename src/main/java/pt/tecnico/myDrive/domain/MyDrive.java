@@ -181,16 +181,23 @@ public class MyDrive extends MyDrive_Base {
 	/**
 	 * Get File from a directory
 	 */
-	public File getFile(String path) throws FileNotFoundException {
+	public File getFile(String path) throws FileNotFoundException{
 		/**FIXME Try to delete method**/
-		return getFile(path, getRootUser());
+		try {
+			return getFile(path, getRootUser());
+		} catch (PermissionDeniedException e) {
+			// Root always have permission, should never happen
+			System.err.println("Should Not happen: root get file permission");
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	public File getFile(String path, User user) throws FileNotFoundException {
+	public File getFile(String path, User user) throws FileNotFoundException, PermissionDeniedException {
 		if (path.equals("/"))
 			return getRootDirectory();
 
-		return getRootDirectory().getFile(path);
+		return getRootDirectory().getFile(path, user);
 	}
 	
 
@@ -201,16 +208,25 @@ public class MyDrive extends MyDrive_Base {
 	 */
 	public Directory getDirectory(String path)
 		throws FileNotFoundException, NotDirectoryException {
+		
+		try{
 			return getDirectory(path, getRootUser());
+		} catch (PermissionDeniedException e) {
+			// Root always have permission, should never happen
+			System.err.println("Should Not happen: root get file permission");
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
 	 * Gets a directory using getFile method
 	 * FIXME try to delete method;
 	 * @param String path
+	 * @throws PermissionDeniedException 
 	 */
 	public Directory getDirectory(String path, User user)
-		throws FileNotFoundException, NotDirectoryException {
+		throws FileNotFoundException, NotDirectoryException, PermissionDeniedException {
 			File f = getFile(path, user);
 			f.isParentable();
 			return (Directory) f;
