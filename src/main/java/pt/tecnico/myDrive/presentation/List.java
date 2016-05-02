@@ -32,7 +32,7 @@ public class List extends MyDriveCommand {
 					service = new ListDirectoryService(token, args[0]);
 					doAndPrintService(service);
 				} catch (FileNotFoundException e) {
-					System.out.println("Path: Directory does not exists");
+					System.out.println("Path: Directory does not exist");
 				} catch (NotDirectoryException e) {
 					System.out.println("Path: not a directory");
 				} catch (PermissionDeniedException e) {
@@ -57,9 +57,9 @@ public class List extends MyDriveCommand {
 		
 		for(java.util.List<String> list : result){
 			for(String s : list){
-				System.out.println(s + " ");
+				System.out.printf(s + " ");
 			}
-			System.out.println("\n");
+			System.out.printf("\n");
 		}
 	}
 }
