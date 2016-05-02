@@ -32,9 +32,11 @@ public class List extends MyDriveCommand {
 					service = new ListDirectoryService(token, args[0]);
 					doAndPrintService(service);
 				} catch (FileNotFoundException e) {
-					System.out.println("Path: file not found");
+					System.out.println("Path: Directory does not exists");
 				} catch (NotDirectoryException e) {
-					System.out.println("Path: file not directory");
+					System.out.println("Path: not a directory");
+				} catch (PermissionDeniedException e) {
+					System.out.println("No permissions to list the dir: " + e.getMessage());
 				}
 			}
 		}

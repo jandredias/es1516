@@ -42,7 +42,7 @@ public class ListDirectoryService extends MyDriveService {
 		}
 	}
 	
-	public ListDirectoryService(long token, String path) throws FileNotFoundException, NotDirectoryException {
+	public ListDirectoryService(long token, String path) throws FileNotFoundException, NotDirectoryException, PermissionDeniedException {
 		this.token = token;
 		myDrive = MyDriveService.getMyDrive();
 		session = myDrive.getSessionByToken(token);
