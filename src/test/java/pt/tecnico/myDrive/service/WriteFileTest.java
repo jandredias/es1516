@@ -27,16 +27,16 @@ public class WriteFileTest extends PermissionsTest {
 			md.addUser("test2", "ola123456", "test", "rwxdrwxd");
 			User testUser2 = md.getUserByUsername("test2");
 			
-			md.addUser("test3", "ola123456", "test", "--------");
+			md.addUser("test3", "ola123456", "test", "rwxdrwxd");
 			User testUser3 = md.getUserByUsername("test3");
-			
-			md.addUser("test4","ola123456", "test", "--------");
-			User testUser4 = md.getUserByUsername("test4");
+			testUser3.setPermissions("--------");
+			//md.addUser("test4","ola123456", "test", "--------");
+			//User testUser4 = md.getUserByUsername("test4");
 			
 			md.addPlainFile("/home/test1" , "plainfile1", testUser1, "olaola");
 			md.addPlainFile("/home/test2" , "plainfile2", testUser2, "olaola");
 			md.addPlainFile("/home/test3", "plainfile3", testUser3, "olaola");
-			md.addPlainFile("/home/test4", "plainfile4", testUser4, "olaola");
+			//md.addPlainFile("/home/test4", "plainfile4", testUser4, "olaola");
 			
 			md.addLink("/home/test1", "link1", testUser1, "/home/test1/plainfile1");
 			md.addLink("/home/test1", "link2", testUser1, "/home/test1/link1");
@@ -48,7 +48,7 @@ public class WriteFileTest extends PermissionsTest {
 			
 		}
 		catch(Exception e){
-			log.error(e.getMessage());;
+			throw new TestSetupException("WriteFileTest: " + e.getClass() + " " + e.getMessage());
 		};
 		
 	}

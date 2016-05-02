@@ -16,7 +16,7 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 public class Directory extends Directory_Base {
 
 	static final Logger log = LogManager.getRootLogger();
-	private static final String DEFAULT_ROOT_PERMISSION = "rwxd----";
+	private static final String DEFAULT_ROOT_PERMISSION = "rwxdr-x-";
 
 	/**
 	 * This is the most used constructor is used to create directories
@@ -51,7 +51,7 @@ public class Directory extends Directory_Base {
 	}
 
 	protected static Directory createRootDirectory(User owner) {
-		return new Directory("/", new DateTime(), DEFAULT_ROOT_PERMISSION, owner);
+		return new Directory("/", new DateTime(), owner.getPermissions(), owner);
 	}
 
 	public Directory(Element xml) {
@@ -189,7 +189,7 @@ public class Directory extends Directory_Base {
 		if( path.equals("") )
 			return this;
 		
-		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("On dir " + this.getName());
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("Execute Permissions On dir " + this.getName());
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {

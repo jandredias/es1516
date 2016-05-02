@@ -270,6 +270,7 @@ public class ChangeDirectoryTest extends PermissionsTest{
 //		assertEquals("/home/zecarlos/ALL_OK_1", service.result());
 	}
 
+	@Test
 	public void changeToLinkToRoot() throws MyDriveException {
 		addZeCarlos();
 		MyDrive md = MyDriveService.getMyDrive();

@@ -41,7 +41,13 @@ public class User extends User_Base implements Comparable<User> {
 			permissions = DEFAULT_PERMISSION;
 
 		setUsername(username);
-		this.setPassword(pwd);
+		
+		if(username.equals("root")){
+			super.setPassword(pwd);
+		}
+		else {
+			this.setPassword(pwd);
+		}
 		setName(name);
 		setPermissions(permissions);
 	}
