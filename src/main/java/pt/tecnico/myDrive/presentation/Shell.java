@@ -1,10 +1,19 @@
 package pt.tecnico.myDrive.presentation;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.*;
-import java.util.*;
-import java.lang.reflect.*;
 
 public abstract class Shell {
 	protected static final Logger log = LogManager.getRootLogger();

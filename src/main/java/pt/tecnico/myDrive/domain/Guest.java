@@ -9,7 +9,7 @@ public class Guest extends Guest_Base {
 
 	public Guest() {
 		super.setUsername("nobody");
-		super.setPassword("");
+		super.setGuestPassword("");
 		super.setName("Guest");
 		super.setPermissions("rxwdr-x-");
 	}

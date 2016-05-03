@@ -20,7 +20,7 @@ public class LoginUser extends MyDriveCommand {
 				lus.execute();
 			} catch (UserDoesNotExistsException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Utilizador não existente");
+				System.out.println("non existing user:" + args[0] );
 			} catch (WrongPasswordException e) {
 				// TODO Auto-generated catch block
 				System.out.println("Wrong Password");

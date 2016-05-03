@@ -41,7 +41,6 @@ public class MyDrive extends MyDrive_Base {
 	 * @return MyDrive
 	 */
 	public static MyDrive getInstance() {
-
 		MyDrive md = FenixFramework.getDomainRoot().getMyDrive();
 
 		if (md != null) return md;
@@ -63,7 +62,9 @@ public class MyDrive extends MyDrive_Base {
 
 		Root root = new Root();
 		this.addUsers(root);
-
+		Guest guest = new Guest();
+		this.addUsers(guest);
+		
 		Directory rootDirectory;
 		rootDirectory = Directory.createRootDirectory(root);
 
@@ -77,6 +78,13 @@ public class MyDrive extends MyDrive_Base {
 			home_root = new Directory("root", root);
 			homeFolder.addFile("", home_root , root);
 			root.setUsersHome(home_root);
+
+			Directory home_guest = null;
+			home_guest = new Directory("nobody", root);
+			homeFolder.addFile("", home_guest, root);
+			home_guest.setPermissions(guest.getPermissions());
+			home_guest.setOwner(guest);
+			guest.setUsersHome(home_guest);
 		} catch (FileNotFoundException | FileExistsException | PermissionDeniedException | InvalidFileNameException e){
 			e.printStackTrace();
 			//Wont Happen. When EMPTY Database;
@@ -87,10 +95,14 @@ public class MyDrive extends MyDrive_Base {
 	public void cleanup(){
 		try{
 			Root root = getRootUser();
-
+			
 			for (User user : getUsersSet()){
-				if( user != root )
+				try{
 					user.delete(root);
+				} catch (PrivateResourceException e) {
+					//Root can delete everyone that is cleanable
+					
+				}
 			}
 			//Cleaning up every File left
 			Directory rootDir = getRootDirectory();

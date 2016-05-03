@@ -14,8 +14,8 @@ public class List extends MyDriveCommand {
 	}
 
 	public void execute(String[] args) {
-		if (args.length > 1)
-			throw new RuntimeException("USAGE: " + name() + " <path>");
+		if (args.length > 1 )
+			throw new RuntimeException("USAGE: " + name() + " [<path>]");
 		else {
 			long token = shell().getCurrentToken();
 			

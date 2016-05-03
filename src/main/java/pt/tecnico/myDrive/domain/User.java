@@ -68,6 +68,14 @@ public class User extends User_Base implements Comparable<User> {
 			super.setPassword(newPass);
 	}
 
+	/**
+	 * Method only to be used by Guest 
+	 * @param guestPass
+	 * @throws PasswordTooShortException
+	 */
+	protected void setGuestPassword(String guestPass){
+		super.setPassword(guestPass);
+	}
 
 	public User(Element xml) {
 		this.xmlImport(xml);
