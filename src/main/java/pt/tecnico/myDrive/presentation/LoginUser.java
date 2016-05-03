@@ -33,8 +33,9 @@ public class LoginUser extends MyDriveCommand {
 			}
 			shell().addUserToken(args[0], lus.result());
 			shell().setCurrentToken(lus.result());
-			if(lus.result() != shell().getTokenByUsername("Guest"))
+			if(lus.result() != shell().getTokenByUsername("nobody")){
 				shell().removeGuest();
+			}
 		}
 	}
 }

@@ -11,7 +11,7 @@ public class Guest extends Guest_Base {
 		super.setUsername("nobody");
 		super.setGuestPassword("");
 		super.setName("Guest");
-		super.setPermissions("rxwdr-x-");
+		super.setPermissions("rwxdr-x-");
 	}
 
 	public Guest(Element xml) {

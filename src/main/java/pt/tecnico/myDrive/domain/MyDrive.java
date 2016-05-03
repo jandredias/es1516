@@ -238,9 +238,13 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws PermissionDeniedException 
 	 */
 	public Directory getDirectory(String path, User user)
-		throws FileNotFoundException, NotDirectoryException, PermissionDeniedException {
+		throws FileNotFoundException, PermissionDeniedException {
 			File f = getFile(path, user);
-			f.isParentable();
+			try {
+				f.isParentable();
+			} catch (NotDirectoryException e) {
+				throw new FileNotFoundException("Directory: " + path);
+			}
 			return (Directory) f;
 	}
 

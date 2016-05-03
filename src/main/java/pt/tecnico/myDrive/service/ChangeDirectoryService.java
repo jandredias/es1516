@@ -33,7 +33,7 @@ public class ChangeDirectoryService extends MyDriveService {
 		Directory targetDir;
 		if(_path.charAt(0) == '/'){
 			//System.out.println("\u001B[33mGoing for root\u001B[0m");
-			targetDir = _drive.getRootDirectory().getDirectory(_path,session.getUser());
+			targetDir = _drive.getDirectory(_path,session.getUser());
 		}
 		else{
 			//System.out.println("\u001B[33mGoing for Relative\u001B[0m");
