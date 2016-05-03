@@ -1,9 +1,9 @@
 package pt.tecnico.myDrive.system;
 
+import org.junit.After;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.presentation.*;
 import pt.tecnico.myDrive.presentation.MyDriveShell;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 
@@ -27,7 +27,7 @@ public class SystemTest extends AbstractServiceTest {
     }
     
     /*TODO After test teardown, clean database*/
-    
+    @After
     public void tearDown(){
     	MyDrive.getInstance().cleanup();
     }
