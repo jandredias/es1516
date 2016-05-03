@@ -31,7 +31,7 @@ public class WriteFileService extends MyDriveService {
 	 * @throws PermissionDeniedException 
 	 * @throws FileNotFoundException 
 	 */
-	public WriteFileService(long token, String path, String content) throws FileNotFoundException, PermissionDeniedException {
+	public WriteFileService(long token, String path, String content) {
 		this.token = token;
 		this.path = path;
 		this.content = content;
@@ -56,11 +56,12 @@ public class WriteFileService extends MyDriveService {
 		File targetFile;
 		if(path.charAt(0) == '/'){
 			//System.out.println("\u001B[33mGoing for root\u001B[0m");
-			targetFile = myDrive.getFile(path,session.getUser());
+			targetFile = myDrive.getFile(path, user);
+			System.out.println("\u001B[31m PATH TO FILE:" + targetFile.getPath() + "\u001B[0m)");
 		}
 		else{
 			//System.out.println("\u001B[33mGoing for Relative\u001B[0m");
-			targetFile = currentDir.getFile(path, session.getUser());
+			targetFile = currentDir.getFile(path, user);
 		}
 		Visitor visitor = new WriteFileVisitor(content, user);
 		targetFile.accept(visitor);

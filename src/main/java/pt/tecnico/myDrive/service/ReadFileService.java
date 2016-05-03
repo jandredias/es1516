@@ -2,8 +2,8 @@ package pt.tecnico.myDrive.service;
 
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
-import pt.tecnico.myDrive.domain.FileContentsVisitor;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.ReadFileContentsVisitor;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
@@ -19,7 +19,6 @@ public class ReadFileService extends MyDriveService {
 	private String	_content;
 	
 	public ReadFileService(long token, String fileName) {
-		_drive = MyDriveService.getMyDrive();
 		_fileName = fileName;
 		_token = token;
 	}
@@ -27,11 +26,13 @@ public class ReadFileService extends MyDriveService {
 	@Override
 	protected void dispatch() throws InvalidTokenException, PermissionDeniedException, FileNotFoundException, NotDirectoryException, UnsupportedOperationException {
 		
+		_drive = MyDriveService.getMyDrive();
+		
 		Session session = _drive.validateToken(_token);
 		Directory currentDir = session.getCurrentDirectory();
 		File file = currentDir.getInnerFile(_fileName);
-		if(!session.getUser().hasReadPermissions(file)) throw new PermissionDeniedException();
-		FileContentsVisitor visitor = new FileContentsVisitor();
+		
+		ReadFileContentsVisitor visitor = new ReadFileContentsVisitor(session.getUser());
 		file.accept(visitor);
 		_content = visitor.getFileContents();
 		
