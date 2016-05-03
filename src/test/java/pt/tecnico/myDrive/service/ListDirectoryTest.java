@@ -58,8 +58,8 @@ public class ListDirectoryTest extends PermissionsTest {
 	}
 	
 	@Override
-	protected char getPermissionChar() {
-		return 'r';
+	protected String getPermissionString() {
+		return "r";
 	}
 	
 	@Override

@@ -189,7 +189,7 @@ public class Directory extends Directory_Base {
 		if( path.equals("") )
 			return this;
 		
-		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("Execute Permissions On dir " + this.getName());
+		if(!user.hasExecutePermissions(this)) throw new PermissionDeniedException("Execute Permissions On dir: " + this.getName() + " permissions: " + this.getPermissions() + " owner: " + this.getOwner().getUsername() + " denied user: " + user.getUsername());
 		ArrayList<String> pieces = MyDrive.pathToArray(path);
 
 		if (pieces.size() == 1) {

@@ -11,7 +11,7 @@ import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
-import pt.tecnico.myDrive.exception.NotPlainFileException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
 
@@ -66,8 +66,8 @@ public class WriteFileTest extends PermissionsTest {
 	}
 	
 	@Override
-	protected char getPermissionChar() {
-		return 'w';
+	protected String getPermissionString() {
+		return "wx";
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class WriteFileTest extends PermissionsTest {
 		assertEquals("teste", md.getFileContents("/home/test3/plainfile3"));
 	}
 	
-	@Test(expected=NotPlainFileException.class)
+	@Test(expected=UnsupportedOperationException.class)
 	public void writeDir() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
@@ -169,7 +169,7 @@ public class WriteFileTest extends PermissionsTest {
 		service.execute();
 	}
 	
-	@Test(expected=NotPlainFileException.class)
+	@Test(expected=UnsupportedOperationException.class)
 	public void writeToDirectoryLink() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
