@@ -7,6 +7,7 @@ import org.jdom2.Element;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 /* HERDA DE PLAINFILE*/
@@ -61,7 +62,7 @@ public class Application extends Application_Base {
 		return array;
 	}
 	
-	public void accept(Visitor visitor) throws UnsupportedOperationException {
+	public void accept(Visitor visitor) throws UnsupportedOperationException, PermissionDeniedException {
 		visitor.visitApplication(this);
 	}
 

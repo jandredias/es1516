@@ -1,8 +1,13 @@
 package pt.tecnico.myDrive.domain;
 
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
-public class FileContentsVisitor implements Visitor {
+public class ReadFileContentsVisitor extends Visitor {
+
+	public ReadFileContentsVisitor(User visiter) {
+		super(visiter);
+	}
 
 	private String fileContents;
 	
@@ -17,17 +22,23 @@ public class FileContentsVisitor implements Visitor {
 	}
 
 	@Override
-	public void visitPlainFile(PlainFile p) throws UnsupportedOperationException {
+	public void visitPlainFile(PlainFile p) throws UnsupportedOperationException, PermissionDeniedException {
+		if(!_visiter.hasReadPermissions(p)) throw new PermissionDeniedException();
+
 		fileContents = p.getContent();
 	}
 
 	@Override
-	public void visitLink(Link l) throws UnsupportedOperationException {
+	public void visitLink(Link l) throws UnsupportedOperationException, PermissionDeniedException {
+		if(!_visiter.hasReadPermissions(l)) throw new PermissionDeniedException();
+
 		fileContents = l.getContent();
 	}
 
 	@Override
-	public void visitApplication(Application a) throws UnsupportedOperationException {
+	public void visitApplication(Application a) throws UnsupportedOperationException, PermissionDeniedException {
+		if(!_visiter.hasReadPermissions(a)) throw new PermissionDeniedException();
+
 		fileContents = a.getContent();
 	}
 

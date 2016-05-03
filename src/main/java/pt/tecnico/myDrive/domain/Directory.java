@@ -71,7 +71,7 @@ public class Directory extends Directory_Base {
 	public void isParentable() throws NotDirectoryException{}
 
 	public void accept(Visitor visitor)
-			throws UnsupportedOperationException {
+			throws UnsupportedOperationException, PermissionDeniedException {
 		visitor.visitDirectory(this);
 	}
 

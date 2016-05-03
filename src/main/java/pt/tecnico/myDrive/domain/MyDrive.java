@@ -358,8 +358,12 @@ public class MyDrive extends MyDrive_Base {
 	/**FIXME should not be public only curr Dir !**/
 	private String getFileContents(File file) throws UnsupportedOperationException{
 
-		FileContentsVisitor visitor = new FileContentsVisitor();
-		file.accept(visitor);
+		ReadFileContentsVisitor visitor = new ReadFileContentsVisitor(getRootUser());
+		try {
+			file.accept(visitor);
+		} catch (PermissionDeniedException e) {
+			//Root always have permission
+		}
 		return visitor.getFileContents();
 	}
 

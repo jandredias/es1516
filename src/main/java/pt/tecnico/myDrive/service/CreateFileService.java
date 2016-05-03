@@ -54,6 +54,7 @@ public class CreateFileService extends MyDriveService {
 			InvalidTokenException, PermissionDeniedException, InvalidAppContentException, InvalidLinkContentException, CantCreatDirWithContentException {
 		
 		MyDrive _drive = MyDriveService.getMyDrive();
+		
 		Session session = _drive.validateToken(_token);
 		User    user    = session.getUser();
 		String _path    = session.getCurrentDirectory().getPath();
@@ -77,7 +78,7 @@ public class CreateFileService extends MyDriveService {
 			break;
 		default:
 			log.error("Unknown Type File");
-			throw new UnknowFileTypeException("");
+			throw new UnknowFileTypeException(_fileType);
 		}
 	}
 }

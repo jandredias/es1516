@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 public class PlainFile extends PlainFile_Base {
@@ -59,7 +60,7 @@ public class PlainFile extends PlainFile_Base {
 		return array;
 	}
 	
-	public void accept(Visitor visitor) throws UnsupportedOperationException {
+	public void accept(Visitor visitor) throws UnsupportedOperationException, PermissionDeniedException {
 		visitor.visitPlainFile(this);
 	}
 }

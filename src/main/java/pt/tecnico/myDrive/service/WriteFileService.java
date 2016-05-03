@@ -42,7 +42,7 @@ public class WriteFileService extends MyDriveService {
 		if(!(plainFile instanceof PlainFile))
 			 throw new NotPlainFileException();
 		if (!session.getUser().hasWritePermissions(plainFile)) throw new PermissionDeniedException(); 
-		((PlainFile) plainFile).setContent(content, session.getUser());
+		((PlainFile) plainFile).setContent(content);
 		
 	}
 }
