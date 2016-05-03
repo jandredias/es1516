@@ -36,6 +36,9 @@ public class LoginUser extends MyDriveCommand {
 				System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 			}
 			shell().addUserToken(args[0], lus.result());
+			shell().setCurrentToken(lus.result());
+			if(lus.result() != shell().getTokenByUsername("Guest"))
+				shell().removeGuest();
 		}
 	}
 }
