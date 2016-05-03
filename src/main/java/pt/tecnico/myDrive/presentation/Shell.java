@@ -30,6 +30,10 @@ public abstract class Shell {
 		userTokens.put(username, token); 
 	}
 	
+	public void removeGuest(){
+		userTokens.remove("Guest");
+	}
+	
 	public Shell(String n) { this(n, new PrintWriter(System.out, true), true); }
 	public Shell(String n, Writer w) { this(n, w, true); }
 	public Shell(String n, Writer w, boolean flush) {
