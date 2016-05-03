@@ -40,7 +40,7 @@ public abstract class Shell {
 	}
 	
 	public void removeGuest(){
-		userTokens.remove("Guest");
+		userTokens.remove("nobody");
 	}
 	
 	public Shell(String n) { this(n, new PrintWriter(System.out, true), true); }
