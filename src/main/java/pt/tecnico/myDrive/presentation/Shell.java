@@ -15,6 +15,9 @@ import java.util.TreeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.MyDrive;
+
 public abstract class Shell {
 	protected static final Logger log = LogManager.getRootLogger();
 	private Map<String,Command> coms = new TreeMap<String,Command>();

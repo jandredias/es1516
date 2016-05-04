@@ -5,6 +5,7 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
 
 public class List extends MyDriveCommand {
@@ -19,24 +20,32 @@ public class List extends MyDriveCommand {
 		else {
 			long token = shell().getCurrentToken();
 			
-			ListDirectoryService service;
+			ListDirectoryService service = new ListDirectoryService(token);
 			
 			if (args.length == 0) {
 				// print current dir
-				service = new ListDirectoryService(token);
 				doAndPrintService(service);
 			}
 			else if (args.length == 1) {
 				// print path dir
+				
 				try {
-					service = new ListDirectoryService(token, args[0]);
+					ChangeDirectoryService getCurrentDir = new ChangeDirectoryService(token, args[0]);
+					getCurrentDir.execute();
+					String currentDir = getCurrentDir.result();
+				
 					doAndPrintService(service);
+				
+					new ChangeDirectoryService(token, currentDir).execute();
+					
 				} catch (FileNotFoundException e) {
 					System.out.println("Path: Directory does not exist");
 				} catch (NotDirectoryException e) {
 					System.out.println("Path: not a directory");
 				} catch (PermissionDeniedException e) {
 					System.out.println("No permissions to list the dir: " + e.getMessage());
+				} catch (MyDriveException e) {
+					System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 				}
 			}
 		}
