@@ -8,11 +8,10 @@ import pt.tecnico.myDrive.exception.PrivateResourceException;
 public class Root extends Root_Base {
 
 	public Root() {
-		try {
-			init("root", "***", "Super User", "rwxdr-x-");
-		} catch (InvalidUsernameException e) {
-			//"root" is always a valid username	}
-		}
+		super.setUsername("root");
+		super.setSpecialPassword("***");
+		super.setName("Super User");
+		super.setPermissions("rwxdr-x-");
 	}
 
 	public Root(Element xml) {

@@ -69,11 +69,10 @@ public class User extends User_Base implements Comparable<User> {
 	}
 
 	/**
-	 * Method only to be used by Guest 
+	 * Method only to be used by Guest or Root
 	 * @param guestPass
-	 * @throws PasswordTooShortException
 	 */
-	protected void setGuestPassword(String guestPass){
+	protected void setSpecialPassword(String guestPass){
 		super.setPassword(guestPass);
 	}
 
