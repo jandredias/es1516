@@ -7,7 +7,7 @@ import pt.tecnico.myDrive.service.LoginUserService;
 
 public class LoginUser extends MyDriveCommand {
 
-	public LoginUser(Shell sh) {
+	public LoginUser(MyDriveShell sh) {
 		super(sh, "login", "login a user");
 	}
 
@@ -31,10 +31,12 @@ public class LoginUser extends MyDriveCommand {
 			catch (MyDriveException e) {
 				System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 			}
-			shell().addUserToken(args[0], lus.result());
-			shell().setCurrentToken(lus.result());
-			if(lus.result() != shell().getTokenByUsername("Guest"))
-				shell().removeGuest();
+			MyDriveShell shell = (MyDriveShell) shell(); 
+			shell.addUserToken(args[0], lus.result());
+			shell.setCurrentToken(lus.result());
+			if(lus.result() != shell.getTokenByUsername("nobody")){
+				shell.removeGuest();
+			}
 		}
 	}
 }

@@ -1,19 +1,14 @@
 package pt.tecnico.myDrive.service;
 
-import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.Directory;
-import pt.tecnico.myDrive.domain.ExecuteFileVisitor;
 import pt.tecnico.myDrive.domain.File;
-import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.domain.Visitor;
 import pt.tecnico.myDrive.domain.WriteFileVisitor;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
 import pt.tecnico.myDrive.exception.NotPlainFileException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;

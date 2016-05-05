@@ -16,7 +16,7 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 public class Directory extends Directory_Base {
 
 	static final Logger log = LogManager.getRootLogger();
-	private static final String DEFAULT_ROOT_PERMISSION = "rwxdr-x-";
+//	private static final String DEFAULT_ROOT_PERMISSION = "rwxdr-x-";
 
 	/**
 	 * This is the most used constructor is used to create directories
