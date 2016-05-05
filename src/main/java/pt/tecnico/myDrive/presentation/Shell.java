@@ -6,10 +6,13 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.KeyStore.Entry;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +36,14 @@ public abstract class Shell {
 	
 	public long getTokenByUsername(String username){
 		return userTokens.get(username); 
+	}
+	public String getUsernameByToken(long token){
+		for (java.util.Map.Entry<String, Long> entry : userTokens.entrySet()) {
+	        if (Objects.equals(token, entry.getValue())) {
+	            return entry.getKey();
+	        }
+	    }
+		return null;
 	}
 	
 	public void addUserToken(String username, long token){
