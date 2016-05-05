@@ -10,7 +10,7 @@ import pt.tecnico.myDrive.service.ListDirectoryService;
 
 public class List extends MyDriveCommand {
 
-	public List(Shell sh) {
+	public List(MyDriveShell sh) {
 		super(sh, "ls", "prints the content of the path directory or the current directory if no path is provided");
 	}
 
@@ -18,7 +18,7 @@ public class List extends MyDriveCommand {
 		if (args.length > 1 )
 			throw new RuntimeException("USAGE: " + name() + " [<path>]");
 		else {
-			long token = shell().getCurrentToken();
+			long token = ((MyDriveShell) shell()).getCurrentToken();
 			
 			ListDirectoryService service = new ListDirectoryService(token);
 			

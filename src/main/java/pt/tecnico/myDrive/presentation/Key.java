@@ -1,7 +1,7 @@
 package pt.tecnico.myDrive.presentation;
 public class Key extends MyDriveCommand {
 
-	public Key(Shell sh){ super(sh, "token", "login a user"); }
+	public Key(MyDriveShell sh){ super(sh, "token", "login a user"); }
 	public void execute(String[] args){
 		//TODO
 		if (args.length < 0)
@@ -11,8 +11,9 @@ public class Key extends MyDriveCommand {
 				//FIXME how to print current username without imports
 			}
 			else{
-				long newToken = shell().getTokenByUsername(args[0]);
-				shell().setCurrentToken(newToken);
+				
+				long newToken = ((MyDriveShell) shell()).getCurrentToken();
+				((MyDriveShell) shell()).setCurrentToken(newToken);
 				System.out.print(newToken);
 			}
 		}

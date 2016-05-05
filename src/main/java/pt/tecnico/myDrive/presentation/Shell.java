@@ -21,27 +21,7 @@ public abstract class Shell {
 	private PrintWriter out;
 	private String name;
 	
-	private Map<String,Long> userTokens = new TreeMap<String,Long>(); //Map Used to store logged users and their tokens
-	private long currentToken = 0;
-
-	public long getCurrentToken(){
-		return currentToken; 
-	}
-	public void setCurrentToken(long newToken){
-		currentToken = newToken ; 
-	}
 	
-	public long getTokenByUsername(String username){
-		return userTokens.get(username); 
-	}
-	
-	public void addUserToken(String username, long token){
-		userTokens.put(username, token); 
-	}
-	
-	public void removeGuest(){
-		userTokens.remove("nobody");
-	}
 	
 	public Shell(String n) { this(n, new PrintWriter(System.out, true), true); }
 	public Shell(String n, Writer w) { this(n, w, true); }
@@ -49,12 +29,7 @@ public abstract class Shell {
 		name = n;
 		out = new PrintWriter(w, flush);
 
-		new Command(this, "quit", "Quit the command interpreter") {
-			void execute(String[] args) {
-				System.out.println(name+" quit");
-				System.exit(0);
-			}
-		};
+
 		/*
 		new Command(this, "exec", "execute an external command") {
 			void execute(String[] args) { 
