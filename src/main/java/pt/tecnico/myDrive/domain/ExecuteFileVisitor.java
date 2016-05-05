@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 
 import pt.tecnico.myDrive.exception.AppExecutionException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
@@ -37,11 +38,15 @@ public class ExecuteFileVisitor extends Visitor{
 		for(String line : lines){
 			String[] executingCommand = line.split(" ");
 			args = Arrays.copyOfRange(executingCommand, 1, executingCommand.length);
-			System.out.println("\u001B[32mTODO:\u001B[0m Execute app on path: " + executingCommand[0] + " with args: " + args);
-			//App app = getApp(executingCommand[0]);
-			//app.accept(this);
+			Directory father = plain.getDir();
+			File file = null ;
+			try {
+				file = father.getFile(executingCommand[0], _visiter);
+			} catch (FileNotFoundException e) {
+				throw new UnsupportedOperationException("App " + executingCommand[0] + " does not exist");
+			}
+			file.accept(this);
 		}
-		throw new RuntimeException("\u001B[1;31mFIXME: ExecuteFileService: NOT IMPLEMENTED visitPlainFile\u001B[0m");
 	}
 
 	public void visitApplication(Application app) throws PermissionDeniedException, UnsupportedOperationException, AppExecutionException{

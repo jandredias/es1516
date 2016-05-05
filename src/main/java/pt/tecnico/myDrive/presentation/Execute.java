@@ -1,6 +1,5 @@
 package pt.tecnico.myDrive.presentation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import pt.tecnico.myDrive.exception.AppExecutionException;
