@@ -78,7 +78,7 @@ public class CreateFileService extends MyDriveService {
 			break;
 		default:
 			log.error("Unknown Type File");
-			throw new UnknowFileTypeException(_fileType);
+			throw new UnknowFileTypeException(_fileType + "\nSupported:\n --dir\n --link\n --plainfile\n --app");
 		}
 	}
 }
