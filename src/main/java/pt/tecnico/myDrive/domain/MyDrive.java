@@ -640,21 +640,19 @@ public class MyDrive extends MyDrive_Base {
 
 		cleanSessions();
 
-		if (username == null)
-			throw new UserDoesNotExistsException();
 
-		if (password == null)
-			throw new WrongPasswordException();
-
-		if (password.length() < 8)
-			throw new PasswordTooShortException();
+		if(password == null) throw new WrongPasswordException();
 
 		User user = this.getUserByUsername(username);
 		if (user == null)
 			throw new UserDoesNotExistsException();
 
-		if (!user.getPassword().equals(password))
-			throw new WrongPasswordException();
+
+		boolean specialUser = user.specialPassUser();
+		if(password.length() < 8 && !specialUser) throw new PasswordTooShortException();
+		
+		if(!user.getPassword().equals(password)) throw new WrongPasswordException();
+
 
 		Session s = new Session(user, this.getNewToken());
 		s.setCurrentDirectory(user.getUsersHome());

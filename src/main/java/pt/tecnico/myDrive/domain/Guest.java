@@ -53,4 +53,9 @@ public class Guest extends Guest_Base {
 	public boolean validateAccessTime(DateTime lastUsed){
 		return true;
 	}
+	
+	@Override
+	public boolean specialPassUser(){
+		return true;
+	}
 }
