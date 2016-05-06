@@ -30,21 +30,22 @@ public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();
 
 	public static void main(String[] args) throws IOException {
-		//if(helloWorld())
-			//return;
+		// if(helloWorld())
+		// return;
 		try {
 			init();
 
-			//Parse the arguments
-			for (String s: args) xmlScan(new File(s));
+			// Parse the arguments
+			for (String s : args)
+				xmlScan(new File(s));
 			xmlPrint();
-		} finally { FenixFramework.shutdown(); }
+		} finally {
+			FenixFramework.shutdown();
+		}
 	}
 
-	public static boolean helloWorld(){
+	public static boolean helloWorld() {
 
-				
-		
 		return true;
 	}
 
@@ -90,9 +91,9 @@ public class MyDriveApplication {
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			log.trace("xmlScan: Importing the main document");
-			Document document = (Document)builder.build(file);
+			Document document = (Document) builder.build(file);
 			md.xmlImport(document.getRootElement());
-		} catch(ImportDocumentException e) {
+		} catch (ImportDocumentException e) {
 			e.getStackTrace();
 		}
 		log.trace("End of xmlScan");
