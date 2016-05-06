@@ -30,9 +30,11 @@ public class List extends MyDriveCommand {
 				// print path dir
 				
 				try {
-					ChangeDirectoryService getCurrentDir = new ChangeDirectoryService(token, args[0]);
+					ChangeDirectoryService getCurrentDir = new ChangeDirectoryService(token, ".");
 					getCurrentDir.execute();
 					String currentDir = getCurrentDir.result();
+					
+					new ChangeDirectoryService(token, args[0]).execute();
 				
 					doAndPrintService(service);
 				
