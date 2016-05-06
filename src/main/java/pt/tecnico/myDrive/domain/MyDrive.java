@@ -30,6 +30,7 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.WrongPasswordException;
+import pt.tecnico.myDrive.exception.PasswordTooShortException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -629,13 +630,15 @@ public class MyDrive extends MyDrive_Base {
 				removeSession(s);
 	}
 
-	public Long login(String username, String password) throws UserDoesNotExistsException, WrongPasswordException{
+	public Long login(String username, String password) throws UserDoesNotExistsException, WrongPasswordException, PasswordTooShortException{
 		
 		cleanSessions();
 		
 		if(username == null) throw new UserDoesNotExistsException();
 
 		if(password == null) throw new WrongPasswordException();
+		
+		if(password.length() < 8) throw new PasswordTooShortException();
 		
 		User user = this.getUserByUsername(username);
 		if(user == null) throw new UserDoesNotExistsException();

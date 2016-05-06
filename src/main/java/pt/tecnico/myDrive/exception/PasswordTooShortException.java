@@ -14,4 +14,8 @@ public class PasswordTooShortException extends RuntimeException {
 		super(reason);
 	}
 	
+	public PasswordTooShortException() {
+		super();
+	}
+	
 }
