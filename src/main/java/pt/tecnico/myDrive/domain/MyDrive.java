@@ -638,11 +638,13 @@ public class MyDrive extends MyDrive_Base {
 
 		if(password == null) throw new WrongPasswordException();
 		
-		if(password.length() < 8) throw new PasswordTooShortException();
 		
 		User user = this.getUserByUsername(username);
 		if(user == null) throw new UserDoesNotExistsException();
 
+		boolean specialUser = user.specialPassUser();
+		if(password.length() < 8 && !specialUser) throw new PasswordTooShortException();
+		
 		if(!user.getPassword().equals(password)) throw new WrongPasswordException();
 
 		Session s = new Session(user, this.getNewToken());
