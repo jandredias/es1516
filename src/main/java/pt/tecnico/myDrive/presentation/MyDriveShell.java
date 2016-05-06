@@ -43,7 +43,8 @@ public class MyDriveShell extends Shell {
 	public static void main(String[] args) throws Exception {
 		MyDriveShell sh = new MyDriveShell();
 		
-		new Import(sh).execute(args); // IMport XML
+		if(args.length >= 1)
+			new Import(sh).execute(args); // IMport XML
 		sh.execute();
 		
 	}
