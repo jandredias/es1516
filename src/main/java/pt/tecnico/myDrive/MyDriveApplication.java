@@ -91,7 +91,7 @@ public class MyDriveApplication {
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			log.trace("xmlScan: Importing the main document");
-			Document document;
+			Document document = null;
 			try {
 				document = (Document) builder.build(file);
 			} catch (JDOMException | IOException e) {

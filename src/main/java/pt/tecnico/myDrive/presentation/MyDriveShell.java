@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.presentation;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -41,6 +42,8 @@ public class MyDriveShell extends Shell {
 	
 	public static void main(String[] args) throws Exception {
 		MyDriveShell sh = new MyDriveShell();
+		
+		new Import(sh).execute(args); // IMport XML
 		sh.execute();
 		
 	}
