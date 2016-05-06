@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.service;
 import static org.junit.Assert.assertTrue;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -11,8 +10,9 @@ import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.exception.TestSetupException;
 
-public class ExtendUserTimeServiceTest {
+public class ExtendUserTimeServiceTest extends AbstractServiceTest {
 
 	private MyDrive myDrive;
 	private User user;
@@ -21,13 +21,17 @@ public class ExtendUserTimeServiceTest {
 	
 	private ExtendUserTimeService extendService;
 	
-	@Before
-	public void setUp() throws Exception {
-		myDrive = MyDrive.getInstance();
-		myDrive.addUser("john", "qwerty1234", "John", null);
-		user = myDrive.getUserByUsername("john");
-		token = myDrive.getNewToken();
-		session = myDrive.getSessionByToken(token);
+	@Override
+	protected void populate() {
+		try {
+			myDrive = MyDrive.getInstance();
+			myDrive.addUser("john", "qwerty1234", "John", null);
+			user = myDrive.getUserByUsername("john");
+			token = myDrive.getNewToken();
+			session = myDrive.getSessionByToken(token);
+		} catch (MyDriveException e) {
+			throw new TestSetupException("ExtendUserTimeService: Populate");
+		}
 	}
 
 	@Test
