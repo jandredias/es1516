@@ -16,6 +16,7 @@ import org.jdom2.Element;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidLinkContentException;
@@ -478,17 +479,13 @@ public class MyDrive extends MyDrive_Base {
 	 * Receives the root element of a XML document and imports the file system
 	 *
 	 * @param Element
+	 * @throws ImportDocumentException 
 	 * @throws InvalidFileNameException
 	 * @throws PermissionDeniedException
 	 */
-	public void xmlImport(Element e)
-			throws InvalidUsernameException, FileNotFoundException,
-			NotDirectoryException, UserDoesNotExistsException,
-			FileExistsException, InvalidFileNameException,
-			ClassNotFoundException, NoSuchMethodException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException, UsernameAlreadyInUseException, PermissionDeniedException {
+	public void xmlImport(Element e) throws ImportDocumentException {
 
+		try{
 		for(Element node : e.getChildren()){
 
 			File file = null;
@@ -528,6 +525,9 @@ public class MyDrive extends MyDrive_Base {
 				dir.addFiles(file);
 
 			}
+		}
+		} catch(Exception e1){
+			throw new ImportDocumentException();
 		}
 	}
 	/* ****************************** XML Related *************************** */
