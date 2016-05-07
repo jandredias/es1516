@@ -1,20 +1,21 @@
 package pt.tecnico.myDrive.service;
 
-import pt.tecnico.myDrive.domain.User;
-import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.exception.InvalidTokenException;
 
 public class ExtendUserTimeService extends MyDriveService {
 
-	// TODO
-	
-	public ExtendUserTimeService(User user) {
-		
+	private long _token;
+
+	public ExtendUserTimeService(long token) {
+		_token = token;
 	}
-	
-	@Override
-	protected void dispatch() throws MyDriveException {
-		// TODO Auto-generated method stub
-		
+
+	public final void dispatch() throws InvalidTokenException {
+
+		MyDrive drive = MyDriveService.getMyDrive();
+
+		drive.validateToken(_token);
 	}
 
 }

@@ -45,4 +45,9 @@ public class Root extends Root_Base {
 	protected long minutesSessionExpires(){
 		return 10;
 	}
+	
+	@Override
+	public boolean specialPassUser(){
+		return true;
+	}
 }

@@ -190,4 +190,8 @@ public class User extends User_Base implements Comparable<User> {
 		boolean valid = (minutesGoneBy < this.minutesSessionExpires());
 		return valid;
 	}
+	
+	public boolean specialPassUser(){
+		return false;
+	}
 }
