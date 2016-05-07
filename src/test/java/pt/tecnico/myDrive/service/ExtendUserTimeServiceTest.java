@@ -1,6 +1,7 @@
 package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -15,8 +16,8 @@ import pt.tecnico.myDrive.exception.TestSetupException;
 public class ExtendUserTimeServiceTest extends AbstractServiceTest {
 
 	private MyDrive myDrive;
-	private User user;
 	private long token;
+	private User user;
 	private Session session;
 	
 	private ExtendUserTimeService extendService;
@@ -26,9 +27,10 @@ public class ExtendUserTimeServiceTest extends AbstractServiceTest {
 		try {
 			myDrive = MyDrive.getInstance();
 			myDrive.addUser("john", "qwerty1234", "John", null);
-			user = myDrive.getUserByUsername("john");
 			token = myDrive.getNewToken();
-			session = myDrive.getSessionByToken(token);
+			user = myDrive.getUserByUsername("john");
+			session  = new Session(user, token);
+			assertEquals(session, myDrive.getSessionByToken(token));
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ExtendUserTimeService: Populate");
 		}
@@ -39,12 +41,13 @@ public class ExtendUserTimeServiceTest extends AbstractServiceTest {
 		DateTime oneHourAgo = DateTime.now().minusHours(1);
 		session.setLastUsed(oneHourAgo);
 		
-		extendService = new ExtendUserTimeService(user);
+		extendService = new ExtendUserTimeService(token);
 		extendService.execute();
 		
 		DateTime lastUsed = session.getLastUsed();
 		
-		assertTrue(lastUsed.minus(oneHourAgo.getMillis()).getMillis() > 0);
+		boolean sessionExtended = lastUsed.minus(oneHourAgo.getMillis()).getMillis() > 0;
+		assertTrue(sessionExtended);
 	}
 	
 	@Test(expected = InvalidTokenException.class)
@@ -52,7 +55,7 @@ public class ExtendUserTimeServiceTest extends AbstractServiceTest {
 		DateTime threeHoursAgo = DateTime.now().minusHours(3);
 		session.setLastUsed(threeHoursAgo);
 		
-		extendService = new ExtendUserTimeService(user);
+		extendService = new ExtendUserTimeService(token);
 		extendService.execute();
 	}
 

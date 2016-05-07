@@ -63,5 +63,14 @@ public class Session extends Session_Base {
 		//super.setUser(user);
 		throw new PrivateResourceException("A User token cannot be transfered");
 	}
+	
+	@Override
+	public String toString() {
+		long twoHoursMillis = 7200000L;
+		String output = getUser().getUsername() + ", " + getToken() + ", last used " + getLastUsed();
+		if(DateTime.now().minus(getLastUsed().getMillis()).getMillis() >= twoHoursMillis)
+			output += " (EXPIRED)";
+		return output;
+	}
 
 }
