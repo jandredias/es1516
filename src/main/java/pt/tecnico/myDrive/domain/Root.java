@@ -22,13 +22,8 @@ public class Root extends Root_Base {
 		super.xmlImport(xml);
 	}
 	
-	public Element xmlExport() {
-		Element element = super.xmlExport();
-
-		element.setName("user");
-
-		return element;
-	}
+	@Override
+	public Element xmlExport() {return null;}
 	
 	@Override
 	public boolean hasPermissions(File file, int position, String permissionLetter ){

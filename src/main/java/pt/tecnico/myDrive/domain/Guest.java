@@ -22,13 +22,8 @@ public class Guest extends Guest_Base {
 		super.xmlImport(xml);
 	}
 	
-	public Element xmlExport() {
-		Element element = super.xmlExport();
-
-		element.setName("guest");
-
-		return element;
-	}
+	@Override
+	public Element xmlExport() {return null;}
 	
 	@Override
 	public boolean hasDeletePermissions(File file){
