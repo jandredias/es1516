@@ -7,6 +7,7 @@ import org.joda.time.Duration;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.PasswordTooShortException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.PrivateResourceException;
 
 public class User extends User_Base implements Comparable<User> {
 
@@ -67,6 +68,15 @@ public class User extends User_Base implements Comparable<User> {
 		else
 			super.setPassword(newPass);
 	}
+	
+	@Override
+	public String getPassword() throws PrivateResourceException{
+		throw new PrivateResourceException("Tring to access user password");
+	}
+	
+	public boolean wrongPassword(String password){
+		return !super.getPassword().equals(password);
+	}
 
 	/**
 	 * Method only to be used by Guest or Root
@@ -102,7 +112,7 @@ public class User extends User_Base implements Comparable<User> {
 		element.setAttribute("username", getUsername());
 
 		Element passwordElement = new Element("password");
-		passwordElement.addContent(getPassword());
+		passwordElement.addContent(super.getPassword());
 
 		Element nameElement = new Element("name");
 		nameElement.addContent(getName());

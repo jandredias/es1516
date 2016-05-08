@@ -549,6 +549,7 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 
+	
 	public Long getNewToken() {
 		while (true) {
 			Long token = ThreadLocalRandom.current().nextLong();
@@ -569,7 +570,7 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws InvalidTokenException
 	 */
 	public Session validateToken(long token) throws InvalidTokenException {
-		Session session = getSessionByTokenNr(token);
+		Session session = getSessionByToken(token);
 		if (session != null) {
 			if (session.validateSession()) {
 				return session;
@@ -579,20 +580,7 @@ public class MyDrive extends MyDrive_Base {
 		throw new InvalidTokenException();
 	}
 
-	/**
-	 * Method that returns the @param token's session returns null if token does
-	 * not exists
-	 *
-	 * @param token
-	 * @return Session that has @param tokem
-	 */
-	private Session getSessionByTokenNr(long token) {
-		for (Session session : this.getDriveSessions()) {
-			if (token == session.getToken())
-				return session;
-		}
-		return null;
-	}
+
 
 	public long getValidToken(String username, String currentDirectoryPath, StrictlyTestObject testsOnly) {
 		if (testsOnly != null) {
@@ -651,7 +639,8 @@ public class MyDrive extends MyDrive_Base {
 		boolean specialUser = user.specialPassUser();
 		if(password.length() < 8 && !specialUser) throw new PasswordTooShortException();
 		
-		if(!user.getPassword().equals(password)) throw new WrongPasswordException();
+//		if(!user.getPassword().equals(password)) throw new WrongPasswordException();
+		if(user.wrongPassword(password)) throw new WrongPasswordException();
 
 
 		Session s = new Session(user, this.getNewToken());
@@ -661,6 +650,15 @@ public class MyDrive extends MyDrive_Base {
 
 	}
 
+	public void eraseSession(long token) throws InvalidTokenException{
+		Session session = this.getSessionByToken(token);
+		if(session != null){
+			removeSession(session);
+		} else {
+			throw new InvalidTokenException("token does not exists");
+		}
+	}
+	
 	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
 
