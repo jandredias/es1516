@@ -58,8 +58,9 @@ public abstract class PermissionsTest extends TokenAccessTest{
 			md.addUser(username,username,username,"rwxdrwxd");
 			User user = md.getUserByUsername(username);
 			md.addDirectory("/home/" + username, folder, user);
-			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
+			md.addApplication(testBaseFolder, "testedFile", user, "irrelevant");
 			md.addDirectory(testBaseFolder, "changeDir",user);
+//			md.addApplication(testBaseFolder, "App",user,"pt.tecnico.myDrive.presentation.");
 			md.getFile(testBaseFolder + "/testedFile").setPermissions(permissions);
 			md.getFile(testBaseFolder + "/changeDir" ).setPermissions(permissions);
 			md.getFile(testBaseFolder).setPermissions(permissions);
