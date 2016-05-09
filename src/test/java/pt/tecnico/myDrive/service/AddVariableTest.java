@@ -9,6 +9,7 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.domain.Variable;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidValueException;
 import pt.tecnico.myDrive.exception.MyDriveException;
@@ -52,29 +53,32 @@ public class AddVariableTest extends TokenAccessTest {
 	@Test
 	public void NewVariable() {
 		MyDrive md = MyDrive.getInstance();
-		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, "var1", "varvalue1");
 		service.execute();
+		Variable result = service.result().get("var1");
+		
 
-		assertEquals("varvalue1", md.getVarValue("var1"));
+		assertEquals("varvalue1", result.getValue());
 	}
 
 	@Test
 	public void ExistingVariable() {
 		MyDrive md = MyDrive.getInstance();
-		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, "var2", "varvalue3");
 		service.execute();
+		Variable result = service.result().get("var2");
 
-		assertEquals("varvalue3", md.getVarValue("var1"));
+		assertEquals("varvalue3", result.getValue());
 	}
 
 	@Test(expected = VarNotFoundException.class)
 	public void NullName() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
-		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, null, "varvalue1");
 		service.execute();
@@ -84,7 +88,7 @@ public class AddVariableTest extends TokenAccessTest {
 	@Test(expected = InvalidValueException.class)
 	public void NullValue() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
-		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
+		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, "var1", null);
 		service.execute();
