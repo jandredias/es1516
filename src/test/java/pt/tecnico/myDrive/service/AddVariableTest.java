@@ -1,16 +1,17 @@
 package pt.tecnico.myDrive.service;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Set;
 
 import org.junit.Test;
 
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
-import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.domain.Variable;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidValueException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
@@ -27,7 +28,12 @@ public class AddVariableTest extends TokenAccessTest {
 		try {
 			md.addUser("teste1", "teste1234", "teste1", "rwxd----");
 			long t1111 = md.getValidToken("teste1", "/home/teste1/familia", new StrictlyTestObject());
-			t1111.addVariable("var2", "varvalue2");
+			
+			Variable var2 = new Variable();
+			var2.setName("var2");
+			var2.setValue("varvalue2");
+			
+			md.getSessionByToken(t1111).getVariablesSet().add(var2);
 
 		} catch (Exception e) {
 			log.debug("This should never occur. Clean use.");
@@ -51,28 +57,27 @@ public class AddVariableTest extends TokenAccessTest {
 	}
 
 	@Test
-	public void NewVariable() {
+	public void NewVariable() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, "var1", "varvalue1");
 		service.execute();
-		Variable result = service.result().get("var1");
-		
-
-		assertEquals("varvalue1", result.getValue());
+//		Variable result = service.result().get("var1");
+//		assertEquals("varvalue1", result.getValue());
+		assertVariable(service.result(), "varvalue1", "var1");
 	}
 
 	@Test
-	public void ExistingVariable() {
+	public void ExistingVariable() throws MyDriveException {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
 
 		AddVariableService service = new AddVariableService(t1111, "var2", "varvalue3");
 		service.execute();
-		Variable result = service.result().get("var2");
-
-		assertEquals("varvalue3", result.getValue());
+//		Variable result = service.result().get("var2");
+//		assertEquals("varvalue3", result.getValue());
+		assertVariable(service.result(), "varvalue3", "var2");
 	}
 
 	@Test(expected = VarNotFoundException.class)
@@ -93,5 +98,20 @@ public class AddVariableTest extends TokenAccessTest {
 		AddVariableService service = new AddVariableService(t1111, "var1", null);
 		service.execute();
 
+	}
+	
+	private void assertVariable(Set<Variable> varSet, String expectedValue, String name) {
+		boolean checked = false;
+		for(Variable var : varSet){
+			if(var.getName().equals(name)){
+				if(!var.getValue().equals(expectedValue)){
+					fail("Values do not match: expected <" + expectedValue + ">, actual <" + var.getValue() + ">");
+				}else{
+					checked = true;
+					break;
+				}
+			}
+		}
+		assertTrue(checked);
 	}
 }
