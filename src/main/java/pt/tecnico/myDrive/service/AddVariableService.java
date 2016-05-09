@@ -48,6 +48,9 @@ public class AddVariableService extends MyDriveService {
 		if (value == null) {
 			throw new InvalidValueException("Value can't be null");
 		}
+		if (session == null) {
+			throw new InvalidTokenException("Token not valid");
+		}
 		if (session.getUser().getUsername().equals("root")
 				&& DateTime.now().minusMinutes(10).getMillis() >= session.getLastUsed().getMillis()) {
 			throw new InvalidTokenException("Token has expired");
