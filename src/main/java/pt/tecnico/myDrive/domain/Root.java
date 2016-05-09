@@ -8,11 +8,10 @@ import pt.tecnico.myDrive.exception.PrivateResourceException;
 public class Root extends Root_Base {
 
 	public Root() {
-		try {
-			init("root", "***", "Super User", "rwxdr-x-");
-		} catch (InvalidUsernameException e) {
-			//"root" is always a valid username	}
-		}
+		super.setUsername("root");
+		super.setSpecialPassword("***");
+		super.setName("Super User");
+		super.setPermissions("rwxdr-x-");
 	}
 
 	public Root(Element xml) {
@@ -23,13 +22,8 @@ public class Root extends Root_Base {
 		super.xmlImport(xml);
 	}
 	
-	public Element xmlExport() {
-		Element element = super.xmlExport();
-
-		element.setName("user");
-
-		return element;
-	}
+	@Override
+	public Element xmlExport() {return null;}
 	
 	@Override
 	public boolean hasPermissions(File file, int position, String permissionLetter ){
@@ -45,5 +39,10 @@ public class Root extends Root_Base {
 	@Override
 	protected long minutesSessionExpires(){
 		return 10;
+	}
+	
+	@Override
+	public boolean specialPassUser(){
+		return true;
 	}
 }

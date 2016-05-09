@@ -16,7 +16,7 @@ import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 
 public class CreateFileService extends MyDriveService {
 
-	private MyDrive _drive;
+
 	private String  _content;
 	private String  _fileType;
 	private String  _fileName;
@@ -28,7 +28,6 @@ public class CreateFileService extends MyDriveService {
 	public CreateFileService(long token, String fileName, String fileType, 
 			String content ) {
 
-		_drive = MyDriveService.getMyDrive();
 		_content = content;
 		_fileType = fileType;
 		_fileName = fileName;
@@ -53,7 +52,9 @@ public class CreateFileService extends MyDriveService {
 			InvalidFileNameException, FileNotFoundException, 
 			 UserDoesNotExistsException, UnknowFileTypeException,
 			InvalidTokenException, PermissionDeniedException, InvalidAppContentException, InvalidLinkContentException, CantCreatDirWithContentException {
-
+		
+		MyDrive _drive = MyDriveService.getMyDrive();
+		
 		Session session = _drive.validateToken(_token);
 		User    user    = session.getUser();
 		String _path    = session.getCurrentDirectory().getPath();
@@ -77,7 +78,7 @@ public class CreateFileService extends MyDriveService {
 			break;
 		default:
 			log.error("Unknown Type File");
-			throw new UnknowFileTypeException("");
+			throw new UnknowFileTypeException(_fileType + "\nSupported:\n --dir\n --link\n --plainfile\n --app");
 		}
 	}
 }

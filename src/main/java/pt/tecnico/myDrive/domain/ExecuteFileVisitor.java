@@ -6,16 +6,20 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 
 import pt.tecnico.myDrive.exception.AppExecutionException;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
-public class ExecuteFileVisitor implements Visitor{
+public class ExecuteFileVisitor extends Visitor{
 
 	private String[] args;
 	
-	public ExecuteFileVisitor() {
+	public ExecuteFileVisitor(User visiter) {
+		super(visiter);
 		resetArgs();
 	}
-	public ExecuteFileVisitor(String[] inArgs) {
+	public ExecuteFileVisitor(User visiter,String[] inArgs) {
+		this(visiter);
 		this.args = inArgs;
 	}
 
@@ -24,21 +28,31 @@ public class ExecuteFileVisitor implements Visitor{
 		args = new String[]{};		
 	}
 	
-	public void visitPlainFile(PlainFile p) throws UnsupportedOperationException{
-		String content 	= p.getContent();
+	public void visitPlainFile(PlainFile plain) throws PermissionDeniedException, UnsupportedOperationException{
+
+		if(!_visiter.hasExecutePermissions(plain)) throw new PermissionDeniedException();
+		
+		String content 	= plain.getContent();
 		String[] lines	= content.split("\n");
 		
 		for(String line : lines){
 			String[] executingCommand = line.split(" ");
 			args = Arrays.copyOfRange(executingCommand, 1, executingCommand.length);
-			System.out.println("\u001B[32mTODO:\u001B[0m Execute app on path: " + executingCommand[0] + " with args: " + args);
-			//App app = getApp(executingCommand[0]);
-			//app.accept(this);
+			Directory father = plain.getDir();
+			File file = null ;
+			try {
+				file = father.getFile(executingCommand[0], _visiter);
+			} catch (FileNotFoundException e) {
+				throw new UnsupportedOperationException("App " + executingCommand[0] + " does not exist");
+			}
+			file.accept(this);
 		}
-		throw new RuntimeException("\u001B[1;31mFIXME: ExecuteFileService: NOT IMPLEMENTED visitPlainFile\u001B[0m");
 	}
 
-	public void visitApplication(Application app) throws UnsupportedOperationException, AppExecutionException{
+	public void visitApplication(Application app) throws PermissionDeniedException, UnsupportedOperationException, AppExecutionException{
+		
+		if(!_visiter.hasExecutePermissions(app)) throw new PermissionDeniedException();
+		
 		String content 	= app.getContent();
 		Class[] argTypes = new Class[] { String[].class };
 		Method method ;
@@ -76,22 +90,22 @@ public class ExecuteFileVisitor implements Visitor{
 		}
 	}
 
-	public void visitDirectory(Directory d) throws UnsupportedOperationException{
+	public void visitDirectory(Directory d) throws PermissionDeniedException, UnsupportedOperationException{
 		throw new UnsupportedOperationException("Can't execute Directory.");
 	}
-	public void visitFile(File f) throws UnsupportedOperationException{ 
+	public void visitFile(File f) throws PermissionDeniedException, UnsupportedOperationException{ 
 		throw new UnsupportedOperationException("Can't execute File."); 
 	}
-	public void visitLink(Link l) throws UnsupportedOperationException{
+	public void visitLink(Link l) throws PermissionDeniedException, UnsupportedOperationException{
 		throw new UnsupportedOperationException("\u001B[31;1mCan't execute Link: Probably domain is wrong!\u001B[0m"); 
 	}
-	public void visitUser(User u) throws UnsupportedOperationException{
+	public void visitUser(User u) throws PermissionDeniedException, UnsupportedOperationException{
 		throw new UnsupportedOperationException("Can't execute User."); 
 	}
-	public void visitRoot(Root r) throws UnsupportedOperationException{
+	public void visitRoot(Root r) throws PermissionDeniedException, UnsupportedOperationException{
 		throw new UnsupportedOperationException("Can't execute Root."); 
 	}
-	public void visitMyDrive(MyDrive mD) throws UnsupportedOperationException{
+	public void visitMyDrive(MyDrive mD) throws PermissionDeniedException, UnsupportedOperationException{
 		throw new UnsupportedOperationException("Can't execute MyDrive."); 
 	}
 }

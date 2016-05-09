@@ -9,20 +9,20 @@ import pt.tecnico.myDrive.exception.PermissionDeniedException;
 
 public class ChangeDirectoryService extends MyDriveService {
 
-	private MyDrive _drive;
 	private long _token;
 	private String _path;
 	private String _returnpath;
 
 	public ChangeDirectoryService(long token, String path){
-		_drive = MyDriveService.getMyDrive();
 		_token = token;
 		_path = path;
 	}
 
 	public final void dispatch() throws FileNotFoundException, InvalidTokenException, PermissionDeniedException {
+		
+		MyDrive drive = MyDriveService.getMyDrive();
 
-		Session session = _drive.validateToken(_token);
+		Session session = drive.validateToken(_token);
 
 		if(_path==null || _path.equals(""))
 			throw new FileNotFoundException();
@@ -33,7 +33,7 @@ public class ChangeDirectoryService extends MyDriveService {
 		Directory targetDir;
 		if(_path.charAt(0) == '/'){
 			//System.out.println("\u001B[33mGoing for root\u001B[0m");
-			targetDir = _drive.getRootDirectory().getDirectory(_path,session.getUser());
+			targetDir = drive.getDirectory(_path,session.getUser());
 		}
 		else{
 			//System.out.println("\u001B[33mGoing for Relative\u001B[0m");

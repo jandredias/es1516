@@ -9,9 +9,9 @@ public class Guest extends Guest_Base {
 
 	public Guest() {
 		super.setUsername("nobody");
-		super.setPassword("");
+		super.setSpecialPassword("");
 		super.setName("Guest");
-		super.setPermissions("rxwdr-x-");
+		super.setPermissions("rwxdr-x-");
 	}
 
 	public Guest(Element xml) {
@@ -22,13 +22,8 @@ public class Guest extends Guest_Base {
 		super.xmlImport(xml);
 	}
 	
-	public Element xmlExport() {
-		Element element = super.xmlExport();
-
-		element.setName("guest");
-
-		return element;
-	}
+	@Override
+	public Element xmlExport() {return null;}
 	
 	@Override
 	public boolean hasDeletePermissions(File file){
@@ -51,6 +46,11 @@ public class Guest extends Guest_Base {
 
 	@Override
 	public boolean validateAccessTime(DateTime lastUsed){
+		return true;
+	}
+	
+	@Override
+	public boolean specialPassUser(){
 		return true;
 	}
 }

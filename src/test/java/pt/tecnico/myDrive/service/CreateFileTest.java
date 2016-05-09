@@ -61,8 +61,8 @@ public class CreateFileTest extends PermissionsTest {
 	}
 	
 	@Override
-	protected char getPermissionChar() {
-		return 'w';
+	protected String getPermissionString() {
+		return "w";
 	}
 	
 	

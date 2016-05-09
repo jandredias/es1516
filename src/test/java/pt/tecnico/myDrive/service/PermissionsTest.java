@@ -19,7 +19,7 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	 * Method that is meant to be define by derivated classes
 	 * returns the relevant char (r,w,x or d) to the service
 	 */
-	protected abstract char getPermissionChar();
+	protected abstract String getPermissionString();
 	
 	/**
 	 * Method that goes through every char of the string and keep 
@@ -31,7 +31,8 @@ public abstract class PermissionsTest extends TokenAccessTest{
 	private String restrictPermissions(String permissions){
 		for (int i = 0; i < permissions.length(); i++){
 			char c = permissions.charAt(i);
-			if (c != getPermissionChar()){
+			int position = getPermissionString().indexOf(c);
+			if (position == -1){
 				permissions = permissions.substring(0, i) + "-" + permissions.substring(i+1);
 			}
 		}

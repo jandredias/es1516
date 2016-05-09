@@ -18,6 +18,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.ImportDocumentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
@@ -29,21 +30,22 @@ public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();
 
 	public static void main(String[] args) throws IOException {
-		//if(helloWorld())
-			//return;
+		// if(helloWorld())
+		// return;
 		try {
 			init();
 
-			//Parse the arguments
-			for (String s: args) xmlScan(new File(s));
+			// Parse the arguments
+			for (String s : args)
+				xmlScan(new File(s));
 			xmlPrint();
-		} finally { FenixFramework.shutdown(); }
+		} finally {
+			FenixFramework.shutdown();
+		}
 	}
 
-	public static boolean helloWorld(){
+	public static boolean helloWorld() {
 
-				
-		
 		return true;
 	}
 
@@ -89,36 +91,16 @@ public class MyDriveApplication {
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			log.trace("xmlScan: Importing the main document");
-			Document document = (Document)builder.build(file);
+			Document document = null;
+			try {
+				document = (Document) builder.build(file);
+			} catch (JDOMException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			md.xmlImport(document.getRootElement());
-		} catch(ClassNotFoundException e) {
-			//e.printStackTrace();
-		} catch(JDOMException | IOException e) {
-			//e.printStackTrace();
-		} catch(InvalidUsernameException e){
-			System.out.println("Invalid username on XML import file");
-		} catch(FileNotFoundException e){
-			//e.printStackTrace();
-			System.out.println("File not found on XML import file");
-		} catch(NotDirectoryException e) {
-			System.out.println("Only directories can contain another files");
-		} catch(UserDoesNotExistsException e) {
-			System.out.println("There is not such a user on XML import file");
-		}catch(FileExistsException e){
-			System.out.println("Duplicated file on XML import file");
-		} catch (InvalidFileNameException e) {
-			System.out.println("Invalid charater somewhere");
-		} catch (UsernameAlreadyInUseException e) {
-			System.out.println("Username cannot be used more than once");
-		} catch (NoSuchMethodException e){
-			//e.printStackTrace();
-		} catch (InstantiationException | IllegalAccessException e){
-			//e.printStackTrace();
-		} catch( InvocationTargetException e){
-			//e.printStackTrace();
-		} catch (PermissionDeniedException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+		} catch (ImportDocumentException e) {
+			e.getStackTrace();
 		}
 		log.trace("End of xmlScan");
 	}

@@ -309,8 +309,8 @@ public class ChangeDirectoryTest extends PermissionsTest{
 	}
 
 	@Override
-	protected char getPermissionChar() {
-		return 'x';
+	protected String getPermissionString() {
+		return "x";
 	}
 
 }

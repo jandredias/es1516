@@ -33,6 +33,10 @@ public class ListDirectoryService extends MyDriveService {
 	 */
 	public ListDirectoryService(long token) {
 		this.token = token;
+	}
+
+	@Override
+	public final void dispatch() throws InvalidTokenException, PermissionDeniedException {
 		myDrive = MyDriveService.getMyDrive();
 		session = myDrive.getSessionByToken(token);
 		if (session != null) {
@@ -40,21 +44,6 @@ public class ListDirectoryService extends MyDriveService {
 		} else {
 			directory = null;
 		}
-	}
-	
-	public ListDirectoryService(long token, String path) throws FileNotFoundException, NotDirectoryException, PermissionDeniedException {
-		this.token = token;
-		myDrive = MyDriveService.getMyDrive();
-		session = myDrive.getSessionByToken(token);
-		if (session != null) {
-			directory = myDrive.getDirectory(path, session.getUser());
-		} else {
-			directory = null;
-		}
-	}
-
-	@Override
-	public final void dispatch() throws InvalidTokenException, PermissionDeniedException {
 		myDrive.validateToken(token);
 
 		if (!session.getUser().hasReadPermissions(directory))

@@ -5,7 +5,7 @@ import pt.tecnico.myDrive.service.ChangeDirectoryService;
 
 public class ChangeDirectory extends MyDriveCommand {
 
-	public ChangeDirectory(Shell sh) {
+	public ChangeDirectory(MyDriveShell sh) {
 		super(sh, "cwd", "changes the current working directory");
 	}
 
@@ -15,14 +15,15 @@ public class ChangeDirectory extends MyDriveCommand {
 			throw new RuntimeException("Invalid syntax. Usage: cwd [path]");
 		}
 
-		long currentToken = shell().getCurrentToken();
+		long currentToken = ((MyDriveShell) shell()).getCurrentToken();
 		ChangeDirectoryService cdService = new ChangeDirectoryService(currentToken, args[0]);
 
 		try {
 			cdService.execute();
-			System.out.println("Current directory: " + args[0]);
+			System.out.println("Current directory: " + cdService.result());
 		} catch (MyDriveException e) {
-			System.out.println("Could not change directory");
+			System.out.println("Could not change directory: " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}

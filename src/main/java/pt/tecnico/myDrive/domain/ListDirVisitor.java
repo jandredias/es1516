@@ -3,11 +3,12 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ListDirVisitor implements Visitor{
+public class ListDirVisitor extends Visitor{
 
     private ArrayList<String> fileNames;
     
-    public ListDirVisitor() {
+    public ListDirVisitor(User visiter) {
+    	super(visiter);
         fileNames = new ArrayList<String>();
     }
 

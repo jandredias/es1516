@@ -31,7 +31,6 @@ public class ExecuteFileService extends MyDriveService {
 		_token = token;
 		_path = path;
 		_args = args;
-		_drive = MyDriveService.getMyDrive();
 	}
 
 	/**
@@ -43,8 +42,8 @@ public class ExecuteFileService extends MyDriveService {
 	@Override
 	public final void dispatch() throws AppExecutionException, InvalidTokenException, FileNotFoundException, PermissionDeniedException, UnsupportedOperationException{
 		
+		_drive = MyDriveService.getMyDrive();
 		Session 	session 	= _drive.validateToken(_token);
-		User    	user    	= session.getUser();
 		Directory	currentDir	= session.getCurrentDirectory();
 		
 		File targetFile;
@@ -56,7 +55,7 @@ public class ExecuteFileService extends MyDriveService {
 			//System.out.println("\u001B[33mGoing for Relative\u001B[0m");
 			targetFile = currentDir.getFile(_path, session.getUser());
 		}
-		Visitor visitor = new ExecuteFileVisitor(_args);
+		Visitor visitor = new ExecuteFileVisitor( session.getUser(), _args);
 		targetFile.accept(visitor);
 	}
 }

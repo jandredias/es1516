@@ -179,4 +179,11 @@ public class LoginUserTest extends AbstractServiceTest {
         //Check if the other session is still valid
         assertEquals("Deleted previous session", 2, user.getSessionSet().size());
 	}
+	
+	@Test(expected = PasswordTooShortException.class)
+	public void loginWithSmallPass() throws MyDriveException{
+		LoginUserService service = new LoginUserService("Nuno", "1");
+		service.execute();
+	}
+	
 }

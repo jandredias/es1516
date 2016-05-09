@@ -11,7 +11,7 @@ import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
-import pt.tecnico.myDrive.exception.NotPlainFileException;
+import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
 
@@ -66,8 +66,8 @@ public class WriteFileTest extends PermissionsTest {
 	}
 	
 	@Override
-	protected char getPermissionChar() {
-		return 'w';
+	protected String getPermissionString() {
+		return "wx";
 	}
 	
 	@Override
@@ -91,53 +91,7 @@ public class WriteFileTest extends PermissionsTest {
 		
 		assertEquals(content, md.getFileContents("/home/test1/olaApp"));
 	}
-	
-	/* ---------TESTS------------- */
-	
-	
-//	@Test
-//	public void writeOwnFileWithPermissionTest() throws Exception  {	
-//		MyDrive md = MyDrive.getInstance();
-//		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
-//		WriteFileService service = new WriteFileService(token,
-//				"plainfile1", "teste");
-//		service.execute();
-//		
-//		assertEquals("teste", md.getFileContents("/home/test1/plainfile1"));
-//	
-//	}
-//	
-//	@Test
-//	public void writeOthersFileWithPermissionTest() throws Exception  {
-//		MyDrive md = MyDrive.getInstance();
-//		token = md.getValidToken("test1", "/home/test2", new StrictlyTestObject());
-//		WriteFileService service = new WriteFileService(token,
-//				"plainfile2", "teste");
-//		service.execute();
-//		
-//		assertEquals("teste", md.getFileContents("/home/test2/plainfile2"));
-//	}
-//	
-//	@Test(expected = PermissionDeniedException.class)
-//	public void writeOwnFileWithoutPermissionTest() throws Exception  {
-//		
-//		MyDrive md = MyDrive.getInstance();
-//		token = md.getValidToken("test3", "/home/test3", new StrictlyTestObject());
-//		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
-//		service.execute();
-//
-//	}
-//	
-//	@Test(expected = PermissionDeniedException.class)
-//	public void writeOthersFileWithoutPermissionTest() throws Exception  {
-//		
-//		MyDrive md = MyDrive.getInstance();
-//		token = md.getValidToken("test4", "/home/test3", new StrictlyTestObject());
-//		WriteFileService service = new WriteFileService(token, "plainfile3", "teste");
-//		service.execute();
-//
-//	}
-	
+		
 	@Test
 	public void rootWriteFileTest() throws Exception  {
 		
@@ -149,7 +103,7 @@ public class WriteFileTest extends PermissionsTest {
 		assertEquals("teste", md.getFileContents("/home/test3/plainfile3"));
 	}
 	
-	@Test(expected=NotPlainFileException.class)
+	@Test(expected=UnsupportedOperationException.class)
 	public void writeDir() throws Exception  {
 		
 		MyDrive md = MyDrive.getInstance();
@@ -169,7 +123,7 @@ public class WriteFileTest extends PermissionsTest {
 		service.execute();
 	}
 	
-	@Test(expected=NotPlainFileException.class)
+	@Test(expected=UnsupportedOperationException.class)
 	public void writeToDirectoryLink() throws Exception  {
 		MyDrive md = MyDrive.getInstance();
 		token = md.getValidToken("test1", "/home/test1", new StrictlyTestObject());
@@ -254,7 +208,40 @@ public class WriteFileTest extends PermissionsTest {
 		this.appContent("OReily_&_Associates");
 	}
 	
+	/*****Third sprint***/
+	public void writePlain(String pathWithName, String content) throws Exception{
+		MyDrive md = MyDrive.getInstance();
+		token = md.getValidToken("root", "/home/", new StrictlyTestObject());
+
+		WriteFileService service = new WriteFileService(token, pathWithName, content);
+		service.execute();
+		
+	}
 	
+	
+	@Test
+	public void writePlainRelativePath() throws Exception{
+		MyDrive md = MyDrive.getInstance();
+		md.addPlainFile("/home/root" , "ola", md.getRootUser(), "olaola");
+
+		String content = "O que e escrito";
+		writePlain("root/ola",content);
+		assertEquals(content, MyDrive.getInstance().getFileContents("/home/root/ola"));
+	}
+	@Test
+	public void writePlainAbsolutePath() throws Exception{
+		MyDrive md = MyDrive.getInstance();
+		md.addPlainFile("/home/root" , "ola", md.getRootUser(), "olaola");
+
+		String content = "O que e escrito";
+		writePlain("/home/root/ola",content);
+		assertEquals(content, MyDrive.getInstance().getFileContents("/home/root/ola"));
+	}
+	@Test(expected=FileNotFoundException.class)
+	public void writePlainInvalidPath() throws Exception{
+		String content = "O que e escrito";
+		writePlain("/home/root/nao_existe_nunca/ola",content);
+	}
 	
 	
 }
