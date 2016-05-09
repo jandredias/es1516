@@ -31,7 +31,7 @@ public abstract class TokenAccessTest extends AbstractServiceTest{
 			md.addUser(username,username,username,"rwxdrwxd");
 			User user = md.getUserByUsername(username);
 			md.addDirectory("/home/" + username, folder, user);
-			md.addPlainFile(testBaseFolder, "testedFile", user, "irrelevant");
+			md.addApplication(testBaseFolder, "testedFile", user, "pt.tecnico.myDrive.presentation.Hello");
 			md.addDirectory(testBaseFolder, "changeDir",user);
 		} catch(MyDriveException E){
 			throw new TestSetupException("buliding permissions test");
