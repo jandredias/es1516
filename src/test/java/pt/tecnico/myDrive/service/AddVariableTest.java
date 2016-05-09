@@ -27,12 +27,12 @@ public class AddVariableTest extends TokenAccessTest {
 
 		try {
 			md.addUser("teste1", "teste1234", "teste1", "rwxd----");
-			long t1111 = md.getValidToken("teste1", "/home/teste1/familia", new StrictlyTestObject());
-			
+			long t1111 = md.getValidToken("teste1", "/home/teste1", new StrictlyTestObject());
+
 			Variable var2 = new Variable();
 			var2.setName("var2");
 			var2.setValue("varvalue2");
-			
+
 			md.getSessionByToken(t1111).getVariablesSet().add(var2);
 
 		} catch (Exception e) {
@@ -63,8 +63,8 @@ public class AddVariableTest extends TokenAccessTest {
 
 		AddVariableService service = new AddVariableService(t1111, "var1", "varvalue1");
 		service.execute();
-//		Variable result = service.result().get("var1");
-//		assertEquals("varvalue1", result.getValue());
+		// Variable result = service.result().get("var1");
+		// assertEquals("varvalue1", result.getValue());
 		assertVariable(service.result(), "varvalue1", "var1");
 	}
 
@@ -75,8 +75,8 @@ public class AddVariableTest extends TokenAccessTest {
 
 		AddVariableService service = new AddVariableService(t1111, "var2", "varvalue3");
 		service.execute();
-//		Variable result = service.result().get("var2");
-//		assertEquals("varvalue3", result.getValue());
+		// Variable result = service.result().get("var2");
+		// assertEquals("varvalue3", result.getValue());
 		assertVariable(service.result(), "varvalue3", "var2");
 	}
 
@@ -99,14 +99,14 @@ public class AddVariableTest extends TokenAccessTest {
 		service.execute();
 
 	}
-	
+
 	private void assertVariable(Set<Variable> varSet, String expectedValue, String name) {
 		boolean checked = false;
-		for(Variable var : varSet){
-			if(var.getName().equals(name)){
-				if(!var.getValue().equals(expectedValue)){
+		for (Variable var : varSet) {
+			if (var.getName().equals(name)) {
+				if (!var.getValue().equals(expectedValue)) {
 					fail("Values do not match: expected <" + expectedValue + ">, actual <" + var.getValue() + ">");
-				}else{
+				} else {
 					checked = true;
 					break;
 				}
