@@ -2,7 +2,6 @@ package pt.tecnico.myDrive.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Set;
 
@@ -32,9 +31,8 @@ public class ExecuteFileTest extends PermissionsTest {
 			token = myDrive.getValidToken("andre", "/home/andre", new StrictlyTestObject());
 
 			myDrive.addApplication("/home/andre", "app", owner, "pt.tecnico.myDrive.service.TestClass");
-			myDrive.addPlainFile("/home/andre", "fileNoArgs.txt", owner, "pt.tecnico.myDrive.service.TestClass");
-			myDrive.addPlainFile("/home/andre", "file2Args.txt", owner,
-					"pt.tecnico.myDrive.service.TestClass arg1 arg2");
+			myDrive.addPlainFile("/home/andre", "fileNoArgs.txt", owner, "app");
+			myDrive.addPlainFile("/home/andre", "file2Args.txt", owner,	"app arg1 arg2");
 
 		} catch (MyDriveException e) {
 			throw new TestSetupException("ExecuteFileTest: populate");
@@ -67,8 +65,9 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Test(expected = PermissionDeniedException.class)
 	public void executeAppTestNoArgsNoPermissions() throws MyDriveException {
-		// TODO
-		fail("NYI");
+		myDrive.getFile("/home/andre/app").setPermissions("rw-drw-d");
+		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/app", noArgs);
+		service.execute();
 	}
 
 	@Test
@@ -83,7 +82,6 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Test
 	public void executeFileAppTestArgs() throws MyDriveException {
-		String[] theArgs = {
 		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/file2Args.txt", noArgs);
 		service.execute();
 		
@@ -94,8 +92,11 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Test
 	public void executeFileAppTestNoArgs() throws MyDriveException {
-		// TODO
-		fail("NYI");
+		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/fileNoArgs.txt", noArgs);
+		service.execute();
+		
+		assertTrue(TestClass.getRan());
+		assertEquals(0, TestClass.getArgsNum());
 	}
 
 	private void assertArguments(String[] expectedArgs) {
