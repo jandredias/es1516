@@ -42,7 +42,7 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Override
 	protected MyDriveService createService(long token, String filename) {
-		return new ExecuteFileService(token, "/home/andre/file.txt", new String[0]);
+		return new ExecuteFileService(token, filename, new String[0]);
 	}
 
 	@Override
