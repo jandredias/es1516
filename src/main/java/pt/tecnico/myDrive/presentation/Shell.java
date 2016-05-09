@@ -82,7 +82,7 @@ public abstract class Shell {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String str, prompt = null; // System.getenv().get("PS1");
 
-		if (prompt == null) prompt = "$ ";
+		if (prompt == null) prompt = "\u001B[33;1m$\u001B[0m ";
 		System.out.println(name+" shell ('quit' to leave)");
 		System.out.print(prompt);
 		while ((str = in.readLine()) != null) {
