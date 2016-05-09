@@ -28,6 +28,14 @@ public class AddVariableService extends MyDriveService {
 		myDrive = MyDrive.getInstance();
 		session = myDrive.getSessionByToken(token);
 	}
+	
+	public AddVariableService(long token, String name) {
+		this(token, name, null);
+	}
+	
+	public AddVariableService(long token) {
+		this(token, null);
+	}
 
 	@Override
 	protected void dispatch() throws MyDriveException {
