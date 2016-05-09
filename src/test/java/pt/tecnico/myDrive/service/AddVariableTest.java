@@ -9,9 +9,10 @@ import pt.tecnico.myDrive.domain.Session;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
+import pt.tecnico.myDrive.exception.InvalidValueException;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
+import pt.tecnico.myDrive.exception.VarNotFoundException;
 
 public class AddVariableTest extends TokenAccessTest {
 
@@ -76,7 +77,7 @@ public class AddVariableTest extends TokenAccessTest {
 	}
 	
 	@Test(expected = VarNotFoundException.class)
-	public void NullName()  {
+	public void NullName() throws MyDriveException  {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
 		
@@ -85,7 +86,7 @@ public class AddVariableTest extends TokenAccessTest {
 
 	}
 	@Test(expected = InvalidValueException.class)
-	public void NullName()  {
+	public void NullValue() throws MyDriveException  {
 		MyDrive md = MyDrive.getInstance();
 		long t1111 = md.getValidToken("teste2", "/home/teste1/familia", new StrictlyTestObject());
 		
