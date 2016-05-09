@@ -69,9 +69,9 @@ public class ExecuteFileVisitor extends Visitor{
 					method = cls.getDeclaredMethod("main", argTypes);
 				} catch (ClassNotFoundException e) {
 					//Test case pack1.pack2.class.method
-					int lastDot = content.lastIndexOf("\\.");
+					int lastDot = content.lastIndexOf(".");
 					String className = content.substring(0,lastDot);
-					String methodName= content.substring(lastDot);
+					String methodName= content.substring(lastDot+1);
 					Class<?> cls = Class.forName(className);
 					
 					method = cls.getDeclaredMethod(methodName, argTypes);
