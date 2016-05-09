@@ -1,8 +1,7 @@
 package pt.tecnico.myDrive.presentation;
 
-import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.service.ChangeDirectoryService;
+import pt.tecnico.myDrive.service.AddVariableService;
 
 public class Environment extends MyDriveCommand {
 

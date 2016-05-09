@@ -35,7 +35,7 @@ public class ExecuteFileTest extends PermissionsTest{
 
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		<>
+		
 	}
 
 	
