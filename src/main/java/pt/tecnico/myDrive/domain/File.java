@@ -168,5 +168,4 @@ public class File extends File_Base {
 	public void accept(Visitor visitor) throws UnsupportedOperationException, PermissionDeniedException {
 		visitor.visitFile(this);
 	}
-
 }

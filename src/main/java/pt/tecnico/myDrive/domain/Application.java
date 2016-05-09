@@ -8,6 +8,7 @@ import pt.tecnico.myDrive.exception.FileExistsException;
 import pt.tecnico.myDrive.exception.InvalidAppContentException;
 import pt.tecnico.myDrive.exception.InvalidFileNameException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
+import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 
 /* HERDA DE PLAINFILE*/
@@ -66,4 +67,8 @@ public class Application extends Application_Base {
 		visitor.visitApplication(this);
 	}
 
+	@Override
+	public void addExtension(Extension e){
+		throw new PrivateResourceException("Application files cannot have an extension");
+	}
 }

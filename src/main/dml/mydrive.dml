@@ -14,6 +14,10 @@ class User{
 class Root extends User;
 class Guest extends User;
 
+class Extension{
+	String extension;
+}
+
 class File {
 	String name;
 	Integer id;
@@ -125,6 +129,24 @@ relation MyDriveHasRoot {
 		multiplicity 0..1;
 	}
 	Directory playsRole rootDirectory {
+		multiplicity 1..1;
+	}
+}
+
+relation UserHasFileExtensions {
+	User playsRole user{
+		multiplicity 1..1;
+	}
+	Extension playsRole extension{
+		multiplicity 0..*;
+	}
+}
+
+relation FileExtension {
+	Extension playsRole extension {
+		multiplicity 0..*;
+	}
+	File playsRole file{
 		multiplicity 1..1;
 	}
 }
