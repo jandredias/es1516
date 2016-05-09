@@ -63,8 +63,6 @@ public class AddVariableTest extends TokenAccessTest {
 
 		AddVariableService service = new AddVariableService(t1111, "var1", "varvalue1");
 		service.execute();
-		// Variable result = service.result().get("var1");
-		// assertEquals("varvalue1", result.getValue());
 		assertVariable(service.result(), "varvalue1", "var1");
 	}
 
@@ -75,8 +73,6 @@ public class AddVariableTest extends TokenAccessTest {
 
 		AddVariableService service = new AddVariableService(t1111, "var2", "varvalue3");
 		service.execute();
-		// Variable result = service.result().get("var2");
-		// assertEquals("varvalue3", result.getValue());
 		assertVariable(service.result(), "varvalue3", "var2");
 	}
 
