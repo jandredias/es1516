@@ -204,4 +204,9 @@ public class User extends User_Base implements Comparable<User> {
 	public boolean specialPassUser(){
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return getUsername() + ", " + getUsersHome();
+	}
 }
