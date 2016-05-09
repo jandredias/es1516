@@ -42,22 +42,8 @@ public class AddVariableService extends MyDriveService {
 
 	@Override
 	protected void dispatch() throws MyDriveException {
-		if (name == null) {
-			throw new VarNotFoundException("Variable name can't be null");
-		}
-		if (value == null) {
-			throw new InvalidValueException("Value can't be null");
-		}
-		if (session == null) {
-			throw new InvalidTokenException("Token not valid");
-		}
-		if (session.getUser().getUsername().equals("root")
-				&& DateTime.now().minusMinutes(10).getMillis() >= session.getLastUsed().getMillis()) {
-			throw new InvalidTokenException("Token has expired");
-		}
-		if (DateTime.now().minusHours(2).getMillis() >= session.getLastUsed().getMillis()) {
-			throw new InvalidTokenException("Token has expired");
-		}
+		checkVars();
+		checkToken();
 
 		Set<Variable> varSet = session.getVariablesSet();
 
@@ -78,6 +64,29 @@ public class AddVariableService extends MyDriveService {
 
 	public final Set<Variable> result() {
 		return myDrive.getSessionByToken(token).getVariablesSet();
+	}
+	
+	private void checkVars() throws VarNotFoundException, InvalidValueException {
+		if (name == null) {
+			throw new VarNotFoundException("Variable name can't be null");
+		}
+		if (value == null) {
+			throw new InvalidValueException("Value can't be null");
+		}
+	}
+
+	
+	private void checkToken() throws InvalidTokenException {
+		if (session == null) {
+			throw new InvalidTokenException("Token not valid");
+		}
+		if (session.getUser().getUsername().equals("root")
+				&& DateTime.now().minusMinutes(10).getMillis() >= session.getLastUsed().getMillis()) {
+			throw new InvalidTokenException("Token has expired");
+		}
+		if (DateTime.now().minusHours(2).getMillis() >= session.getLastUsed().getMillis()) {
+			throw new InvalidTokenException("Token has expired");
+		}
 	}
 
 }
