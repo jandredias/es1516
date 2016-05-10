@@ -56,6 +56,8 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
+		// we're only going to check the args if the service was executed
+		// successfully, i.e., no exceptions were thrown
 		if (expectedArgs != null) {
 			new Verifications() {
 				{
