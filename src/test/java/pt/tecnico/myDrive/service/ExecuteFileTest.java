@@ -56,11 +56,13 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Override
 	protected void assertServiceExecutedWithSuccess() {
-		new Verifications() {
-			{
-				tc.main(expectedArgs);
-			}
-		};
+		if (expectedArgs != null) {
+			new Verifications() {
+				{
+					tc.main(expectedArgs);
+				}
+			};
+		}
 	}
 
 	@Test
