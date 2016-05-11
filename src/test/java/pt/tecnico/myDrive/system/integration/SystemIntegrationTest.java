@@ -5,20 +5,16 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
-import mockit.internal.expectations.TestOnlyPhase;
-import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.myDrive.MyDriveApplication;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
+import pt.tecnico.myDrive.service.AbstractServiceTest;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.DeleteFileService;
@@ -30,20 +26,18 @@ import pt.tecnico.myDrive.service.TestClass;
 import pt.tecnico.myDrive.service.WriteFileService;
 
 @RunWith(JMockit.class)
-public class SystemIntegrationTest {
+public class SystemIntegrationTest extends AbstractServiceTest {
 
 	private final static String[] args = {};
-	
+
 	private MyDrive md;
 
 	@Mocked
 	private TestClass testClass;
 
-	@Before
-	public void setUp() {
-		MyDriveApplication.init();
+	@Override
+	protected void populate() {
 		try {
-			FenixFramework.getTransactionManager().begin(false);
 			md = MyDrive.getInstance();
 			md.addUser("testuser", "bigpassword", "testuser", "rwxdrwxd");
 		} catch (Exception e) {
@@ -100,15 +94,6 @@ public class SystemIntegrationTest {
 		DeleteFileService delPlainFile = new DeleteFileService(token, "myfile.txt");
 		delPlainFile.execute();
 
-	}
-
-	@After
-	public void tearDown() {
-		try {
-			FenixFramework.getTransactionManager().rollback();
-		} catch (Exception e) {
-			throw new TestSetupException("Failed integration test tear down");
-		}
 	}
 
 	private void printDirectory(List<List<String>> result) {
