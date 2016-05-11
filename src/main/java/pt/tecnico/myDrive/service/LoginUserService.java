@@ -9,18 +9,18 @@ public class LoginUserService extends MyDriveService {
 	private String _password;
 	private long _token;
 
-	public LoginUserService(String username, String password){
+	public LoginUserService(String username, String password) {
 		this._username = username;
 		this._password = password;
 	}
 
 	@Override
-	public final void dispatch() throws UserDoesNotExistsException, WrongPasswordException{
+	public final void dispatch() throws UserDoesNotExistsException, WrongPasswordException {
 
-		this._token = MyDriveService.getMyDrive().login(_username,_password);
+		this._token = MyDriveService.getMyDrive().login(_username, _password);
 	}
 
 	public final long result() {
-        return _token;
-  }
+		return _token;
+	}
 }

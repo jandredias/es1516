@@ -2,7 +2,6 @@ package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
 
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 
 public class Root extends Root_Base {
