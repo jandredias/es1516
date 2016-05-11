@@ -6,17 +6,16 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.KeyStore.Entry;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import pt.ist.fenixframework.Atomic;
 
 public abstract class Shell {
 	protected static final Logger log = LogManager.getRootLogger();
@@ -74,7 +73,8 @@ public abstract class Shell {
 	}
 
 	// false if it redefines an existing Command
-	/* package */ boolean add(Command c) {
+	/* package */
+	boolean add(Command c) {
 		return coms.put(c.name(), c) == null ? true : false;
 	}
 
@@ -86,6 +86,7 @@ public abstract class Shell {
 		return Collections.unmodifiableCollection(coms.keySet());
 	}
 
+	@Atomic
 	public void execute() throws Exception {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String str, prompt = null; // System.getenv().get("PS1");
