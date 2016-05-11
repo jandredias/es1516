@@ -1,0 +1,7 @@
+<mydrive>
+  <user username="teste">
+    <password>123456789</password>
+    <name>testUser</name>
+    <home>/home/teste</home>
+  </user>
+</mydrive>

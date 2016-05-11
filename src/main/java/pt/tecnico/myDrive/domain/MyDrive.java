@@ -1,6 +1,5 @@
 package pt.tecnico.myDrive.domain;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +23,7 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.NotDirectoryException;
+import pt.tecnico.myDrive.exception.PasswordTooShortException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 import pt.tecnico.myDrive.exception.TestSetupException;
@@ -31,7 +31,6 @@ import pt.tecnico.myDrive.exception.UnsupportedOperationException;
 import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
 import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 import pt.tecnico.myDrive.exception.WrongPasswordException;
-import pt.tecnico.myDrive.exception.PasswordTooShortException;
 
 public class MyDrive extends MyDrive_Base {
 
@@ -549,7 +548,6 @@ public class MyDrive extends MyDrive_Base {
 		return null;
 	}
 
-	
 	public Long getNewToken() {
 		while (true) {
 			Long token = ThreadLocalRandom.current().nextLong();
@@ -579,8 +577,6 @@ public class MyDrive extends MyDrive_Base {
 		log.warn("Non Active Token was used");
 		throw new InvalidTokenException();
 	}
-
-
 
 	public long getValidToken(String username, String currentDirectoryPath, StrictlyTestObject testsOnly) {
 		if (testsOnly != null) {
@@ -628,20 +624,21 @@ public class MyDrive extends MyDrive_Base {
 
 		cleanSessions();
 
-
-		if(password == null) throw new WrongPasswordException();
+		if (password == null)
+			throw new WrongPasswordException();
 
 		User user = this.getUserByUsername(username);
 		if (user == null)
 			throw new UserDoesNotExistsException();
 
-
 		boolean specialUser = user.specialPassUser();
-		if(password.length() < 8 && !specialUser) throw new PasswordTooShortException();
-		
-//		if(!user.getPassword().equals(password)) throw new WrongPasswordException();
-		if(user.wrongPassword(password)) throw new WrongPasswordException();
+		if (password.length() < 8 && !specialUser)
+			throw new PasswordTooShortException();
 
+		// if(!user.getPassword().equals(password)) throw new
+		// WrongPasswordException();
+		if (user.wrongPassword(password))
+			throw new WrongPasswordException();
 
 		Session s = new Session(user, this.getNewToken());
 		s.setCurrentDirectory(user.getUsersHome());
@@ -650,15 +647,15 @@ public class MyDrive extends MyDrive_Base {
 
 	}
 
-	public void eraseSession(long token) throws InvalidTokenException{
+	public void eraseSession(long token) throws InvalidTokenException {
 		Session session = this.getSessionByToken(token);
-		if(session != null){
+		if (session != null) {
 			removeSession(session);
 		} else {
 			throw new InvalidTokenException("token does not exists");
 		}
 	}
-	
+
 	/* **************************** Tokens Related ************************** */
 	/* ********************************************************************** */
 

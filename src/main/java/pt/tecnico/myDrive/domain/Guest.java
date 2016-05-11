@@ -21,36 +21,38 @@ public class Guest extends Guest_Base {
 	protected void xmlImport(Element xml) {
 		super.xmlImport(xml);
 	}
-	
+
+	/*
+	 * @Override public Element xmlExport() {return null;}
+	 */
+
 	@Override
-	public Element xmlExport() {return null;}
-	
-	@Override
-	public boolean hasDeletePermissions(File file){
+	public boolean hasDeletePermissions(File file) {
 		return false;
 	}
+
 	@Override
-	public boolean hasWritePermissions(File file){
+	public boolean hasWritePermissions(File file) {
 		return false;
 	}
-	
+
 	@Override
-	public void delete(User deleter) throws PrivateResourceException{
+	public void delete(User deleter) throws PrivateResourceException {
 		throw new PrivateResourceException("Tring to delete guest user");
 	}
-	
+
 	@Override
-	public void setPassword(String newPass) throws PrivateResourceException{
+	public void setPassword(String newPass) throws PrivateResourceException {
 		throw new PrivateResourceException("Tring to change guest password");
 	}
 
 	@Override
-	public boolean validateAccessTime(DateTime lastUsed){
+	public boolean validateAccessTime(DateTime lastUsed) {
 		return true;
 	}
-	
+
 	@Override
-	public boolean specialPassUser(){
+	public boolean specialPassUser() {
 		return true;
 	}
 }

@@ -27,15 +27,15 @@ public class SystemTest extends AbstractServiceTest {
 
 	@Test
 	public void success() {
-		/*new Import(sh).execute(new String[] { "filename" });
-		new LoginUser(sh).execute(new String[] { "user", "pass" });
-		new ChangeDirectory(sh).execute(new String[] { "path" });
+		/*new Import(sh).execute(new String[] { "drive.xml" });
+		new LoginUser(sh).execute(new String[] { "teste", "123456789" });
+		new ChangeDirectory(sh).execute(new String[] { "/home/teste" });
 		new List(sh).execute(new String[] { });
-		new AddFile(sh).execute(new String[] { "fileName", "fileType", "content" });
-		new Write(sh).execute(new String[] { "path", "text" });
-		new Execute(sh).execute(new String[] { "path" });
-		new Key(sh).execute(new String[] { "user" });
-		new Environment(sh).execute(new String[] { "name", "value" });*/
+		new AddFile(sh).execute(new String[] { "testFile", "app" });
+		new Write(sh).execute(new String[] { "/home/teste/testFile", "text" });
+		new Execute(sh).execute(new String[] { "/home/teste/testFile" });
+		new Key(sh).execute(new String[] { "root" });
+		new Environment(sh).execute(new String[] { "testVar", "testValue" });*/
 	}
 
 	@After
