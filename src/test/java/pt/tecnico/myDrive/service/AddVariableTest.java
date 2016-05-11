@@ -16,6 +16,7 @@ import pt.tecnico.myDrive.exception.InvalidValueException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.exception.VarNotFoundException;
+import pt.tecnico.myDrive.service.dto.VariableDto;
 
 public class AddVariableTest extends TokenAccessTest {
 
@@ -96,12 +97,14 @@ public class AddVariableTest extends TokenAccessTest {
 
 	}
 
-	private void assertVariable(Set<Variable> varSet, String expectedValue, String name) {
+//	private void assertVariable(Set<Variable> varSet, String expectedValue, String name) {
+	private void assertVariable(Set<VariableDto> varDtoSet, String expectedValue, String name) {
 		boolean checked = false;
-		for (Variable var : varSet) {
-			if (var.getName().equals(name)) {
-				if (!var.getValue().equals(expectedValue)) {
-					fail("Values do not match: expected <" + expectedValue + ">, actual <" + var.getValue() + ">");
+//		for (Variable var : varSet) {
+		for(VariableDto varDto : varDtoSet){
+			if (varDto.getName().equals(name)) {
+				if (!varDto.getValue().equals(expectedValue)) {
+					fail("Values do not match: expected <" + expectedValue + ">, actual <" + varDto.getValue() + ">");
 				} else {
 					checked = true;
 					break;

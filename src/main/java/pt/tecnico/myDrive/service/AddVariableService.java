@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -11,6 +12,7 @@ import pt.tecnico.myDrive.exception.InvalidTokenException;
 import pt.tecnico.myDrive.exception.InvalidValueException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.VarNotFoundException;
+import pt.tecnico.myDrive.service.dto.VariableDto;
 
 public class AddVariableService extends MyDriveService {
 
@@ -62,8 +64,14 @@ public class AddVariableService extends MyDriveService {
 
 	}
 
-	public final Set<Variable> result() {
-		return myDrive.getSessionByToken(token).getVariablesSet();
+	public final Set<VariableDto> result() {
+		Set<VariableDto> varDto = new HashSet<VariableDto>();
+		
+		for(Variable var : myDrive.getSessionByToken(token).getVariablesSet()){
+			varDto.add(new VariableDto(var.getName(), var.getValue()));
+		}
+		return varDto;
+//		return myDrive.getSessionByToken(token).getVariablesSet();
 	}
 	
 	private void checkVars() throws VarNotFoundException, InvalidValueException {
