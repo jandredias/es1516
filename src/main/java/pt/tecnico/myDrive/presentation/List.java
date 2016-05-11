@@ -64,9 +64,6 @@ public class List extends MyDriveCommand {
 		}
 
 		java.util.List<java.util.List<String>> result = service.result();
-		
-		if(result == null)
-			System.out.printf("result e null");
 
 		for (java.util.List<String> list : result) {
 			for (String s : list) {
