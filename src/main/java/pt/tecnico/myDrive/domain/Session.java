@@ -8,12 +8,12 @@ import pt.tecnico.myDrive.exception.PrivateResourceException;
 public class Session extends Session_Base {
 
 	public Session() {
-		//Whenever there is a need to setUp user do this:
+		// Whenever there is a need to setUp user do this:
 		// super.setUser(user);
 		super();
 	}
 
-	public Session(User user, long token){
+	public Session(User user, long token) {
 		super.setToken(token);
 		super.setUser(user);
 		Directory currentDirectory = user.getUsersHome();
@@ -23,17 +23,18 @@ public class Session extends Session_Base {
 		super.setMyDrive(user.getMyDrive());
 	}
 
-	public boolean valid(){
-		
+	public boolean valid() {
+
 		return this.getUser().validateAccessTime(this.getLastUsed());
 	}
 
 	/**
 	 * Method that returns true when a Session is still valid
+	 * 
 	 * @return
 	 */
 	protected boolean validateSession() {
-		boolean valid = valid(); 
+		boolean valid = valid();
 		if (valid)
 			extendTime();
 
@@ -42,33 +43,33 @@ public class Session extends Session_Base {
 
 	private void extendTime() {
 		DateTime currTime = new DateTime();
-		//currTime = currTime.plusHours(2);
+		// currTime = currTime.plusHours(2);
 		super.setLastUsed(currTime);
 	}
 
 	@Override
-	public void setLastUsed(DateTime newTime) throws PrivateResourceException{
+	public void setLastUsed(DateTime newTime) throws PrivateResourceException {
 		DateTime limitTime = super.getLastUsed();
 
 		Duration interval = new Duration(newTime, limitTime);
-		if(interval.getMillis() < 0) //When Extending Limit Time
+		if (interval.getMillis() < 0) // When Extending Limit Time
 			throw new PrivateResourceException("Canot extend session time!");
 		else
 			super.setLastUsed(newTime);
 	}
 
 	@Override
-	public void setUser(User user) throws PrivateResourceException{
-		//Whenever there is a need to setUp user do this:
-		//super.setUser(user);
+	public void setUser(User user) throws PrivateResourceException {
+		// Whenever there is a need to setUp user do this:
+		// super.setUser(user);
 		throw new PrivateResourceException("A User token cannot be transfered");
 	}
-	
+
 	@Override
 	public String toString() {
 		long twoHoursMillis = 7200000L;
 		String output = getUser().getUsername() + ", " + getToken() + ", last used " + getLastUsed();
-		if(DateTime.now().minus(getLastUsed().getMillis()).getMillis() >= twoHoursMillis)
+		if (DateTime.now().minus(getLastUsed().getMillis()).getMillis() >= twoHoursMillis)
 			output += " (EXPIRED)";
 		return output;
 	}

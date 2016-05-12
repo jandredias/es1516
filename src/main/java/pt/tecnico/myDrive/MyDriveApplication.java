@@ -3,7 +3,6 @@ package pt.tecnico.myDrive;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,15 +15,7 @@ import org.jdom2.output.XMLOutputter;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.myDrive.domain.MyDrive;
-import pt.tecnico.myDrive.exception.FileExistsException;
-import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.ImportDocumentException;
-import pt.tecnico.myDrive.exception.InvalidFileNameException;
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
-import pt.tecnico.myDrive.exception.NotDirectoryException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
-import pt.tecnico.myDrive.exception.UserDoesNotExistsException;
-import pt.tecnico.myDrive.exception.UsernameAlreadyInUseException;
 
 public class MyDriveApplication {
 	static final Logger log = LogManager.getRootLogger();

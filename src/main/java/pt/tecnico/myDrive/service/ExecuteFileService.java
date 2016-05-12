@@ -1,13 +1,10 @@
 package pt.tecnico.myDrive.service;
 
-import java.util.ArrayList;
-
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.ExecuteFileVisitor;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.Session;
-import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.domain.Visitor;
 import pt.tecnico.myDrive.exception.AppExecutionException;
 import pt.tecnico.myDrive.exception.FileNotFoundException;

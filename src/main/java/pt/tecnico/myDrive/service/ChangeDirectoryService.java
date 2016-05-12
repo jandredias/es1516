@@ -13,33 +13,32 @@ public class ChangeDirectoryService extends MyDriveService {
 	private String _path;
 	private String _returnpath;
 
-	public ChangeDirectoryService(long token, String path){
+	public ChangeDirectoryService(long token, String path) {
 		_token = token;
 		_path = path;
 	}
 
 	public final void dispatch() throws FileNotFoundException, InvalidTokenException, PermissionDeniedException {
-		
+
 		MyDrive drive = MyDriveService.getMyDrive();
 
 		Session session = drive.validateToken(_token);
 
-		if(_path==null || _path.equals(""))
+		if (_path == null || _path.equals(""))
 			throw new FileNotFoundException();
-
 
 		Directory currentDir = session.getCurrentDirectory();
 
 		Directory targetDir;
-		if(_path.charAt(0) == '/'){
-			//System.out.println("\u001B[33mGoing for root\u001B[0m");
-			targetDir = drive.getDirectory(_path,session.getUser());
-		}
-		else{
-			//System.out.println("\u001B[33mGoing for Relative\u001B[0m");
+		if (_path.charAt(0) == '/') {
+			// System.out.println("\u001B[33mGoing for root\u001B[0m");
+			targetDir = drive.getDirectory(_path, session.getUser());
+		} else {
+			// System.out.println("\u001B[33mGoing for Relative\u001B[0m");
 			targetDir = currentDir.getDirectory(_path, session.getUser());
 		}
-		if(!session.getUser().hasExecutePermissions(targetDir)) throw new PermissionDeniedException();
+		if (!session.getUser().hasExecutePermissions(targetDir))
+			throw new PermissionDeniedException();
 		session.setCurrentDirectory(targetDir);
 
 		_returnpath = targetDir.getPath();

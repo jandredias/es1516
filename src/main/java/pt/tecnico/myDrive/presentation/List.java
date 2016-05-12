@@ -15,31 +15,30 @@ public class List extends MyDriveCommand {
 	}
 
 	public void execute(String[] args) {
-		if (args.length > 1 )
+		if (args.length > 1)
 			throw new RuntimeException("USAGE: " + name() + " [<path>]");
 		else {
 			long token = ((MyDriveShell) shell()).getCurrentToken();
-			
+
 			ListDirectoryService service = new ListDirectoryService(token);
-			
+
 			if (args.length == 0) {
 				// print current dir
 				doAndPrintService(service);
-			}
-			else if (args.length == 1) {
+			} else if (args.length == 1) {
 				// print path dir
-				
+
 				try {
 					ChangeDirectoryService getCurrentDir = new ChangeDirectoryService(token, ".");
 					getCurrentDir.execute();
 					String currentDir = getCurrentDir.result();
-					
+
 					new ChangeDirectoryService(token, args[0]).execute();
-				
+
 					doAndPrintService(service);
-				
+
 					new ChangeDirectoryService(token, currentDir).execute();
-					
+
 				} catch (FileNotFoundException e) {
 					System.out.println("Path: Directory does not exist");
 				} catch (NotDirectoryException e) {
@@ -52,7 +51,7 @@ public class List extends MyDriveCommand {
 			}
 		}
 	}
-	
+
 	private void doAndPrintService(ListDirectoryService service) {
 		try {
 			service.execute();
@@ -63,11 +62,11 @@ public class List extends MyDriveCommand {
 		} catch (MyDriveException e) {
 			System.out.println("Something critical went Wrong: " + e.getClass() + " : " + e.getMessage());
 		}
-		
+
 		java.util.List<java.util.List<String>> result = service.result();
-		
-		for(java.util.List<String> list : result){
-			for(String s : list){
+
+		for (java.util.List<String> list : result) {
+			for (String s : list) {
 				System.out.printf(s + " ");
 			}
 			System.out.printf("\n");

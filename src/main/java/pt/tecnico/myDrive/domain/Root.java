@@ -2,7 +2,6 @@ package pt.tecnico.myDrive.domain;
 
 import org.jdom2.Element;
 
-import pt.tecnico.myDrive.exception.InvalidUsernameException;
 import pt.tecnico.myDrive.exception.PrivateResourceException;
 
 public class Root extends Root_Base {
@@ -21,28 +20,30 @@ public class Root extends Root_Base {
 	protected void xmlImport(Element xml) {
 		super.xmlImport(xml);
 	}
-	
+
+	/*
+	 * @Override public Element xmlExport() {return null;}
+	 */
+
 	@Override
-	public Element xmlExport() {return null;}
-	
-	@Override
-	public boolean hasPermissions(File file, int position, String permissionLetter ){
-		//System.out.println("\u001B[33;1mROOT using its SUPER privileges\u001B[0m");
+	public boolean hasPermissions(File file, int position, String permissionLetter) {
+		// System.out.println("\u001B[33;1mROOT using its SUPER
+		// privileges\u001B[0m");
 		return true;
 	}
-	
+
 	@Override
-	public void delete(User deleter) throws PrivateResourceException{
+	public void delete(User deleter) throws PrivateResourceException {
 		throw new PrivateResourceException("Tring to delete root user");
 	}
 
 	@Override
-	protected long minutesSessionExpires(){
+	protected long minutesSessionExpires() {
 		return 10;
 	}
-	
+
 	@Override
-	public boolean specialPassUser(){
+	public boolean specialPassUser() {
 		return true;
 	}
 }

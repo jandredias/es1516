@@ -25,6 +25,6 @@ public class ChangeDirectory extends MyDriveCommand {
 			System.out.println("Could not change directory: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 	}
 }
