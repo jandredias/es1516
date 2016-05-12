@@ -11,7 +11,12 @@ import java.util.Set;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import mockit.Expectations;
+import mockit.Tested;
+import mockit.integration.junit4.JMockit;
+import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
@@ -24,69 +29,95 @@ import pt.tecnico.myDrive.service.AddVariableService;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.DeleteFileService;
+import pt.tecnico.myDrive.service.ExecuteFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
 import pt.tecnico.myDrive.service.ReadFileService;
+import pt.tecnico.myDrive.service.TestClass;
 import pt.tecnico.myDrive.service.WriteFileService;
 import pt.tecnico.myDrive.service.dto.VariableDto;
 
+@RunWith(JMockit.class)
 public class SystemIntegrationTest extends AbstractServiceTest {
 
+	@Tested
+	private TestClass testclass;
+	
 	private MyDrive md;
+	private User testuser;
 
 	private long token;
+	private final String[] theArgs = {"arg1", "arg2"};
 
 	@Override
 	protected void populate() {
 		try {
 			md = MyDrive.getInstance();
 			md.addUser("testuser", "bigpassword", "testuser", "rwxdrwxd");
+			testuser = md.getUserByUsername("testuser");
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new TestSetupException("Failed integration test setup");
 		}
-
 	}
 
 	@Test
 	public void integrationTest() throws MyDriveException {
-		// LoginUserService
+		
+		new Expectations() {
+			{
+				testclass.main(theArgs);
+			}
+		};
+		
+		// login user
 		LoginUserService loginService = new LoginUserService("testuser", "bigpassword");
 		loginService.execute();
 		token = loginService.result();
 		assertNotEquals("Token was zero", 0, token);
 
+		// import xml
 		Document doc = loadXMLDoc("drive.xml");
 		assertNotNull("Document was null", doc);
-		ImportXMLService xmlService = new ImportXMLService(doc);
-		xmlService.execute();
+		new ImportXMLService(doc).execute();
 		User importedUser = md.getUserByUsername("teste");
 		assertNotNull("User was null", importedUser);
 		assertEquals("Names did not match", "testUser", importedUser.getName());
 		assertEquals("Home dirs did not match", "/home/teste", importedUser.getUsersHome().getPath());
 		
+		// change directory
 		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
 		cdService.execute();
 		assertEquals("Home dirs did not match", "/home/testuser", cdService.result());
 		
-		CreateFileService touchService = new CreateFileService(token, "myfile.txt", "plainfile", "qwerty");
-		touchService.execute();
+		// create plain file
+		new CreateFileService(token, "myfile.txt", "plainfile", "qwerty").execute();
 		File myfile = md.getFile("/home/testuser/myfile.txt");
 		assertTrue("myfile was not plainfile", myfile instanceof PlainFile);
 		
+		// create app
+		new CreateFileService(token, "myapp", "app", "pt.tecnico.myDrive.service.TestClass").execute();
+		File myapp= md.getFile("/home/testuser/myapp");
+		assertTrue("myapp not app", myapp instanceof Application);
+		
+		// list dir
 		ListDirectoryService lsService = new ListDirectoryService(token);
 		lsService.execute();
-		assertEquals("Directory did not have 3 files", 3, lsService.result().size()); // . .. and myfile.txt
+		assertEquals("Directory did not have 4 files", 4, lsService.result().size()); // . .. myapp and myfile.txt
 		
-		WriteFileService wService = new WriteFileService(token, "myfile.txt", "pt.tecnico.myDrive.service.TestClass");
-		wService.execute();
+		// change content of plain file
+		new WriteFileService(token, "myfile.txt", "myapp").execute();
 		
+		// read plain file
 		ReadFileService rService = new ReadFileService(token, "myfile.txt");
 		rService.execute();
-		assertEquals("File did not have correct content", "pt.tecnico.myDrive.service.TestClass", rService.result());
+		assertEquals("File did not have correct content", "myapp", rService.result());
 		
-		// TODO ExecuteFileService
+		// execute plain file
+		new ExecuteFileService(token, "myfile.txt", theArgs).execute();
 		
+		// delete file
 		DeleteFileService delService = new DeleteFileService(token, "myfile.txt");
 		delService.execute();
 		try {
@@ -96,6 +127,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 			// all ok
 		}
 		
+		// add var
 		AddVariableService varService = new AddVariableService(token, "myvar", "myvalue");
 		varService.execute();
 		Set<VariableDto> vars = varService.result();
@@ -104,7 +136,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		assertEquals("Variable name did not match", "myvar", var.getName());
 		assertEquals("Variable value did not match", "myvalue", var.getValue());
 		
-		fail("Not yet complete");
+//		fail("Not yet complete");
 	}
 
 	private Document loadXMLDoc(String path) {
