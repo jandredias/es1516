@@ -3,19 +3,21 @@ package pt.tecnico.myDrive.system.integration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.io.File;
 
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
+import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
+import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
+import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.LoginUserService;
 
@@ -52,7 +54,12 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
 		cdService.execute();
 		assertEquals("/home/testuser", cdService.result());
-
+		
+		CreateFileService touchService = new CreateFileService(token, "myfile.txt", "plainfile", "qwerty");
+		touchService.execute();
+		File myfile = md.getFile("/home/testuser/myfile.txt");
+		assertTrue(myfile instanceof PlainFile);
+		
 		fail("Not yet complete");
 	}
 
@@ -60,9 +67,9 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		Document doc = null;
 		try {
 			SAXBuilder builder = new SAXBuilder();
-			File file;
+			java.io.File file;
 			if (path.startsWith("."))
-				file = new File(path);
+				file = new java.io.File(path);
 			else
 				file = resourceFile(path);
 			doc = (Document) builder.build(file);
@@ -72,7 +79,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		return doc;
 	}
 
-	public File resourceFile(String filename) {
+	public java.io.File resourceFile(String filename) {
 		log.trace("Resource: " + filename);
 		ClassLoader classLoader = getClass().getClassLoader();
 		if (classLoader.getResource(filename) == null)
