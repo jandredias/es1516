@@ -1,23 +1,28 @@
 package pt.tecnico.myDrive.service;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import mockit.Mock;
-import mockit.MockUp;
+import mockit.Expectations;
+import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.Directory;
+import pt.tecnico.myDrive.domain.File;
+import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
-import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
-import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
 @RunWith(JMockit.class)
 public class EnvironmentLinksTest extends AbstractServiceTest{
 	private long token;
+
+	@Mocked
+	public Link linkMock;
 	
 	@Override
 	protected void populate() {
@@ -33,31 +38,51 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	
 	
 	protected void testVar(String content) throws MyDriveException{
-		MyDrive md = MyDriveService.getMyDrive();
+		MyDrive md= MyDriveService.getMyDrive();
 		md.addPlainFile("/home/root/","specialLink", md.getRootUser(),content);
 		Directory dir = MyDrive.getInstance().getDirectory("/home/root/sandbox");
-		new MockUp<MyDrive>() {
-			@Mock
-			Directory getDirectory(String name = "/home/root/specialLink" , User user)  throws FileNotFoundException, PermissionDeniedException { 
-				return dir; 
+		
+		Directory dirLink = md.getDirectory("/home/root");
+		for(File file : dirLink.getFilesSet()){
+			if(file.getName().equals("specialLink")){
+				linkMock = (Link) file;
+			}
+		}
+		 
+		
+		new Expectations() {
+			{
+				linkMock.getFile(md.getRootUser());
+				result = dir;
 			}
 		};
 		
-		ChangeDirectoryService service = new ChangeDirectoryService(token, path);
+		ChangeDirectoryService service = new ChangeDirectoryService(token, "specialLink");
 		service.execute();
 		assertEquals("/home/root/sandbox",service.result());
 	}
 	
 	@Test
-	protected void absoluteLinkWithVarBeg() throws MyDriveException{
+	public void absoluteLinkWithVarBeg() throws MyDriveException{
 		testVar("$User/sandbox");
 	}
 	
 
 	protected void failVar(String path) throws MyDriveException{
-		new MockUp<MyDrive>() {
-			@Mock
-			Directory getDirectory(String path, User user)  throws FileNotFoundException, PermissionDeniedException { throw new FileNotFoundException(); }
+		MyDrive md= MyDriveService.getMyDrive();
+		md.addPlainFile("/home/root/","specialLink", md.getRootUser(),path);
+		Directory dirLink = md.getDirectory("/home/root");
+		for(File file : dirLink.getFilesSet()){
+			if(file.getName().equals("specialLink")){
+				linkMock = (Link) file;
+			}
+		}
+
+		new Expectations() {
+			{
+				linkMock.getFile(md.getRootUser());
+				result = new FileNotFoundException(); 
+			}
 		};
 		
 		ChangeDirectoryService service = new ChangeDirectoryService(token, path);
@@ -69,7 +94,7 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	}
 	
 	@Test(expected=FileNotFoundException.class)
-	public void nonExistentVar(){
+	public void nonExistentVar() throws MyDriveException{
 		failVar("/home/$NAOEXISTE/sandbox");
 	}
 	
@@ -77,7 +102,6 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	public void usingOnlyDollarSign(){
 		System.out.println("\u001B[31mTodo Test\u001B[0m");
 	}
-*/
 
 
 	

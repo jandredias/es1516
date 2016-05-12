@@ -135,6 +135,7 @@ public class User extends User_Base implements Comparable<User> {
 	protected void delete(User deleter) throws PermissionDeniedException{
 		//*********************************
 		//*********************************
+		System.out.println("\u001B[31mDeleting"+  this.getUsername() + "\u001B[0m");
 		for (File file : getOwnedFilesSet()){
 			file.delete(deleter);
 		}

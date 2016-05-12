@@ -63,9 +63,14 @@ public class MyDrive extends MyDrive_Base {
 		this.setFileId(0);
 
 		Root root = new Root();
-		this.addUsers(root);
 		Guest guest = new Guest();
-		this.addUsers(guest);
+		try {
+			this.addUser(root);
+			this.addUser(guest);
+		} catch (UsernameAlreadyInUseException e1) {
+			// Please it is a new my drive..
+			e1.printStackTrace();
+		}
 
 		Directory rootDirectory;
 		rootDirectory = Directory.createRootDirectory(root);
@@ -102,7 +107,6 @@ public class MyDrive extends MyDrive_Base {
 					user.delete(root);
 				} catch (PrivateResourceException e) {
 					// Root can delete everyone that is cleanable
-
 				}
 			}
 			// Cleaning up every File left
@@ -300,9 +304,10 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws NoSuchUserException
 	 */
 	public User getUserByUsername(String username) {
-		for (User user : getUsersSet())
+		for (User user : getUsersSet()){
 			if (user.getUsername().equals(username))
 				return user;
+		}
 		return null;
 	}
 
