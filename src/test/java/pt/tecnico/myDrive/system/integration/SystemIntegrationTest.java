@@ -3,6 +3,7 @@ package pt.tecnico.myDrive.system.integration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -38,20 +39,20 @@ import pt.tecnico.myDrive.service.TestClass;
 import pt.tecnico.myDrive.service.WriteFileService;
 import pt.tecnico.myDrive.service.dto.VariableDto;
 
-@RunWith(JMockit.class)
+//@RunWith(JMockit.class)
 public class SystemIntegrationTest extends AbstractServiceTest {
 
-	private boolean testRan = false;
-	
 	private MyDrive md;
 
 	private long token;
+	private boolean testRan = false;
 	private final String[] theArgs = {"arg1", "arg2"};
 
 	@Override
 	protected void populate() {
 		try {
 			md = MyDrive.getInstance();
+			assertNotNull("MyDrive was null", md);
 			md.addUser("testuser", "bigpassword", "testuser", "rwxdrwxd");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,6 +70,8 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 			}
 		};
 		
+		assertNotNull("MyDrive was null", md);
+		assertNotNull("testuser was null", md.getUserByUsername("testuser"));
 		// login user
 		LoginUserService loginService = new LoginUserService("testuser", "bigpassword");
 		loginService.execute();
