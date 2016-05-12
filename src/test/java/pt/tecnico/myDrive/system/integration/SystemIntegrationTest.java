@@ -52,10 +52,11 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 	protected void populate() {
 		try {
 			md = MyDrive.getInstance();
-			assertNotNull("MyDrive was null", md);
 			md.addUser("testuser", "bigpassword", "testuser", "rwxdrwxd");
+			log.trace("testuser created successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("Test setup failure");
 			throw new TestSetupException("Failed integration test setup");
 		}
 	}
@@ -69,14 +70,14 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 				testRan = true;
 			}
 		};
+		log.trace("Mockup configured successfully");
 		
-		assertNotNull("MyDrive was null", md);
-		assertNotNull("testuser was null", md.getUserByUsername("testuser"));
 		// login user
 		LoginUserService loginService = new LoginUserService("testuser", "bigpassword");
 		loginService.execute();
 		token = loginService.result();
 		assertNotEquals("Token was zero", 0, token);
+		log.trace("LoginUserService executed successfully");
 
 		// import xml
 		Document doc = loadXMLDoc("drive.xml");
@@ -86,26 +87,31 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		assertNotNull("User was null", importedUser);
 		assertEquals("Names did not match", "testUser", importedUser.getName());
 		assertEquals("Home dirs did not match", "/home/teste", importedUser.getUsersHome().getPath());
+		log.trace("ImportXMLService executed successfully");
 		
 		// change directory
 		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
 		cdService.execute();
 		assertEquals("Home dirs did not match", "/home/testuser", cdService.result());
+		log.trace("ChangeDirectoryService executed successfully");
 		
 		// create plain file
 		new CreateFileService(token, "myfile.txt", "plainfile", "qwerty").execute();
 		File myfile = md.getFile("/home/testuser/myfile.txt");
 		assertTrue("myfile was not plainfile", myfile instanceof PlainFile);
+		log.trace("CreateFileService (plain file) executed sucessfully");
 		
 		// create app
 		new CreateFileService(token, "myapp", "app", "pt.tecnico.myDrive.service.TestClass").execute();
 		File myapp= md.getFile("/home/testuser/myapp");
 		assertTrue("myapp not app", myapp instanceof Application);
+		log.trace("CreateFileService (app) executed successfully");
 		
 		// list dir
 		ListDirectoryService lsService = new ListDirectoryService(token);
 		lsService.execute();
 		assertEquals("Directory did not have 4 files", 4, lsService.result().size()); // . .. myapp and myfile.txt
+		log.trace("ListDirectoryService executed successfully");
 		
 		// change content of plain file
 		new WriteFileService(token, "myfile.txt", "myapp").execute();
@@ -114,10 +120,12 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		ReadFileService rService = new ReadFileService(token, "myfile.txt");
 		rService.execute();
 		assertEquals("File did not have correct content", "myapp", rService.result());
+		log.trace("Write and ReadFileServices executed successfully");
 		
 		// execute plain file
 		new ExecuteFileService(token, "myfile.txt", theArgs).execute();
 		assertTrue("TestClass did not run", testRan);
+		log.trace("ExecuteFileService executed successfully");
 		
 		// delete file
 		DeleteFileService delService = new DeleteFileService(token, "myfile.txt");
@@ -128,6 +136,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		} catch (FileNotFoundException e) {
 			// all ok
 		}
+		log.trace("DeleteFileService executed successfully");
 		
 		// add var
 		AddVariableService varService = new AddVariableService(token, "myvar", "myvalue");
@@ -137,6 +146,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		VariableDto var = vars.iterator().next();
 		assertEquals("Variable name did not match", "myvar", var.getName());
 		assertEquals("Variable value did not match", "myvalue", var.getValue());
+		log.trace("AddVariableService executed successfully");
 		
 	}
 
