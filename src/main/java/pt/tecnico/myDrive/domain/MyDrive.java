@@ -458,9 +458,14 @@ public class MyDrive extends MyDrive_Base {
 		List<User> usersSorted = new ArrayList<User>(getUsersSet());
 		Collections.sort(usersSorted);
 
-		for (User user : usersSorted)
-			element.addContent(user.xmlExport());
-
+		for (User user : usersSorted){
+			Element userEl = user.xmlExport();
+			String username = userEl.getChild("user").getValue();
+			if(!(username.equals("root") || username.equals("nobody"))){
+				element.addContent(userEl);
+			}
+		}
+			
 		List<Element> filesSorted = new ArrayList<Element>(getRootDirectory().xmlExport());
 		Collections.sort(filesSorted, new Comparator<Element>() {
 			public int compare(Element e1, Element e2) {
@@ -468,10 +473,20 @@ public class MyDrive extends MyDrive_Base {
 						- Integer.parseInt(e2.getAttribute("id").getValue());
 			}
 		});
-		for (Element el : filesSorted)
-			if (!el.getChild("name").getValue().equals("/"))
+		for (Element el : filesSorted){
+			boolean condition = true;
+			
+			if (el.getChild("name").getValue().equals("/")){
+				condition = false;
+			}
+			if (el.getChild("name").getValue().equals("home") && el.getChild("path").getValue().equals("/")){
+				condition = false;
+			}
+			
+			if(condition){
 				element.addContent(el);
-
+			}
+		}
 		return doc;
 	}
 
