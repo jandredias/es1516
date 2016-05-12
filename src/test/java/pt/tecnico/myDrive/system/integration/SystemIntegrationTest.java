@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.system.integration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -12,11 +11,9 @@ import java.util.Set;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import mockit.Mock;
 import mockit.MockUp;
-import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -39,7 +36,6 @@ import pt.tecnico.myDrive.service.TestClass;
 import pt.tecnico.myDrive.service.WriteFileService;
 import pt.tecnico.myDrive.service.dto.VariableDto;
 
-//@RunWith(JMockit.class)
 public class SystemIntegrationTest extends AbstractServiceTest {
 
 	private MyDrive md;
@@ -78,7 +74,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		token = loginService.result();
 		assertNotEquals("Token was zero", 0, token);
 		log.trace("LoginUserService executed successfully");
-
+		
 		// import xml
 		Document doc = loadXMLDoc("drive.xml");
 		assertNotNull("Document was null", doc);
