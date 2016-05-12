@@ -516,17 +516,23 @@ public class MyDrive extends MyDrive_Base {
 					}
 
 					// Set files owner
-					User owner = getUserByUsername(node.getChild("owner").getValue());
+					User owner = getUserByUsername((node.getChild("owner") == null) ?
+							"root" :
+								node.getChild("owner").getValue());
 					file.setOwner(owner);
 
 					// Set file's parent
 					Directory dir = reallyGetDirectory(node.getChild("path").getValue(), this.getRootUser());
+					System.out.println(dir.getPath());
+					System.out.println(file.getName());
 					dir.addFiles(file);
 
 				}
 			}
 		} catch (Exception e1) {
-			throw new ImportDocumentException();
+			log.debug(e1.getClass());
+			e1.printStackTrace();
+			throw new ImportDocumentException(e1.getMessage());
 		}
 	}
 	/* ****************************** XML Related *************************** */
