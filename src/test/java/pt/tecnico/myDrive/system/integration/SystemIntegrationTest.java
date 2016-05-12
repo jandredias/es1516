@@ -1,5 +1,6 @@
 package pt.tecnico.myDrive.system.integration;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -14,6 +15,7 @@ import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
+import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.LoginUserService;
 
@@ -45,6 +47,11 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		Document doc = loadXMLDoc("drive.xml");
 		assertNotNull(doc);
 		ImportXMLService xmlService = new ImportXMLService(doc);
+		xmlService.execute();
+		
+		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
+		cdService.execute();
+		assertEquals("/home/testuser", cdService.result());
 
 		fail("Not yet complete");
 	}
