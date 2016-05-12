@@ -76,7 +76,16 @@ public class MyDrive extends MyDrive_Base {
 		rootDirectory = Directory.createRootDirectory(root);
 
 		this.setRootDirectory(rootDirectory);
+		initialSetup();
+
+	}
+
+	private void initialSetup() {
 		try {
+			Root root = getRootUser();
+			User guest = this.getUserByUsername("nobody");
+			Directory rootDirectory = this.getRootDirectory();
+			
 			Directory homeFolder = null;
 			homeFolder = new Directory("home", root);
 			rootDirectory.addFile("", homeFolder, root);
@@ -94,10 +103,9 @@ public class MyDrive extends MyDrive_Base {
 			guest.setUsersHome(home_guest);
 		} catch (FileNotFoundException | FileExistsException | PermissionDeniedException | InvalidFileNameException e) {
 			e.printStackTrace();
-			// Wont Happen. When EMPTY Database;
 		}
 	}
-
+/*
 	public void cleanup() {
 		try {
 			Root root = getRootUser();
@@ -115,16 +123,12 @@ public class MyDrive extends MyDrive_Base {
 				if (!file.getName().equals("/"))
 					file.delete(root);
 			}
-
-			Directory homeFolder = new Directory("home", root);
-			this.addFile("", homeFolder, root);
-
-			Directory home_root = new Directory("root", root);
-			this.addFile("/home/", home_root, root);
-
-			root.setUsersHome(home_root);
+			initialSetup();
+			for (User user : getUsersSet()) {
+				System.out.println(user.getUsername());
+			}
 		} catch (MyDriveException e) {
-			// Won't happen... I hope so...
+			e.printStackTrace();
 		}
 	}
 	/* ********************************************************************** */
@@ -304,7 +308,7 @@ public class MyDrive extends MyDrive_Base {
 	 * @throws NoSuchUserException
 	 */
 	public User getUserByUsername(String username) {
-		for (User user : getUsersSet()){
+		for (User user : getUsersSet()) {
 			if (user.getUsername().equals(username))
 				return user;
 		}
@@ -463,14 +467,14 @@ public class MyDrive extends MyDrive_Base {
 		List<User> usersSorted = new ArrayList<User>(getUsersSet());
 		Collections.sort(usersSorted);
 
-		for (User user : usersSorted){
+		for (User user : usersSorted) {
 			Element userEl = user.xmlExport();
 			String username = userEl.getChild("user").getValue();
-			if(!(username.equals("root") || username.equals("nobody"))){
+			if (!(username.equals("root") || username.equals("nobody"))) {
 				element.addContent(userEl);
 			}
 		}
-			
+
 		List<Element> filesSorted = new ArrayList<Element>(getRootDirectory().xmlExport());
 		Collections.sort(filesSorted, new Comparator<Element>() {
 			public int compare(Element e1, Element e2) {
@@ -478,17 +482,17 @@ public class MyDrive extends MyDrive_Base {
 						- Integer.parseInt(e2.getAttribute("id").getValue());
 			}
 		});
-		for (Element el : filesSorted){
+		for (Element el : filesSorted) {
 			boolean condition = true;
-			
-			if (el.getChild("name").getValue().equals("/")){
+
+			if (el.getChild("name").getValue().equals("/")) {
 				condition = false;
 			}
-			if (el.getChild("name").getValue().equals("home") && el.getChild("path").getValue().equals("/")){
+			if (el.getChild("name").getValue().equals("home") && el.getChild("path").getValue().equals("/")) {
 				condition = false;
 			}
-			
-			if(condition){
+
+			if (condition) {
 				element.addContent(el);
 			}
 		}

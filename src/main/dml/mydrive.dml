@@ -90,7 +90,7 @@ relation MyDriveDomain {
 
 relation MyDriveHasUsers{
 	User playsRole users {
-		multiplicity 1..*;
+		multiplicity 2..*;
 	}
 	MyDrive playsRole myDrive {
 		multiplicity 1..1;
