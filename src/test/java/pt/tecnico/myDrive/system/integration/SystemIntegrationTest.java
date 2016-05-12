@@ -14,11 +14,13 @@ import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
 import pt.tecnico.myDrive.domain.User;
+import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
+import pt.tecnico.myDrive.service.DeleteFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
@@ -48,10 +50,10 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		LoginUserService loginService = new LoginUserService("testuser", "bigpassword");
 		loginService.execute();
 		token = loginService.result();
-		assertNotEquals(0, token);
+		assertNotEquals("Token was zero", 0, token);
 
 		Document doc = loadXMLDoc("drive.xml");
-		assertNotNull(doc);
+		assertNotNull("Document was null", doc);
 		ImportXMLService xmlService = new ImportXMLService(doc);
 		xmlService.execute();
 		User importedUser = md.getUserByUsername("teste");
@@ -61,23 +63,34 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		
 		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
 		cdService.execute();
-		assertEquals("/home/testuser", cdService.result());
+		assertEquals("Home dirs did not match", "/home/testuser", cdService.result());
 		
 		CreateFileService touchService = new CreateFileService(token, "myfile.txt", "plainfile", "qwerty");
 		touchService.execute();
 		File myfile = md.getFile("/home/testuser/myfile.txt");
-		assertTrue(myfile instanceof PlainFile);
+		assertTrue("myfile was not plainfile", myfile instanceof PlainFile);
 		
 		ListDirectoryService lsService = new ListDirectoryService(token);
 		lsService.execute();
-		assertEquals(3, lsService.result().size()); // . .. and myfile.txt
+		assertEquals("Directory did not have 3 files", 3, lsService.result().size()); // . .. and myfile.txt
 		
 		WriteFileService wService = new WriteFileService(token, "myfile.txt", "pt.tecnico.myDrive.service.TestClass");
 		wService.execute();
 		
 		ReadFileService rService = new ReadFileService(token, "myfile.txt");
 		rService.execute();
-		assertEquals("pt.tecnico.myDrive.service.TestClass", rService.result());
+		assertEquals("File did not have correct content", "pt.tecnico.myDrive.service.TestClass", rService.result());
+		
+		// TODO ExecuteFileService
+		
+		DeleteFileService delService = new DeleteFileService(token, "myfile.txt");
+		delService.execute();
+		try {
+			md.getFile("/home/testuser/myfile.txt");
+			fail("File was not deleted");
+		} catch (FileNotFoundException e) {
+			// all ok
+		}
 		
 		fail("Not yet complete");
 	}
