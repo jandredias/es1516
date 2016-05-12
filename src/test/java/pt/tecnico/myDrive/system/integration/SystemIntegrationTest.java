@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Set;
+
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
+import pt.tecnico.myDrive.service.AddVariableService;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.DeleteFileService;
@@ -26,6 +29,7 @@ import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
 import pt.tecnico.myDrive.service.ReadFileService;
 import pt.tecnico.myDrive.service.WriteFileService;
+import pt.tecnico.myDrive.service.dto.VariableDto;
 
 public class SystemIntegrationTest extends AbstractServiceTest {
 
@@ -91,6 +95,14 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		} catch (FileNotFoundException e) {
 			// all ok
 		}
+		
+		AddVariableService varService = new AddVariableService(token, "myvar", "myvalue");
+		varService.execute();
+		Set<VariableDto> vars = varService.result();
+		assertEquals("Unexpected number of defined variables", 1, vars.size());
+		VariableDto var = vars.iterator().next();
+		assertEquals("Variable name did not match", "myvar", var.getName());
+		assertEquals("Variable value did not match", "myvalue", var.getValue());
 		
 		fail("Not yet complete");
 	}
