@@ -554,9 +554,8 @@ public class MyDrive extends MyDrive_Base {
 				}
 			}
 		} catch (Exception e1) {
-			log.debug(e1.getClass());
 			e1.printStackTrace();
-			throw new ImportDocumentException(e1.getMessage());
+			throw new ImportDocumentException(e1.getClass() + " : " + e1.getMessage());
 		}
 	}
 	/* ****************************** XML Related *************************** */

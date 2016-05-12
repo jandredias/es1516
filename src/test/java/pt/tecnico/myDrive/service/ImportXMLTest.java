@@ -125,7 +125,7 @@ public class ImportXMLTest extends AbstractServiceTest {
 	+ "		<name>\"link\"</name>"
 	+ "		<permissions>\"rwxd----\"</permissions>"
 	+ "		<owner>\"root\"</owner>"
-	+ "		<contents>\"/home/test1\"</contents>"
+	+ "		<value>\"/home/test1\"</value>"
 	+ "		<path>\"/home/test1\"</path>"
 	+ "	</plain>"
 	+ "</myDrive>";
@@ -144,7 +144,7 @@ public class ImportXMLTest extends AbstractServiceTest {
 	+ "<myDrive>"
 	+ " <plain>"
 	+ "		<name>\"link\"</name>"
-	+ "		<contents>\"/home/test1\"</contents>"
+	+ "		<value>\"/home/test1\"</value>"
 	+ "		<path>\"/home/test1\"</path>"
 	+ "	</plain>"
 	+ "</myDrive>";
