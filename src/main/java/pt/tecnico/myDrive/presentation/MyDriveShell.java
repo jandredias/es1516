@@ -6,15 +6,7 @@ import java.util.TreeMap;
 
 public class MyDriveShell extends Shell {
 
-	private Map<String, Long> userTokens = new TreeMap<String, Long>(); // Map
-																		// Used
-																		// to
-																		// store
-																		// logged
-																		// users
-																		// and
-																		// their
-																		// tokens
+	private Map<String, Long> userTokens = new TreeMap<String, Long>(); //Map Used to store logged users and their tokens
 	private long currentToken = 0;
 
 	public long getCurrentToken() {
