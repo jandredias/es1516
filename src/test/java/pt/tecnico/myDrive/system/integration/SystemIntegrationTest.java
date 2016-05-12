@@ -13,6 +13,7 @@ import org.junit.Test;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.PlainFile;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 import pt.tecnico.myDrive.service.AbstractServiceTest;
@@ -53,6 +54,10 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		assertNotNull(doc);
 		ImportXMLService xmlService = new ImportXMLService(doc);
 		xmlService.execute();
+		User importedUser = md.getUserByUsername("teste");
+		assertNotNull("User was null", importedUser);
+		assertEquals("Names did not match", "testUser", importedUser.getName());
+		assertEquals("Home dirs did not match", "/home/teste", importedUser.getUsersHome().getPath());
 		
 		ChangeDirectoryService cdService = new ChangeDirectoryService(token, "/home/testuser");
 		cdService.execute();
