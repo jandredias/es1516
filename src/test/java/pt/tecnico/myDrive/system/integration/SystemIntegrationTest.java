@@ -13,8 +13,8 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import mockit.Expectations;
-import mockit.Tested;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.Application;
 import pt.tecnico.myDrive.domain.File;
@@ -41,11 +41,9 @@ import pt.tecnico.myDrive.service.dto.VariableDto;
 @RunWith(JMockit.class)
 public class SystemIntegrationTest extends AbstractServiceTest {
 
-	@Tested
-	private TestClass testclass;
+	private boolean testRan = false;
 	
 	private MyDrive md;
-	private User testuser;
 
 	private long token;
 	private final String[] theArgs = {"arg1", "arg2"};
@@ -55,7 +53,6 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		try {
 			md = MyDrive.getInstance();
 			md.addUser("testuser", "bigpassword", "testuser", "rwxdrwxd");
-			testuser = md.getUserByUsername("testuser");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TestSetupException("Failed integration test setup");
@@ -64,10 +61,11 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 
 	@Test
 	public void integrationTest() throws MyDriveException {
-		
-		new Expectations() {
-			{
-				testclass.main(theArgs);
+		// this is for ExecuteFileService
+		new MockUp<TestClass>() {
+			@Mock
+			public void main(String[] args) {
+				testRan = true;
 			}
 		};
 		
@@ -116,6 +114,7 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		
 		// execute plain file
 		new ExecuteFileService(token, "myfile.txt", theArgs).execute();
+		assertTrue("TestClass did not run", testRan);
 		
 		// delete file
 		DeleteFileService delService = new DeleteFileService(token, "myfile.txt");
@@ -136,7 +135,6 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		assertEquals("Variable name did not match", "myvar", var.getName());
 		assertEquals("Variable value did not match", "myvalue", var.getValue());
 		
-//		fail("Not yet complete");
 	}
 
 	private Document loadXMLDoc(String path) {
