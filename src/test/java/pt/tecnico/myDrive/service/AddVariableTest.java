@@ -97,12 +97,9 @@ public class AddVariableTest extends TokenAccessTest {
 
 	}
 
-	// private void assertVariable(Set<Variable> varSet, String expectedValue,
-	// String name) {
 	private void assertVariable(Set<VariableDto> varDtoSet, String expectedValue, String name) {
 		boolean checked = false;
-		// for (Variable var : varSet) {
-		for (VariableDto varDto : varDtoSet) {
+		for(VariableDto varDto : varDtoSet){
 			if (varDto.getName().equals(name)) {
 				if (!varDto.getValue().equals(expectedValue)) {
 					fail("Values do not match: expected <" + expectedValue + ">, actual <" + varDto.getValue() + ">");

@@ -43,7 +43,7 @@ public class MyDriveApplication {
 	@Atomic
 	public static void init() {
 		log.trace("Init: " + FenixFramework.getDomainRoot());
-		MyDrive.getInstance().cleanup();
+		MyDrive.getInstance();//.cleanup();
 	}
 
 	@Atomic

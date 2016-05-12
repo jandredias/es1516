@@ -19,11 +19,7 @@ public class Root extends Root_Base {
 
 	protected void xmlImport(Element xml) {
 		super.xmlImport(xml);
-	}
-
-	/*
-	 * @Override public Element xmlExport() {return null;}
-	 */
+	}	 
 
 	@Override
 	public boolean hasPermissions(File file, int position, String permissionLetter) {
@@ -34,6 +30,8 @@ public class Root extends Root_Base {
 
 	@Override
 	public void delete(User deleter) throws PrivateResourceException {
+		System.out.println("\u001B[31mDeleting"+  this.getUsername() + "\u001B[0m");
+
 		throw new PrivateResourceException("Tring to delete root user");
 	}
 
