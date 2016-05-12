@@ -49,7 +49,9 @@ public class Application extends Application_Base {
 	}
 
 	protected void importContent(Element xml) {
-		setContent(xml.getChild("method").getValue());
+		setContent((xml.getChild("contents") == null) ?
+				"" :
+					xml.getChild("contents").getValue());
 	}
 
 
