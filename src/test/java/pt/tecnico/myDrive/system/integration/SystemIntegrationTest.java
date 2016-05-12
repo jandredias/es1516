@@ -19,6 +19,7 @@ import pt.tecnico.myDrive.service.AbstractServiceTest;
 import pt.tecnico.myDrive.service.ChangeDirectoryService;
 import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
+import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
 
 public class SystemIntegrationTest extends AbstractServiceTest {
@@ -59,6 +60,10 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		touchService.execute();
 		File myfile = md.getFile("/home/testuser/myfile.txt");
 		assertTrue(myfile instanceof PlainFile);
+		
+		ListDirectoryService lsService = new ListDirectoryService(token);
+		lsService.execute();
+		assertEquals(3, lsService.result().size()); // . .. and myfile.txt
 		
 		fail("Not yet complete");
 	}
