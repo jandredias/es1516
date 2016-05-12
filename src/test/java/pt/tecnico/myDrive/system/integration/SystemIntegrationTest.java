@@ -21,6 +21,8 @@ import pt.tecnico.myDrive.service.CreateFileService;
 import pt.tecnico.myDrive.service.ImportXMLService;
 import pt.tecnico.myDrive.service.ListDirectoryService;
 import pt.tecnico.myDrive.service.LoginUserService;
+import pt.tecnico.myDrive.service.ReadFileService;
+import pt.tecnico.myDrive.service.WriteFileService;
 
 public class SystemIntegrationTest extends AbstractServiceTest {
 
@@ -64,6 +66,13 @@ public class SystemIntegrationTest extends AbstractServiceTest {
 		ListDirectoryService lsService = new ListDirectoryService(token);
 		lsService.execute();
 		assertEquals(3, lsService.result().size()); // . .. and myfile.txt
+		
+		WriteFileService wService = new WriteFileService(token, "myfile.txt", "pt.tecnico.myDrive.service.TestClass");
+		wService.execute();
+		
+		ReadFileService rService = new ReadFileService(token, "myfile.txt");
+		rService.execute();
+		assertEquals("pt.tecnico.myDrive.service.TestClass", rService.result());
 		
 		fail("Not yet complete");
 	}
