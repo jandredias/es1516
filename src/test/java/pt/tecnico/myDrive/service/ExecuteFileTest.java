@@ -3,7 +3,6 @@ package pt.tecnico.myDrive.service;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import mockit.Mocked;
 import mockit.Verifications;
 import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.MyDrive;
@@ -23,9 +22,6 @@ public class ExecuteFileTest extends PermissionsTest {
 	private final static String[] NOARGS = {};
 	private final static String[] THEARGS = { "arg1", "arg2" };
 	private static String[] expectedArgs;
-
-	@Mocked
-	private TestClass tc;
 
 	protected void populate() {
 		try {
@@ -61,7 +57,7 @@ public class ExecuteFileTest extends PermissionsTest {
 		if (expectedArgs != null) {
 			new Verifications() {
 				{
-					tc.main(expectedArgs);
+					TestClass.main(expectedArgs);
 				}
 			};
 		}
@@ -69,11 +65,11 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Test
 	public void executeAppTestNoArgs() throws MyDriveException {
+		expectedArgs = NOARGS;
+		assertServiceExecutedWithSuccess();
 		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/app", NOARGS);
 		service.execute();
 
-		expectedArgs = NOARGS;
-		assertServiceExecutedWithSuccess();
 	}
 
 	@Test(expected = PermissionDeniedException.class)
@@ -85,29 +81,29 @@ public class ExecuteFileTest extends PermissionsTest {
 
 	@Test
 	public void executeAppTestArgs() throws MyDriveException {
+		expectedArgs = THEARGS;
+		assertServiceExecutedWithSuccess();
 		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/app", THEARGS);
 		service.execute();
 
-		expectedArgs = THEARGS;
-		assertServiceExecutedWithSuccess();
 	}
 
 	@Test
 	public void executeFileAppTestArgs() throws MyDriveException {
+		expectedArgs = THEARGS;
+		assertServiceExecutedWithSuccess();
 		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/file2Args.txt", NOARGS);
 		service.execute();
 
-		expectedArgs = THEARGS;
-		assertServiceExecutedWithSuccess();
 	}
 
 	@Test
 	public void executeFileAppTestNoArgs() throws MyDriveException {
+		expectedArgs = NOARGS;
+		assertServiceExecutedWithSuccess();
 		ExecuteFileService service = new ExecuteFileService(token, "/home/andre/fileNoArgs.txt", NOARGS);
 		service.execute();
 
-		expectedArgs = NOARGS;
-		assertServiceExecutedWithSuccess();
 	}
 
 }

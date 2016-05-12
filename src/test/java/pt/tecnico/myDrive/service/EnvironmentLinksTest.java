@@ -15,8 +15,11 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
+
+
 @RunWith(JMockit.class)
 public class EnvironmentLinksTest extends AbstractServiceTest{
+	
 	private long token;
 
 	@Mocked
@@ -27,7 +30,7 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 		try{
 			MyDrive md = MyDrive.getInstance();
 			token = md.getValidToken("root", "/home/root/", new StrictlyTestObject() );
-			md.addDirectory("/home/root", "sandbox", md.getRootUser());
+			//md.addDirectory("/home/root", "sandbox", md.getRootUser());
 			
 		}
 		catch(Exception e){
@@ -39,7 +42,7 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	protected void testVar(String content) throws MyDriveException{
 		MyDrive md= MyDriveService.getMyDrive();
 		md.addLink("/home/root/","specialLink", md.getRootUser(),content);
-		Directory dir = MyDrive.getInstance().getDirectory("/home/root/sandbox");
+		Directory dir = MyDrive.getInstance().getDirectory("/home/root/");
 		
 		Directory dirLink = md.getDirectory("/home/root");
 		for(File file : dirLink.getFilesSet()){
@@ -90,17 +93,17 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	
 	@Test(expected=FileNotFoundException.class)
 	public void nonExistentPath() throws MyDriveException{
-		failVar("/home/$NAOEXISTE/sandbox");
+		failVar("/home/$NAOEXISTE/");
 	}
 	
 	@Test(expected=FileNotFoundException.class)
 	public void nonExistentVar() throws MyDriveException{
-		failVar("/home/$NAOEXISTE/sandbox");
+		failVar("/home/$NAOEXISTE/");
 	}
 	
 	@Test(expected=FileNotFoundException.class)
 	public void usingOnlyDollarSign() throws MyDriveException{
-		failVar("/home/$/sandbox");
+		failVar("/home/$/");
 	}
 
 
