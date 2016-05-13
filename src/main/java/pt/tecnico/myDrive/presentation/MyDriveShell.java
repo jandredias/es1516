@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import pt.tecnico.myDrive.exception.MyDriveException;
+import pt.tecnico.myDrive.service.CleanSessionService;
+
 public class MyDriveShell extends Shell {
 
 	private Map<String, Long> userTokens = new TreeMap<String, Long>(); //Map Used to store logged users and their tokens
@@ -60,6 +63,14 @@ public class MyDriveShell extends Shell {
 		new Import(this);
 		new MyDriveCommand(this, "quit", "Quit the command interpreter") {
 			void execute(String[] args) {
+				for (java.util.Map.Entry<String, Long> entry : userTokens.entrySet()) {
+					try {
+						new CleanSessionService(entry.getValue()).execute();
+					} catch (MyDriveException e) {
+						//USer does not exist
+					}
+				}
+				
 				System.out.println("MyDrive" + " quit");
 				System.exit(0);
 			}
