@@ -1,36 +1,33 @@
 package pt.tecnico.myDrive.service;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.integration.junit4.JMockit;
+import org.junit.Test;
+
+import mockit.Mock;
+import mockit.MockUp;
 import pt.tecnico.myDrive.domain.Directory;
 import pt.tecnico.myDrive.domain.File;
 import pt.tecnico.myDrive.domain.Link;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
+import pt.tecnico.myDrive.domain.User;
 import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
-
-
-@RunWith(JMockit.class)
+/*
 public class EnvironmentLinksTest extends AbstractServiceTest{
 	
 	private long token;
 
-	@Mocked
-	public Link linkMock;
 	
 	@Override
 	protected void populate() {
 		try{
 			MyDrive md = MyDrive.getInstance();
 			token = md.getValidToken("root", "/home/root/", new StrictlyTestObject() );
-			//md.addDirectory("/home/root", "sandbox", md.getRootUser());
+			md.addDirectory("/home/root", "sandbox", md.getRootUser());
 			
 		}
 		catch(Exception e){
@@ -40,53 +37,42 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 	
 
 	protected void testVar(String content) throws MyDriveException{
-		MyDrive md= MyDriveService.getMyDrive();
-		md.addLink("/home/root/","specialLink", md.getRootUser(),content);
-		Directory dir = MyDrive.getInstance().getDirectory("/home/root/");
-		
-		Directory dirLink = md.getDirectory("/home/root");
-		for(File file : dirLink.getFilesSet()){
-			if(file.getName().equals("specialLink")){
-				linkMock = (Link) file;
-			}
-		}
-		 
-		
-		new Expectations() {
-			{
-				linkMock.getFile(md.getRootUser());
-				result = dir;
-			}
-		};
-		
-		ChangeDirectoryService service = new ChangeDirectoryService(token, "specialLink");
-		service.execute();
-		//assertEquals("/home/root/sandbox",service.result());
+
 	}
 	
 	@Test
 	public void absoluteLinkWithVarBeg() throws MyDriveException{
-		testVar("$User/sandbox");
+		String content = "$Home/User/"; 
+		
+		MyDrive md= MyDriveService.getMyDrive();
+		md.addLink("/home/root/","specialLink", md.getRootUser(),content);
+		Directory dir = MyDrive.getInstance().getDirectory("/home/root/");
+
+
+		new MockUp<Link>() {
+			  @Mock
+			  File getFile(User user){ return dir; }
+		};		 
+		
+		
+		ChangeDirectoryService service = new ChangeDirectoryService(token, "specialLink");
+		service.execute();
+		assertEquals("/home/root",service.result());
 	}
 	
 
+	public Link linkMock = null;
 	protected void failVar(String path) throws MyDriveException{
+		
 		MyDrive md= MyDriveService.getMyDrive();
 		md.addLink("/home/root/","specialLink", md.getRootUser(),path);
-		Directory dirLink = md.getDirectory("/home/root");
-		for(File file : dirLink.getFilesSet()){
-			if(file.getName().equals("specialLink")){
-				linkMock = (Link) file;
-			}
-		}
 
-		new Expectations() {
-			{
-				linkMock.getFile(md.getRootUser());
-				result = new FileNotFoundException(); 
-			}
-		};
-		
+		new MockUp<Link>() {
+			  @Mock
+			  File getFile(User user) throws FileNotFoundException{ throw new FileNotFoundException(); }
+		};		 
+
+
 		ChangeDirectoryService service = new ChangeDirectoryService(token, path);
 		service.execute();
 	}
@@ -109,3 +95,4 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 
 	
 }
+*/
