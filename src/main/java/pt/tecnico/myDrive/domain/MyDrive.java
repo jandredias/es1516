@@ -520,7 +520,7 @@ public class MyDrive extends MyDrive_Base {
 					User user;
 					// If it's the root user it should not be created
 					// but updated Otherwise create the user and set him up
-					if (!node.getAttribute("username").getValue().equals("root")) {
+					if (!(node.getAttribute("username").getValue().equals("root")||node.getAttribute("username").getValue().equals("nobody"))) {
 						user = new User(node);
 						addUser(user);
 						// Update users home
@@ -549,10 +549,7 @@ public class MyDrive extends MyDrive_Base {
 
 					// Set file's parent
 					Directory dir = reallyGetDirectory(node.getChild("path").getValue(), this.getRootUser());
-					System.out.println(dir.getPath());
-					System.out.println(file.getName());
 					dir.addFiles(file);
-
 				}
 			}
 		} catch (Exception e1) {
