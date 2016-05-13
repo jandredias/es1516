@@ -45,7 +45,9 @@ public class PlainFile extends PlainFile_Base {
 	 * @param xml
 	 */
 	protected void importContent(Element xml) {
-		setContent(xml.getChild("contents").getValue());
+		setContent((xml.getChild("contents") == null) ?
+				"" :
+					xml.getChild("contents").getValue());
 	}
 
 	public ArrayList<Element> xmlExport() {
