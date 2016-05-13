@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -469,7 +470,8 @@ public class MyDrive extends MyDrive_Base {
 
 		for (User user : usersSorted) {
 			Element userEl = user.xmlExport();
-			String username = userEl.getChild("user").getValue();
+			Attribute usernameEl = userEl.getAttribute("username");
+			String username = usernameEl.getValue();
 			if (!(username.equals("root") || username.equals("nobody"))) {
 				element.addContent(userEl);
 			}
