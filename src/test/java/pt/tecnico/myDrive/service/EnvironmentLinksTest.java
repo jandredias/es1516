@@ -16,7 +16,7 @@ import pt.tecnico.myDrive.exception.FileNotFoundException;
 import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
-/*
+
 public class EnvironmentLinksTest extends AbstractServiceTest{
 	
 	private long token;
@@ -95,4 +95,3 @@ public class EnvironmentLinksTest extends AbstractServiceTest{
 
 	
 }
-*/

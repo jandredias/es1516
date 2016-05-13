@@ -1,7 +1,10 @@
 package pt.tecnico.myDrive.service;
-/*
-import org.junit.Test;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import pt.tecnico.myDrive.domain.MyDrive;
 import pt.tecnico.myDrive.domain.StrictlyTestObject;
 import pt.tecnico.myDrive.domain.User;
@@ -9,7 +12,7 @@ import pt.tecnico.myDrive.exception.MyDriveException;
 import pt.tecnico.myDrive.exception.PermissionDeniedException;
 import pt.tecnico.myDrive.exception.TestSetupException;
 
-//@RunWith(JMockit.class)
+@RunWith(JMockit.class)
 public class ExecuteFileTest extends PermissionsTest {
 
 	private MyDrive myDrive;
@@ -51,13 +54,13 @@ public class ExecuteFileTest extends PermissionsTest {
 	protected void assertServiceExecutedWithSuccess() {
 		// we're only going to check the args if the service was executed
 		// successfully, i.e., no exceptions were thrown
-		/*
+	
 		new Verifications() {
 			{
 				TestClass.main(expectedArgs);
 			}
-		};*/
-	/*}
+		};
+	}
 
 	@Test
 	public void executeAppTestNoArgs() throws MyDriveException {
@@ -103,4 +106,4 @@ public class ExecuteFileTest extends PermissionsTest {
 	}
 
 }
-*/ 
+ 
